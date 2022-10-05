@@ -1,0 +1,43 @@
+{% extends 'default_frame.twig' %}
+
+{% block main %}
+    <style>
+        .ec-layoutRole .ec-layoutRole__contents{
+            max-width: none;
+        }
+        .select-css {
+            padding: 0 10px !important;
+            height: 40px !important;
+        }
+    </style>
+    <div id="wrap" class="formBg" style="height: 100vh;">
+        <main id="customer">
+            <section class="formContent customerContent">
+                <h2>ご注文ありがとうございました</h2>
+                <div class="" style="text-align: center;">
+                    ただいま、ご注文の確認メールをお送りさせていただきました。<br>
+                    万一、確認メールが届かず迷惑メールフォルダに分類されてもいない場合は、トラブルの可能性もありますので、大変お手数ではございますが、下記よりお問い合わせください。<br>
+                    今後ともご愛顧賜りますよう、よろしくお願い申し上げます。<br><br>
+                </div>
+                <div>
+
+                    ご注文番号：00000000<br><br>
+
+                    ■定期購買情報<br><br>
+
+                    ご案内：　 自動継続課金の登録を行いました。<br>
+                    　　　　　・課金額：〇〇円税込<br>
+                    　　　　　・次回課金日：〇〇年〇月〇日<br>
+                    　　　　　・課金間隔：毎月1日<br>
+                </div>
+                <div class="btn-wrap">
+                    <a href="{{ url("homepage") }}" class="btn">トップページへ</a>
+                </div>
+            </section>
+        </main>
+        <footer>
+            Copyright© Free Wimax 5G All rights reserved.
+        </footer>
+    </div>
+
+{% endblock %}

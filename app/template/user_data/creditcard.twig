@@ -1,0 +1,250 @@
+{% extends 'default_frame.twig' %}
+
+{% block main %}
+    <style>
+        .ec-layoutRole .ec-layoutRole__contents{
+            max-width: none;
+        }
+        .select-css {
+            padding: 0 10px !important;
+            height: 40px !important;
+        }
+        .error {
+          color: #e74c3c;
+        }
+        .bg-load-overlay{
+            height: 0 !important;
+        }
+    </style>
+    
+    <script src="https://js.stripe.com/v2/"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script>
+        
+        $(document).ready(function() {
+            var $form = $("#shopping-form");
+            const params = new URLSearchParams(window.location.search)
+            let price = params.get('price');
+            let token = params.get('token');
+            $('#shopping_order__token').val(token);
+            $('#price').val(price);
+            $('.creditCardText').keypress(function (e) {
+                if($(this).val().length == 19){
+                    e.preventDefault();
+                }
+            })
+            $('.card-cvc').keypress(function (e) {
+                if($(this).val().length == 4){
+                    e.preventDefault();
+                }
+            })
+            // $('.creditCardText').keyup(function() {
+            //     var foo = $(this).val().split(" ").join(""); // remove hyphens
+            //     if (foo.length > 0) {
+            //         foo = foo.match(new RegExp('.{1,4}', 'g')).join(" ");
+            //     }
+            //     $(this).val(foo);
+            // });
+           
+            $('#checkout_btn').click(function (e) {
+                e.preventDefault();
+                if($form.valid()){
+                    if (!$form.data('cc-on-file')) {
+                        Stripe.setPublishableKey($form.data('stripe-publishable-key'));
+
+                        Stripe.createToken({
+                            number: $('#card_number').val(),
+                            cvc: $('#card_cvc').val(),
+                            exp_month: $('#card_month').val(),
+                            exp_year: $('#card_year').val()
+                        }, stripeResponseHandler);
+                    }
+                }
+            })
+            
+            function stripeResponseHandler(status, response) {
+                console.log(response, status);
+                if (response.error) {
+                    if(response.error.code == 'invalid_number'){
+                        $('.error')
+                            .removeClass('hide')
+                            .find('.alert')
+                            .text('カード関連情報を数字形式で入力してください。');
+                    }
+                    if(response.error.code == 'incorrect_number'){
+                        $('.error')
+                            .removeClass('hide')
+                            .find('.alert')
+                            .text('カード番号が正しくありません。');
+                    }
+                    if(response.error.code == 'invalid_expiry_year'){
+                        $('.error')
+                            .removeClass('hide')
+                            .find('.alert')
+                            .text('カードの有効期限(年)は無効です。');
+                    }
+                    if(response.error.code == "invalid_expiry_month"){
+                        $('.error')
+                            .removeClass('hide')
+                            .find('.alert')
+                            .text('カードの有効期限(月)は無効です。');
+                    }
+                    if(response.error.code == "invalid_cvc"){
+                        $('.error')
+                            .removeClass('hide')
+                            .find('.alert')
+                            .text('セキュリティコードが無効です。');
+                    }
+        
+                } else {
+                    /* token contains id, last4, and card type */
+                    var token = response['id'];
+                    var brand = response['card']['brand'];
+                    console.log(brand);
+                    //$form.find('input[type=text]').empty();
+                    $form.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
+                    $form.append("<input type='hidden' name='card_brand' value='" +  + "'/>");
+                    var url = '{{ url('card_pay') }}'
+                    $.ajax({
+                        url: url,
+                        type: $form.attr('method'),
+                        data: $form.serialize(),
+                        dataType: 'json',
+                    }).done(function(data) {
+                        window.location.href = 'https://wimax.gonosen.work/plugin/stripe_payment_gateway/credit_card';
+                        // console.log(data);
+                        // var form = $('#shopping-form1');
+                        // var url = '{{ url('shopping_checkout') }}'
+                       
+                        // $.ajax({
+                        //     url: url,
+                        //     type: form.attr('method'),
+                        //     data: form.serialize(),
+                        //     dataType: 'json',
+                        // }).done(function(data) {
+                        //     window.location.href = 'https://wimax.gonosen.work/plugin/stripe_payment_gateway/credit_card';
+                        // }).fail(function(data) {
+                        //     alert('{{ '失敗しました。'|trans }}');
+                        // })
+                       
+                        //alert('カード情報を変更しました。')
+                    }).fail(function(data) {
+                        alert('{{ '失敗しました。'|trans }}');
+                    })
+                }
+            }
+        })
+        
+    </script>
+    <div id="wrap" class="formBg">
+        <main id="customer">
+            <section class="formContent customerContent">
+                <h2>クレジットカード情報入力</h2>
+                <div class="creditcardContent__text">
+                    ご利用可能なクレジットカードは以下の通りです。
+                    <div>
+                        <img src="/html/user_data/assets/img/icons/visa.gif">
+                        <img src="/html/user_data/assets/img/icons/master.gif">
+                        <img src="/html/user_data/assets/img/icons/jcb.gif">
+                        <img src="/html/user_data/assets/img/icons/amex.gif">
+                        <img src="/html/user_data/assets/img/icons/mufg.gif">
+                        <img src="/html/user_data/assets/img/icons/nicos.gif">
+                        <img src="/html/user_data/assets/img/icons/dc.gif">
+                        <img src="/html/user_data/assets/img/icons/ufj.gif">
+                        <img src="/html/user_data/assets/img/icons/diners.gif">
+                        <img src="/html/user_data/assets/img/icons/discover.gif">
+                    </div>
+                </div>
+                <form id="shopping-form1" method="post" action="{{ url('shopping_checkout') }}">
+                    <input type="hidden" id="shopping_order__token" name="_shopping_order[_token]" value="">
+                </form>
+                <form id="shopping-form" method="post" action="{{ url("card_pay") }}" data-cc-on-file="false" data-stripe-publishable-key="pk_test_51HPQf3I7V9uu8qK5pPZ8ZyLPvfoFtBIFWmD5Hl5BbGlhuEgGfABCr2YuuJkujJUrb3daN9qQJhmGhev2K4fbYQQY00GdczvBIy" role="form">
+                    
+                    <input type="hidden" id="price" name="price" value="">
+                    <ul>
+                        <li>
+                            <dl>
+                                <dt>カード番号</dt>
+                                <dd>
+                                    <input type="text" name="card_number" id="card_number" value="" placeholder="0123456789123" class="width-l creditCardText" maxlength="16" required>
+                                </dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <dl>
+                                <dt>有効期限</dt>
+                                <dd>
+                                    <select name="card_year" id="card_year" required>
+                                        <option value="2022">2022</option>
+                                        <option value="2023">2023</option>
+                                        <option value="24">2024</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2026">2026</option>
+                                        <option value="2027">2027</option>
+                                        <option value="2028">2028</option>
+                                    </select>年
+                                    <select name="card_month" id="card_month" required>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>月
+                                </dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <dl>
+                                <dt>名義人</dt>
+                                <dd>
+                                    <input type="text" name="card_owner" value="" placeholder="半角英字・半角スペース可" class="width-l" required>
+                                </dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <dl>
+                                <dt>パスワード</dt>
+                                <dd>
+                                    <input type="password" name="card_cvc" id="card_cvc" value="" placeholder="***" class="width-s card_cvc" maxlength="4" required>
+                                </dd>
+                            </dl>
+                            <dl class="pass-note">
+                                <dt><img src="/html/user_data/assets/img/common/credit.png" alt="カードイメージ"></dt>
+                                <dd>
+                                    セキュリティコードとはクレジットカードの不正利用を防止する為のクレジットカード番号とは別に印字されている３桁もしくは４桁の数字です。<br>
+                                    ・VISA、MasterCard、JCB、Dinersの場合（図Ａ）<br>
+                                    　カード裏面の署名欄に印字された末尾３桁の数字がセキュリティコードです。<br>
+                                    ・American Expressの場合（図Ｂ）<br>
+                                    　カード表面の右上（または左上）に印字されている４桁の数字がセキュリティコードです。
+                                </dd>
+                            </dl>
+                        </li>
+                    </ul>
+
+                    <div class="warning">
+                        以上の内容で間違いなければ、「支払を行う」ボタンをクリックしてください。<br>
+                        なお、ボタンの２度押しは絶対に行わないでください。二重請求となる恐れがございます。
+                    </div>
+
+                    <div class="btn-wrap">
+                        <a href="{{ url('shopping') }}" class="border-btn">戻る</a>
+                        <button type="submit" class="btn" id="checkout_btn">申し込む</button>
+                    </div>
+                </form>
+                <div class="form-group">
+                        <div id="card-element" class="card-element"></div>
+
+                        <div id="card-errors" class="error" role="alert" style="color: red"></div>
+                    </div>
+            </section>
+        </main>
+    </div>
+
+{% endblock %}

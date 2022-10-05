@@ -1,0 +1,40 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame.twig' %}
+
+{% set mypageno = 'withdraw' %}
+
+{% set body_class = 'mypage' %}
+
+{% block main %}
+<style>
+    .ec-layoutRole .ec-layoutRole__contents{
+        max-width: none;
+    }
+</style>
+<div id="wrap" class="formBg" style="height: 100vh;">
+    <main id="customer">
+        <section class="formContent customerContent">
+             <h2>{{ '退会が完了いたしました'|trans }}</h2>
+            <div class="">
+                ご利用いただき誠にありがとうございました。<br>
+                またのご来店をお待ちしております。<br>
+            </div>
+            <div class="btn-wrap">
+                <a href="{{ url('homepage') }}" class="btn">TOPへ</a>
+            </div>
+        </section>
+    </main>
+        <footer>
+        Copyright© Free Wimax 5G All rights reserved.
+    </footer>
+</div>
+{% endblock %}

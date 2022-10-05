@@ -1,0 +1,207 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame.twig' %}
+
+{% set body_class = 'mypage' %}
+
+{% block stylesheet %}
+    <style>
+        .login-content{
+            background: #fff;
+            left: 50%;
+            padding: 5%;
+            position: absolute;
+            top: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 600px;
+            max-height: 80vh;
+            /*overflow: scroll;*/
+        }
+        .login-content h3 {
+            text-align: center;
+            font-size: clamp(16px, 5.625vw, 18px);
+            margin-bottom: 30px;
+        }
+        .login-content ul li dl {
+            margin-bottom: 20px;
+        }
+        .login-content ul li dl dt {
+            margin-bottom: 5px;
+        }
+        .login-content ul li dl dd {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .login-content ul li dl dd .width-l {
+            width: 100%;
+        }
+
+        .login-content ul li dl dd input {
+            padding: 10px;
+            border-radius: 5px;
+            border: #ccc solid 1px;
+        }
+        .btn-wrap {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 100px;
+        }
+        .btn-wrap .border-btn {
+            background: #fff;
+            -webkit-box-shadow: 0px 1px 2px 1px rgb(0 0 0 / 25%);
+            box-shadow: 0px 1px 2px 1px rgb(0 0 0 / 25%);
+            border: 2px solid #0B7AB6;
+            border-radius: 5px;
+            width: 170px;
+            padding: 5px;
+            display: block;
+            text-decoration: none;
+            color: #0B7AB6;
+            text-align: center;
+            font-weight: bold;
+        }
+        .btn-wrap .btn {
+            background: #0B7AB6;
+            -webkit-box-shadow: 0px 1px 2px 1px rgb(0 0 0 / 25%);
+            box-shadow: 0px 1px 2px 1px rgb(0 0 0 / 25%);
+            border-radius: 5px;
+            border: 2px solid #0B7AB6;
+            width: 170px;
+            padding: 5px;
+            display: block;
+            text-decoration: none;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+        }
+        ul {
+          list-style-type: none;
+         }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div class="login-content">
+        <form name="login_mypage" id="login_mypage" method="post" action="{{ url('mypage_login') }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            {% if app.session.flashBag.has('eccube.login.target.path') %}
+                {% for targetPath in app.session.flashBag.peek('eccube.login.target.path') %}
+                    <input type="hidden" name="_target_path" value="{{ targetPath }}" />
+                {% endfor %}
+            {% endif %}
+            <h3>{{ 'ログイン'|trans }}</h3>
+            <ul>
+                <li>
+                    <dl>
+                        <dt>メールアドレス</dt>
+                        <dd>
+                            {{ form_widget(form.login_email, {'attr': {'style' : 'ime-mode: disabled;', 'placeholder' : 'メールアドレス', 'autofocus': true}}) }}
+                        </dd>
+                    </dl>
+                </li>
+                <li>
+                    <dl>
+                        <dt>パスワード</dt>
+                        <dd>
+                            {{ form_widget(form.login_pass,  {'attr': {'placeholder' : 'パスワード' }}) }}
+                        </dd>
+                    </dl>
+                </li>
+            </ul>
+            {% for reset_complete in app.session.flashbag.get('password_reset_complete') %}
+                <p>{{ reset_complete|trans }}</p>
+            {% endfor %}
+            {% if error %}
+                <p class="ec-errorMessage">{{ error.messageKey|trans(error.messageData, 'validators')|nl2br }}</p>
+            {% endif %}
+            <div class="btn-wrap">
+                <a href="{{ url('entry') }}" class="border-btn">新規登録</a>
+                <button type="submit" class="btn">{{ 'ログイン'|trans }}</button>
+            </div>
+        </form>
+    </div>
+{#    <div class="ec-role">#}
+{#        <div class="ec-pageHeader">#}
+{#            <h1>{{ 'ログイン'|trans }}</h1>#}
+{#        </div>#}
+{#        <div class="ec-off2Grid">#}
+{#            <div class="ec-off2Grid__cell">#}
+{#                <form name="login_mypage" id="login_mypage" method="post" action="{{ url('mypage_login') }}">#}
+{#                    {% if app.session.flashBag.has('eccube.login.target.path') %}#}
+{#                        {% for targetPath in app.session.flashBag.peek('eccube.login.target.path') %}#}
+{#                            <input type="hidden" name="_target_path" value="{{ targetPath }}" />#}
+{#                        {% endfor %}#}
+{#                    {% endif %}#}
+{#                    <div class="ec-login">#}
+{#                        <div class="ec-login__icon">#}
+{#                            <div class="ec-icon"><img src="{{ asset('assets/icon/user.svg') }}" alt=""></div>#}
+{#                        </div>#}
+{#                        <div class="ec-login__input">#}
+{#                            <div class="ec-input">#}
+{#                                {{ form_widget(form.login_email, {'attr': {'style' : 'ime-mode: disabled;', 'placeholder' : 'メールアドレス', 'autofocus': true}}) }}#}
+{#                                {{ form_widget(form.login_pass,  {'attr': {'placeholder' : 'パスワード' }}) }}#}
+{#                            </div>#}
+{#                            {% if BaseInfo.option_remember_me %}#}
+{#                            <div class="ec-checkbox">#}
+{#                                <label>#}
+{#                                    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}#}
+{#                                        <input type="hidden" name="login_memory" value="1">#}
+{#                                    {% else %}#}
+{#                                        {{ form_widget(form.login_memory, { 'label': '次回から自動的にログインする'|trans }) }}#}
+{#                                    {% endif %}#}
+{#                                </label>#}
+{#                            </div>#}
+{#                            {% endif %}#}
+{#                            {% for reset_complete in app.session.flashbag.get('password_reset_complete') %}#}
+{#                                <p>{{ reset_complete|trans }}</p>#}
+{#                            {% endfor %}#}
+{#                            {% if error %}#}
+{#                                <p class="ec-errorMessage">{{ error.messageKey|trans(error.messageData, 'validators')|nl2br }}</p>#}
+{#                            {% endif %}#}
+{#                        </div>#}
+{#                        <div class="ec-grid2">#}
+{#                            <div class="ec-grid2__cell">#}
+{#                                <div class="ec-login__actions">#}
+{#                                    <button type="submit"#}
+{#                                            class="ec-blockBtn--cancel">{{ 'ログイン'|trans }}</button>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="ec-grid2__cell">#}
+{#                                <div class="ec-login__link"><a class="ec-link"#}
+{#                                                               href="{{ url('forgot') }}">{{ 'ログイン情報をお忘れですか？'|trans }}</a>#}
+{#                                </div>#}
+{#                                <div class="ec-login__link"><a class="ec-link"#}
+{#                                                               href="{{ url('entry') }}">{{ '新規会員登録'|trans }}</a>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">#}
+{#                </form>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
+{% endblock %}

@@ -1,0 +1,145 @@
+{% extends 'default_frame.twig' %}
+
+{% block main %}
+<style>
+    footer{
+        background: white !important;
+    }
+    ul.mypageContent__menu>li:nth-child(3)>a{
+        border: 2px solid #0B7AB6 !important;
+        color: #0B7AB6;
+        font-weight: bold;
+    }
+    .error {
+      color: #e74c3c;
+    }
+    .bg-load-overlay{
+        height: 0 !important;
+    }
+</style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+
+    <script>
+        $(function() {
+            $('#change_credit').click(function(e){
+                e.preventDefault();
+                var form = $('#shopping-form');
+                if(form.valid()){
+                    var url = '{{ url('card_change') }}'
+                    $.ajax({
+                        url: url,
+                        type: form.attr('method'),
+                        data: form.serialize(),
+                        dataType: 'json',
+                    }).done(function(data) {
+                        alert('カード情報を変更しました。')
+                    }).fail(function(data) {
+                        alert('{{ 'カード情報変更に失敗しました。'|trans }}');
+                    })
+                }
+
+            })
+        })
+    </script>
+<div id="wrap">
+    <main id="mypage">
+        <section class="mypageContent customerContent">
+            <h2>マイページ/お届け先編集</h2>
+            <div class="mypageContent__name">{{ 'ようこそ%last_name% %first_name%さん'|trans({ '%last_name%': app.user.name01, '%first_name%': app.user.name02 }) }}</div>
+                {% include 'Mypage/navi.twig' %}
+            <div class="mypageContentBox">
+                <div class="creditcardContent__text">
+                    ご利用可能なクレジットカードは以下の通りです。
+                    <div>
+                        <img src="/html/user_data/assets/img/icons/visa.gif">
+                        <img src="/html/user_data/assets/img/icons/master.gif">
+                        <img src="/html/user_data/assets/img/icons/jcb.gif">
+                        <img src="/html/user_data/assets/img/icons/amex.gif">
+                        <img src="/html/user_data/assets/img/icons/mufg.gif">
+                        <img src="/html/user_data/assets/img/icons/nicos.gif">
+                        <img src="/html/user_data/assets/img/icons/dc.gif">
+                        <img src="/html/user_data/assets/img/icons/ufj.gif">
+                        <img src="/html/user_data/assets/img/icons/diners.gif">
+                        <img src="/html/user_data/assets/img/icons/discover.gif">
+                    </div>
+                </div>
+                <form id="shopping-form" method="post" action="{{ url("card_change") }}">
+                    <ul>
+                        <li>
+                            <dl>
+                                <dt>カード番号</dt>
+                                <dd>
+                                    <input type="text" name="card_number" id="card_number" value="" placeholder="0123456789123" class="width-l" maxlength="16" required>
+                                </dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <dl>
+                                <dt>有効期限</dt>
+                                <dd>
+                                    <select name="card_year" id="card_year" required>
+                                        <option value="2022">2022</option>
+                                        <option value="2023">2023</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2026">2026</option>
+                                        <option value="2027">2027</option>
+                                        <option value="2028">2028</option>
+                                    </select>年
+                                    <select name="card_month" id="card_month" required>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                        <option value="11">11</option>
+                                        <option value="12">12</option>
+                                    </select>月
+                                </dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <dl>
+                                <dt>名義人</dt>
+                                <dd>
+                                    <input type="text" name="card_owner" id="card_owner" value="" placeholder="半角英字・半角スペース可" class="width-l" required>
+                                </dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <dl>
+                                <dt>セキュリティコード<br>
+                                    (CVC)
+                                </dt>
+                                <dd>
+                                    <input type="password" maxlength="4" name="card_cvc" id="card_cvc" value="" placeholder="***" class="width-s" required>
+                                </dd>
+                            </dl>
+                            <dl class="pass-note">
+                                <dt><img src="/html/user_data/assets/img/common/credit.png" alt="カードイメージ"></dt>
+                                <dd>
+                                    セキュリティコードとはクレジットカードの不正利用を防止する為のクレジットカード番号とは別に印字されている３桁もしくは４桁の数字です。<br>
+                                    ・VISA、MasterCard、JCB、Dinersの場合（図Ａ）<br>
+                                    　カード裏面の署名欄に印字された末尾３桁の数字がセキュリティコードです。<br>
+                                    ・American Expressの場合（図Ｂ）<br>
+                                    　カード表面の右上（または左上）に印字されている４桁の数字がセキュリティコードです。
+                                </dd>
+                            </dl>
+                        </li>
+                    </ul>
+
+                    <div class="btn-wrap">
+                        <button type="submit" class="btn" id="change_credit">変更する</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+</div>
+
+{% endblock %}

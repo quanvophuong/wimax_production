@@ -1,0 +1,69 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame.twig' %}
+
+{% set body_class = 'registration_page' %}
+
+{% block main %}
+<style>
+    .ec-layoutRole__contents{
+        min-height: 100vh    
+    }
+</style>
+    <div class="ec-role" style="padding-top: 60px">
+        <div class="ec-pageHeader">
+            <h1>{{ '新規会員登録(仮登録完了)'|trans }}</h1>
+        </div>
+    </div>
+    <div class="ec-registerCompleteRole">
+        <div class="ec-off3Grid ec-text-ac">
+            <div class="ec-off3Grid__cell">
+{#                <form method="post" action="https://cloud-option.com/wimax/">#}
+                <div class="ec-reportHeading">
+                    <h2>{{ '会員登録ありがとうございます'|trans }}</h2>
+                </div>
+                <p class="ec-reportDescription">{{ '現在、仮会員の状態です。ただいま、ご入力いただいたメールアドレス宛に、ご本人様確認用のメールをお送りいたしました。
+メール本文内のURLをクリックすると、本会員登録が完了となります。
+'|trans|nl2br }}</p>
+                <div class="ec-off4Grid">
+                    <div class="ec-off4Grid__cell"><a class="ec-blockBtn--cancel" href="{{ url('homepage') }}">{{ 'トップページへ'|trans }}</a></div>
+{#                    {% set order = random(00000, 99999) %}#}
+
+{#                    {% if form.company_name.vars.data is empty %}#}
+{#                        <input type="hidden" name="pracontact" value="2">#}
+{#                    {% else %}#}
+{#                        <input type="hidden" name="pracontact" value="1">#}
+{#                    {% endif %}#}
+{#                    <input type="hidden" name="pracompany" value="{{ form.company_name.vars.data }}">#}
+{#                    <input type="hidden" name="praname1" value="{{ form.name.name01.vars.data }}">#}
+{#                    <input type="hidden" name="praname2" value="{{ form.name.name02.vars.data }}">#}
+{#                    <input type="hidden" name="pranameread1" value="{{ form.kana.kana01.vars.data }}">#}
+{#                    <input type="hidden" name="pranameread2" value="{{ form.kana.kana02.vars.data }}">#}
+{#                    <input type="hidden" name="pramail" value="{{ form.email.vars.data }}">#}
+{#                    <input type="hidden" name="praphone" value="{{ form.phone_number.vars.data }}">#}
+{#                    <input type="hidden" name="prapostal" value="{{ form.postal_code.vars.data }}">#}
+{#                    <input type="hidden" name="pratodofuken" value="{{ form.address.pref.vars.data }}">#}
+{#                    <input type="hidden" name="praaddress" value="{{ form.address.addr01.vars.data }} {{ form.address.addr02.vars.data }}">#}
+{#                    <input type="hidden" name="praordernumber" value="WI-{{ order }}">#}
+
+{#                <div class="ec-registerRole__actions">#}
+{#                    <div class="ec-off4Grid">#}
+{#                        <div class="ec-off4Grid__cell">#}
+{#                            <button class="ec-blockBtn--action" type="submit">Submit</button>#}
+{#                            <a style="margin-top: 10px;" class="ec-blockBtn--cancel" href="{{ url('homepage') }}">{{ 'トップページへ'|trans }}</a>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                </form>#}
+            </div>
+        </div>
+    </div>
+{% endblock %}

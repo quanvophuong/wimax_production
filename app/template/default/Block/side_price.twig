@@ -1,0 +1,40 @@
+<input type="hidden" id="next" name="next_total" value="8250">
+<input type="hidden" id="total" name="total_value" value="4950">
+<div id="sidePrice">
+    <div class="sidePriceContent">
+        <h2>お支払金額</h2>
+        <span class="sp displayBtn"><img src="/html/user_data/assets/img/icons/display-btn.svg" alt=">"></span>
+        <div class="displayArea">
+            <dl>
+                <dt>初期費用</dt>
+                <dd>3,300円</dd>
+            </dl>
+            <dl>
+                <dt>ACアダプタ料金</dt>
+                <dd id="usb_value">1,540円</dd>
+            </dl>
+            <dl>
+                <dt>月額料金</dt>
+                <dd>4,800円</dd>
+            </dl>
+            <dl>
+                <dt>端末補償オプション</dt>
+                <dd id="option_value">550円</dd>
+            </dl>
+        </div>
+        <div class="sidePriceContent__total">
+            <dl>
+                <dt>初月お支払い金額合計</dt>
+                <dd id="total_value">10,190円</dd>
+            </dl>
+            <dl>
+                <dt>2ヶ月目以降の料金</dt>
+                <dd id="next_total">5,350円</dd>
+            </dl>
+        </div>
+        <div class="col2">
+            <div class="sidePriceContent__agree">【<a href="{{ url('help_agreement') }}">利用規約</a>】に同意して</div>
+            <button id="moveCart" class="btn">カートに追加する</button>
+        </div>
+    </div>
+</div>

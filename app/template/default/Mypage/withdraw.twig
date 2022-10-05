@@ -1,0 +1,49 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame.twig' %}
+
+{% set mypageno = 'withdraw' %}
+
+{% set body_class = 'mypage' %}
+
+{% block main %}
+<style>
+    footer{
+        background: white !important;
+    }
+</style>
+    <div id="wrap">
+        <main id="mypage">
+            <section class="mypageContent">
+                <h2>{{ 'マイページ'|trans }}/{{ '解約手続'|trans }}</h2>
+                <div class="mypageContent__name">{{ 'ようこそ%last_name% %first_name%さん'|trans({ '%last_name%': app.user.name01, '%first_name%': app.user.name02 }) }}</div>
+                {% include 'Mypage/navi.twig' %}
+                <div class="mypageContentBox">
+                    <div style="font-size:100px;text-align:center;">
+                        <div class="ec-icon"><img src="{{ asset('assets/icon/exclamation.svg') }}" alt=""></div>
+                    </div>
+                    <h3>解約手続きの前にご確認ください</h3>
+                    <div class="mypageContentBox__text">安心補償解約の際は「安心補償解約へ」、プラン解約の際は「プラン解約へ」をご選択ください。ポップアップが表示されますので、「解約に関する注意事項」をお読みいただき、「解約する」をご選択ください。</div>
+                    <form method="post" action="{{ url('mypage_withdraw') }}">
+                        {{ form_widget(form._token) }}
+                        <div class="btn-wrap">
+                            <button type="submit" class="btn" name="mode"
+                                    value="confirm">{{ '安心保障解約へ'|trans }}</button>
+                            <button type="submit" class="btn" name="mode"
+                                    value="confirm">{{ 'プラン解約へ'|trans }}</button>
+                        </div>
+                    </form>
+
+                </div>
+            </section>
+        </main>
+    </div>
+{% endblock %}

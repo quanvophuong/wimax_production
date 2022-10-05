@@ -1,0 +1,165 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame.twig' %}
+
+{% set mypageno = 'index' %}
+
+{% set body_class = 'mypage' %}
+
+{% block main %}
+<style>
+    footer{
+        background: white !important;
+    }
+</style>
+    <div id="wrap" style="min-height: calc(100vh - 120px);">
+        <main id="mypage">
+            <section class="mypageContent">
+                <h2>{{ 'マイページ'|trans }}/{{ 'ご注文履歴'|trans }}</h2>
+                <div class="mypageContent__name">{{ 'ようこそ%last_name% %first_name%さん'|trans({ '%last_name%': app.user.name01, '%first_name%': app.user.name02 }) }}</div>
+                {% include 'Mypage/navi.twig' %}
+                <div class="mypageContentBox">
+                    {% if pagination.totalItemCount > 0 %}
+                        <p class="ec-para-normal">{{ '%count%件の履歴があります'|trans({'%count%':pagination.totalItemCount}) }}</p>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>注文<br class="sp">番号</th>
+                                <th>契約日</th>
+                                <th>契約<br class="sp">内容</th>
+                                <th>次回課金日/<br class="sp">課金額</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for Order in pagination %}
+                            <tr>
+                                <td>{{ Order.order_no }}</td>
+                                <td>{{ Order.order_date|date_sec }}</td>
+                                <td>
+                                    {% for shipping in Order.shippings %}
+                                        {% set idx = loop.index0 %}
+                                        {% set isShowReducedTaxMess = false %}
+
+                                                {% for orderItem in shipping.productOrderItems %}
+                                                    <dl>
+                                                        <dt>{{ orderItem.productName }}</dt>
+                                                        <dd>¥ 4,950</dd>
+                                                    </dl>
+                                                    <dl>
+                                                        <dt>オプション</dt>
+                                                        <dd>
+                                                            {% if orderItem.productId != 3 %}
+                                                                {% if orderItem.productClass.classCategory1 == 'フリー補償' %}
+                                                                    ¥ 550
+                                                                {% elseif orderItem.productClass.classCategory1 == 'ライト補償' %}
+                                                                    ¥ 275
+                                                                {% endif %}
+                                                            {% else %}                                                                
+                                                                {% if orderItem.productClass.classCategory2 == 'フリー補償' %}
+                                                                    ¥ 550
+                                                                {% elseif orderItem.productClass.classCategory2 == 'ライト補償' %}
+                                                                    ¥ 275
+                                                                {% endif %}
+                                                            {% endif %}
+                                                        </dd>
+                                                    </dl>
+                                                    <dl>
+                                                        <dt>初月費用</dt>
+                                                        <dd>¥ 3,300</dd>
+                                                    </dl>
+                                                {% endfor %}
+
+                                    {% endfor %}
+
+                                </td>
+                                <td>
+                                    <div class="nextTotal">
+                                        <span class="date">{{ Order.order_date|date_sec }}</span>
+                                        <span class="price">{{ Order.subtotal|price }}</span>
+                                    </div>
+                                    <div class="deviceNo">端末番号：{{ Order.order_no }}</div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="ec-pagerRole">
+                            {% include "pager.twig" with {'pages': pagination.paginationData} %}
+                        </div>
+                    {% else %}
+                        <p class="ec-para-normal">{{ 'ご注文履歴はありません。'|trans }}</p>
+                    {% endif %}
+
+                </div>
+            </section>
+        </main>
+    </div>
+{#    <div class="ec-layoutRole__main">#}
+{#        <div class="ec-mypageRole">#}
+{#            {% if pagination.totalItemCount > 0 %}#}
+{#                <p class="ec-para-normal">{{ '%count%件の履歴があります'|trans({'%count%':pagination.totalItemCount}) }}</p>#}
+{#                {% for Order in pagination %}#}
+{#                    <div class="ec-historyRole">#}
+{#                        <div class="ec-historyRole__contents">#}
+
+{#                            <div class="ec-historyRole__header">#}
+{#                                <div class="ec-historyListHeader">#}
+{#                                    <p class="ec-historyListHeader__date">{{ Order.order_date|date_sec }}</p>#}
+{#                                    <dl class="ec-definitions">#}
+{#                                        <dt>{{ 'ご注文番号'|trans }}</dt>#}
+{#                                        <dd>{{ Order.order_no }}</dd>#}
+{#                                    </dl>#}
+{#                                    {% if (BaseInfo.option_mypage_order_status_display) %}#}
+{#                                        <dl class="ec-definitions">#}
+{#                                            <dt>{{ 'ご注文状況'|trans }}</dt>#}
+{#                                            <dd>{{ Order.CustomerOrderStatus }}</dd>#}
+{#                                        </dl>#}
+{#                                    {% endif %}#}
+{#                                    <p class="ec-historyListHeader__action">#}
+{#                                        <a class="ec-inlineBtn"#}
+{#                                           href="{{ url('mypage_history', {'order_no': Order.order_no}) }}">{{ '詳細を見る'|trans }}</a>#}
+{#                                    </p>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                            <div class="ec-historyRole__detail">#}
+{#                                {% for OrderItem in Order.MergedProductOrderItems %}#}
+{#                                    <div class="ec-imageGrid">#}
+{#                                        <div class="ec-imageGrid__img">#}
+{#                                            {% if OrderItem.Product is null %}#}
+{#                                                <img src="{{ asset(''|no_image_product, 'save_image') }}"/>#}
+{#                                            {% else %}#}
+{#                                                <img src="{{ asset(OrderItem.Product.MainListImage|no_image_product, 'save_image') }}">#}
+{#                                            {% endif %}#}
+{#                                        </div>#}
+{#                                        <div class="ec-imageGrid__content">#}
+{#                                            <p class="ec-historyRole__detailTitle">{{ OrderItem.product_name }}</p>#}
+{#                                            {% if OrderItem.class_category_name1 is not empty %}#}
+{#                                                {{ OrderItem.class_category_name1 }}#}
+{#                                            {% endif %}#}
+{#                                            {% if OrderItem.class_category_name2 is not empty %}#}
+{#                                                / {{ OrderItem.class_category_name2 }}#}
+{#                                            {% endif %}#}
+{#                                            <p class="ec-historyRole__detailPrice">{{ OrderItem.price_inc_tax|price }}#}
+{#                                                × {{ OrderItem.quantity }}</p>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                {% endfor %}#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                {% endfor %}#}
+{#                <div class="ec-pagerRole">#}
+{#                    {% include "pager.twig" with {'pages': pagination.paginationData} %}#}
+{#                </div>#}
+{#            {% endif %}#}
+{#        </div>#}
+{#    </div>#}
+{% endblock %}

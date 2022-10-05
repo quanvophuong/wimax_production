@@ -1,0 +1,44 @@
+{% block main %}
+    {% if greenform_id != '' %}
+        <div class="row">
+            <iframe src="https://greenform.jp/fl/contact/{{ greenform_id }}/eccube" id="greenform" seamless="seamless" style="border:none; width: 100%; height: {{ form_height }}px;"></iframe>
+        </div>
+
+        <script>
+            function save_data(event){
+                if( event.origin != 'https://greenform.jp' ){
+                    return;
+                }
+                if( event.data != undefined ){
+                    var json = null;
+                    try{
+                        json = JSON.parse(event.data);
+                    }catch(e){
+                        return;
+                    }
+
+                    if( json.email != undefined && json.email != '' ){
+                        var postdata = { "greenform_sei": json.sei,
+                            "greenform_mei": json.mei,
+                            "greenform_email": json.email,
+                            "greenform_postcode": json.postcode,
+                            "greenform_pref": json.pref,
+                            "greenform_address": json.address,
+                            "greenform_tel": json.gf_tel,
+                            "greenform_gender": json.gf_gender,
+                            "not_ref_send_id": "{{ not_ref_send_id }}"
+                        };
+                        $.post("{{ url('homepage') }}block_green_form", postdata,
+                            function(data){
+                                // No Action
+                            }
+                        );
+                    }else{
+                        console.log('greenform_email is empty');
+                    }
+                }
+            }
+            window.addEventListener('message', save_data, false);
+        </script>
+    {% endif %}
+{% endblock %}

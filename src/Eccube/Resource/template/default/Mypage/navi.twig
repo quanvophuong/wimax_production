@@ -1,0 +1,25 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+<ul class="mypageContent__menu">
+    <li class="{% if mypageno|default('') == 'index' %}current{% endif %}">
+        <a href="{{ url('mypage') }}">{{ 'ご注文履歴'|trans }}</a>
+    </li>
+    <li class="{% if mypageno|default('') == 'change' %}current{% endif %}">
+        <a href="{{ url('mypage_change') }}">{{ '会員情報'|trans }}</a>
+    </li>
+    <li class="{% if mypageno|default('') == 'my_credit' %}current{% endif %}">
+        <a href="{{ url('my_credit') }}">クレジットカード情報変更</a>
+    </li>
+    <li class="{% if mypageno|default('') == 'withdraw' %}current{% endif %}">
+        <a href="{{ url('mypage_withdraw') }}">解約手続</a>
+    </li>
+</ul>
+

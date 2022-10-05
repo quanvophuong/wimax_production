@@ -1,0 +1,57 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame.twig' %}
+
+{% set mypageno = 'withdraw' %}
+
+{% set body_class = 'mypage' %}
+
+{% block main %}
+    <div id="wrap">
+        <main id="mypage">
+            <section class="mypageContent">
+                <h2>{{ 'マイページ'|trans }}/{{ '解約手続'|trans }}</h2>
+                {{ include('Mypage/navi.twig') }}
+            </section>
+            <div class="ec-mypageRole">
+                <div class="ec-withdrawConfirmRole">
+                    <div class="ec-off3Grid">
+                        <div class="ec-off3Grid__cell">
+                            <div style="font-size:100px;text-align:center;">
+                                <div class="ec-icon"><img src="{{ asset('assets/icon/exclamation.svg') }}" alt=""></div>
+                            </div>
+                            <p class="ec-withdrawConfirmRole__title">{{ '解約に関する注意事項'|trans }}</p>
+                            <p class="ec-withdrawConfirmRole__description">{{ 'こちらでは安心保障解約を行います。「解約する」を選択いただくと、弊社が手動で解約させていただきます。解約完了し次第、メールにてご連絡させていただきます。'|trans }}
+                            </p>
+                        </div>
+                    </div>
+                    <form method="post" action="{{ url('mypage_withdraw') }}">
+                        {{ form_widget(form._token) }}
+                        <div class="btn-wrap">
+                            <a href="{{ url('mypage') }}" class="border-btn">戻る</a>
+                            <button type="submit" class="btn" name="mode" value="complete">確認画面へ進む</a>
+                        </div>
+                        {#<div class="ec-off4Grid">#}
+                        {#    <div class="ec-off4Grid__cell">#}
+                        {#        <a class="ec-withdrawConfirmRole__cancel ec-blockBtn--cancel" href="{{ url('mypage') }}">#}
+                        {#            {{ 'いいえ、退会しません'|trans }}#}
+                        {#        </a>#}
+                        {#        <button type="submit" class="ec-blockBtn" name="mode"#}
+                        {#                value="complete">{{ 'はい、退会します'|trans }}#}
+                        {#        </button>#}
+                        {#    </div>#}
+                        {#</div>#}
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+{% endblock %}

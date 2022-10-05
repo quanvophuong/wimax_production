@@ -1,0 +1,819 @@
+{% extends '@admin/default_frame.twig' %}
+
+{% set menus = ['store', 'plugin', 'plugin_list'] %}
+
+{% block title %}GreenFormプラグイン 設定{% endblock %}
+{% block sub_title %}{% endblock %}
+
+{% form_theme form '@admin/Form/bootstrap_4_horizontal_layout.html.twig' %}
+
+{% block stylesheet %}{% endblock stylesheet %}
+
+{% block javascript %}{% endblock javascript %}
+
+{% block main %}
+    <style>
+        .hsd-description-area-li {
+            font-weight: bold;
+        }
+
+        /* タブのスタイル */
+        .tabs {
+            margin-top: 50px;
+            padding-bottom: 40px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            width: 80%;
+            margin: 0 auto;
+        }
+        .tab_item {
+            width: calc(100%/3);
+            height: 50px;
+            border-bottom: 3px solid #2EA122;
+            background-color: #d9d9d9;
+            line-height: 50px;
+            font-size: 16px;
+            text-align: center;
+            color: #565656;
+            display: block;
+            float: left;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            cursor: hand;
+        }
+        .tab_item:hover {
+            opacity: 0.75;
+        }
+        input[name="tab_item"] {
+            display: none;
+        }
+        .tab_content {
+            display: none;
+            padding: 40px 40px 0;
+            clear: both;
+            overflow: hidden;
+        }
+        #create_mag:checked ~ #create_mag_content,
+        #setting:checked ~ #setting_content,
+        #greenform_tab:checked ~ #greenform_tab_content {
+            display: block;
+        }
+        .tabs input:checked + .tab_item {
+            background-color: #2EA122;
+            color: #fff;
+        }
+
+        /* メルマガ用記事作成 */
+        .hsd-make-article-row {
+            margin-top: 5px;
+        }
+
+        .self-building-square-spinner, .self-building-square-spinner * {
+            box-sizing: border-box;
+        }
+        .self-building-square-spinner {
+            height: 40px;
+            width: 40px;
+            top: calc( -10px * 2 / 3);
+        }
+        .self-building-square-spinner .square {
+            height: 10px;
+            width: 10px;
+            top: calc( -10px * 2 / 3);
+            margin-right: calc(10px / 3);
+            margin-top: calc(10px / 3);
+            background: #ff1d5e;
+            float: left;
+            position:relative;
+            opacity: 0;
+            animation: self-building-square-spinner 6s infinite;
+        }
+        .self-building-square-spinner .square:nth-child(1) {
+            animation-delay: calc(300ms * 6);
+        }
+        .self-building-square-spinner .square:nth-child(2) {
+            animation-delay: calc(300ms * 7);
+        }
+        .self-building-square-spinner .square:nth-child(3) {
+            animation-delay: calc(300ms * 8);
+        }
+        .self-building-square-spinner .square:nth-child(4) {
+            animation-delay: calc(300ms * 3);
+        }
+        .self-building-square-spinner .square:nth-child(5) {
+            animation-delay: calc(300ms * 4);
+        }
+        .self-building-square-spinner .square:nth-child(6) {
+            animation-delay: calc(300ms * 5);
+        }
+        .self-building-square-spinner .square:nth-child(7) {
+            animation-delay: calc(300ms * 0);
+        }
+        .self-building-square-spinner .square:nth-child(8) {
+            animation-delay: calc(300ms * 1);
+        }
+        .self-building-square-spinner .square:nth-child(9) {
+            animation-delay: calc(300ms * 2);
+        }
+        .self-building-square-spinner .clear{
+            clear: both;
+        }
+        @keyframes self-building-square-spinner {
+            0% {
+                opacity: 0;
+            }
+            5% {
+                opacity: 1;
+                top: 0;
+            }
+            50.9% {
+                opacity: 1;
+                top: 0;
+            }
+            55.9% {
+                opacity: 0;
+                top: inherit;
+            }
+        }
+    </style>
+
+    <!-- bootstrap datepicker -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.ja.min.js"></script>
+
+    <!-- アンケート -->
+    <div class="modal fade" id="anq_modal1" tabindex="-1"
+         role="dialog" aria-labelledby="label1" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="label1" style="margin: 0 auto; padding-top: 20px;">アンケートにご協力くださいませ！</h5><img src="{{ asset('HsdGreenFormPg/assets/form_san.png', 'plugin') }}" style="width: 80px;"/>
+                </div>
+                <div class="modal-body">
+                    <iframe src="https://greenform.jp/fl/contact/348860ff559c901ee" id="greenform" seamless="seamless" style="border:none; width:100%; height: 500px;"></iframe>
+                    <script src="https://greenform.jp/form/js/recivechild.js"></script>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="anq_skip(0);">スキップ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GreenFormログイン案内 -->
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        GreenFormへは、メールアドレス（ログインID）「{{ gf_id }}@greenform.jp」、パスワード「{{ gf_pw }}」でログインできます。ログイン後にパスワードを変更できます。（全機能を30日間無料でご利用できます。ご利用料金は<a href="https://mailform-greenform.jp/lp/#price" target="_new">こちら</a>をご覧くださいませ。）<br>
+        表示のメールアドレス（ログインID）、パスワードでうまくログインが行えない場合は、<a href="https://admin.greenform.jp/users/add" target="_blank">こちら</a>よりID・パスワードをGreenFormへご登録くださいませ。<br>
+        すでにGreenFormのアカウントを既にお持ちの方は、お持ちのアカウントでご利用可能です。
+    </div>
+
+    <div class="tabs">
+        <input id="greenform_tab" type="radio" name="tab_item" checked>
+        <label class="tab_item" for="greenform_tab">GreenForm</label>
+        <input id="setting" type="radio" name="tab_item">
+        <label class="tab_item" for="setting">設定</label>
+        <input id="create_mag" type="radio" name="tab_item">
+        <label class="tab_item" for="create_mag">記事作成</label>
+
+        <!-- GreenForm -->
+        <div class="tab_content" id="greenform_tab_content">
+            <div class="tab_content_description">
+                <iframe src="https://admin.greenform.jp" style="width: 100%; border: none;" id="greenform_tab_in"></iframe>
+            </div>
+        </div>
+
+        <!-- 設定 -->
+        <div class="tab_content" id="setting_content">
+            <div class="tab_content_description">
+                <a href="#hsd-description-area" style="margin-left: 15px; line-height: 30px;">各項目の説明はこちら</a>
+                <form role="form" method="post">
+
+                    {{ form_widget(form._token) }}
+
+                    <div class="c-contentsArea__cols">
+                        <div class="c-contentsArea__primaryCol">
+                            <div class="c-primaryCol">
+                                <div class="card rounded border-0 mb-4">
+                                    <div class="card-header"><span>各ページGreenFormの設定</span></div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームID 1 <span class="text-danger">*</span></span><span
+                                                        class="badge badge-primary ml-1">必須</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.greenform_id_1) }}
+                                                {{ form_errors(form.greenform_id_1) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームの高さ 1(px) <span class="text-danger">*</span></span><span
+                                                        class="badge badge-primary ml-1">必須</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.form_height_1) }}
+                                                {{ form_errors(form.form_height_1) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>設置ページ 1 <span class="text-danger">*</span></span><span
+                                                        class="badge badge-primary ml-1">必須</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.route_1) }}
+                                                {{ form_errors(form.route_1) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- form2 -->
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームID 2</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.greenform_id_2) }}
+                                                {{ form_errors(form.greenform_id_2) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームの高さ 2(px)</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.form_height_2) }}
+                                                {{ form_errors(form.form_height_2) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>設置ページ 2</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.route_2) }}
+                                                {{ form_errors(form.route_2) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- form3 -->
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームID 3</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.greenform_id_3) }}
+                                                {{ form_errors(form.greenform_id_3) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームの高さ 3(px)</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.form_height_3) }}
+                                                {{ form_errors(form.form_height_3) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>設置ページ 3</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.route_3) }}
+                                                {{ form_errors(form.route_3) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- form4 -->
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームID 4</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.greenform_id_4) }}
+                                                {{ form_errors(form.greenform_id_4) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームの高さ 4(px)</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.form_height_4) }}
+                                                {{ form_errors(form.form_height_4) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>設置ページ 4</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.route_4) }}
+                                                {{ form_errors(form.route_4) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- form5 -->
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームID 5</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.greenform_id_5) }}
+                                                {{ form_errors(form.greenform_id_5) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームの高さ 5(px)</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.form_height_5) }}
+                                                {{ form_errors(form.form_height_5) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>設置ページ 5</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.route_5) }}
+                                                {{ form_errors(form.route_5) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- form6 -->
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームID 6</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.greenform_id_6) }}
+                                                {{ form_errors(form.greenform_id_6) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームの高さ 6(px)</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.form_height_6) }}
+                                                {{ form_errors(form.form_height_6) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>設置ページ 6</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.route_6) }}
+                                                {{ form_errors(form.route_6) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- form7 -->
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームID 7</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.greenform_id_7) }}
+                                                {{ form_errors(form.greenform_id_7) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームの高さ 7(px)</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.form_height_7) }}
+                                                {{ form_errors(form.form_height_7) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>設置ページ 7</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.route_7) }}
+                                                {{ form_errors(form.route_7) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- form8 -->
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームID 8</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.greenform_id_8) }}
+                                                {{ form_errors(form.greenform_id_8) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームの高さ 8(px)</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.form_height_8) }}
+                                                {{ form_errors(form.form_height_8) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>設置ページ 8</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.route_8) }}
+                                                {{ form_errors(form.route_8) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- form9 -->
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームID 9</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.greenform_id_9) }}
+                                                {{ form_errors(form.greenform_id_9) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームの高さ 9(px)</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.form_height_9) }}
+                                                {{ form_errors(form.form_height_9) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>設置ページ 9</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.route_9) }}
+                                                {{ form_errors(form.route_9) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- form10 -->
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームID 10</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.greenform_id_10) }}
+                                                {{ form_errors(form.greenform_id_10) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームの高さ 10(px)</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.form_height_10) }}
+                                                {{ form_errors(form.form_height_10) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>設置ページ 10</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.route_10) }}
+                                                {{ form_errors(form.route_10) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- form11 -->
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームID 11</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.greenform_id_11) }}
+                                                {{ form_errors(form.greenform_id_11) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームの高さ 11(px)</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.form_height_11) }}
+                                                {{ form_errors(form.form_height_11) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>設置ページ 11</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.route_11) }}
+                                                {{ form_errors(form.route_11) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- form12 -->
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームID 12</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.greenform_id_12) }}
+                                                {{ form_errors(form.greenform_id_12) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームの高さ 12(px)</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.form_height_12) }}
+                                                {{ form_errors(form.form_height_12) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>設置ページ 12</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.route_12) }}
+                                                {{ form_errors(form.route_12) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- form13 -->
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームID 13</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.greenform_id_13) }}
+                                                {{ form_errors(form.greenform_id_13) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームの高さ 13(px)</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.form_height_13) }}
+                                                {{ form_errors(form.form_height_13) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>設置ページ 13</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.route_13) }}
+                                                {{ form_errors(form.route_13) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- form14 -->
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームID 14</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.greenform_id_14) }}
+                                                {{ form_errors(form.greenform_id_14) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームの高さ 14(px)</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.form_height_14) }}
+                                                {{ form_errors(form.form_height_14) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>設置ページ 14</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.route_14) }}
+                                                {{ form_errors(form.route_14) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- form15 -->
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームID 15</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.greenform_id_15) }}
+                                                {{ form_errors(form.greenform_id_15) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>フォームの高さ 15(px)</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.form_height_15) }}
+                                                {{ form_errors(form.form_height_15) }}
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-3"><span>設置ページ 15</span></div>
+                                            <div class="col mb-2">
+                                                {{ form_widget(form.route_15) }}
+                                                {{ form_errors(form.route_15) }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card-body" id="hsd-description-area">
+                                        <div class="row">
+                                            <div class="wall">
+                                                <h3 class="page-header">各項目の説明</h3>
+                                                <ul>
+                                                    <li class="hsd-description-area-li">【GreenFormの顧客リストに登録】</li>
+                                                    <li>
+                                                        <p>
+                                                            GreenForm連携（GreenForm管理画面の「設定」で連携します）がされている場合に下記の動作を行います。<br />
+                                                            登録する：GreenFormの顧客リストに購入者の氏名・メールアドレスを登録します。<br />
+                                                            登録しない：GreenFormの顧客リストに登録しません。
+                                                        </p>
+                                                    </li>
+                                                    <li class="hsd-description-area-li">【顧客リストが所属するフォームID】</li>
+                                                    <li>
+                                                        <p>
+                                                            上記の【GreenFormの顧客リストに登録】が「登録する」の場合に、登録先の顧客リストが存在するフォームIDを設定します。
+                                                        </p>
+                                                    </li>
+                                                    <li class="hsd-description-area-li">【フォームの高さ *(px)】</li>
+                                                    <li>
+                                                        <p>
+                                                            フォームの表示する領域の高さを、ピクセル（px）で指定します。<br />
+                                                        </p>
+                                                    </li>
+                                                    <li class="hsd-description-area-li">【設置ページ *(px)】</li>
+                                                    <li>
+                                                        <p>
+                                                            GreenFormを表示するページを設定いたします。<br />
+                                                        </p>
+                                                    </li>
+
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card rounded border-0 mb-4">
+                                <div class="card-header"><span>EC-CUBEの受注が完了した時のアクション</span></div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <span>GreenFormの顧客リストに登録 <span class="text-danger">*</span></span>
+                                        </div>
+                                        <div class="col mb-2">
+                                            {{ form_widget(form.order_to_greenformreg) }}
+                                            {{ form_errors(form.order_to_greenformreg) }}
+                                            ※氏名とメールアドレスのみ登録されます
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-3"><span>顧客リストが所属するフォームID</span></div>
+                                        <div class="col mb-2">
+                                            {{ form_widget(form.og_greenform_id) }}
+                                            {{ form_errors(form.og_greenform_id) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="c-conversionArea">
+                        <div class="c-conversionArea__container">
+                            <div class="row justify-content-between align-items-center">
+                                <div class="col-6">
+                                    <div class="c-conversionArea__leftBlockItem">
+                                        <a class="c-baseLink"
+                                           href="{{ url('admin_store_plugin') }}">
+                                            <i class="fa fa-backward" aria-hidden="true"></i>
+                                            <span>プラグイン一覧</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="row align-items-center justify-content-end">
+                                        <div class="col-auto">
+                                            <button class="btn btn-ec-conversion px-5"
+                                                    type="submit">登録</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- メルマガ用記事作成 -->
+        <div class="tab_content" id="create_mag_content">
+            <div class="tab_content_description">
+                <div class="row">
+                    <div class="col-12">
+                        <h3>売れ筋商品の記事</h3>
+                    </div>
+                </div>
+                <div class="row hsd-make-article-row">
+                    <div class="col-3">
+                        GreenForm ID・パスワード
+                    </div>
+                    <div class="col-5">
+                        <input type="text" id="hsd_greenform_id" class="form-control" value="{{ gf_id }}@greenform.jp" placeholder="GreenForm ID(メールアドレス)" />
+                    </div>
+                    <div class="col-4">
+                        <input type="password" id="hsd_greenform_pw" class="form-control" value="{{ gf_pw }}" placeholder="GreenForm パスワード" />
+                    </div>
+                </div>
+                <div class="row hsd-make-article-row">
+                    <div class="col-3">
+                        GreenForm フォームID
+                    </div>
+                    <div class="col-9">
+                        <input type="text" id="hsd_greenform_formid" class="form-control" value="" placeholder="例）05405d9c63859d94e など" />
+                    </div>
+                </div>
+                <div class="row hsd-make-article-row">
+                    <div class="col-3">
+                        オーダーの集計期間
+                    </div>
+                    <div class="col-9">
+                        <div class="input-daterange input-group" id="datepicker">
+                            <input type="text" class="input-sm form-control" name="agg_start" id="hsd_greenform_agg_start" />
+                            <span class="input-group-addon">　〜　</span>
+                            <input type="text" class="input-sm form-control" name="agg_end" id="hsd_greenform_agg_end" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row hsd-make-article-row">
+                    <div class="col-3">
+                        記事にする商品数
+                    </div>
+                    <div class="col-9">
+                        <input type="number" id="hsd_greenform_count" class="form-control" value="10" />
+                    </div>
+                </div>
+                <div class="row hsd-make-article-row">
+                    <div class="col-12 text-center">
+                        <button onclick="save_mag(this);">記事作成</button>
+                    </div>
+                </div>
+                <div class="row hsd-make-article-row" id="hsd_make_article_info">
+                    <div class="col-12 text-center">
+                        <span id="hsd_make_article_info_mes"></span>
+                        <!-- ローディングスピナー -->
+                        <div class="self-building-square-spinner" style="display: none; margin: 0 auto;" id="hsd_make_article_load_spinner">
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square clear"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                            <div class="square clear"></div>
+                            <div class="square"></div>
+                            <div class="square"></div>
+                        </div>
+                        <!-- ローディングスピナー -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var h = $(window).height();
+        $('#greenform_tab_in').height(h);
+
+        $('#create_mag_content .input-daterange').datepicker({
+            format: "yyyy-mm-dd",
+            todayBtn: "linked",
+            language: "ja",
+            orientation: "bottom right"
+        });
+
+        // 売れ筋商品の記事
+        function save_mag(obj){
+            $('#hsd_make_article_info_mes').text('記事作成中...');
+            $('#hsd_make_article_info_mes').css('color', '#F00');
+            $('#hsd_make_article_load_spinner').css('display', 'block');
+            var agg_start = $('#hsd_greenform_agg_start').val();
+            var agg_end = $('#hsd_greenform_agg_end').val();
+            var gf_id = $('#hsd_greenform_id').val();
+            var gf_pw = $('#hsd_greenform_pw').val();
+            var gf_formid = $('#hsd_greenform_formid').val();
+            var gf_count = $('#hsd_greenform_count').val();
+            // ローダー表示
+            // 保存
+            $.ajax( {
+                url: "{{ url('admin_homepage') }}hsd_green_form/save_mag",
+                type:'POST',
+                dataType: 'json',
+                data: { agg_start: agg_start, agg_end: agg_end , gf_id: gf_id, gf_pw: gf_pw, gf_formid: gf_formid, gf_count: gf_count },
+                success: function( data ) {
+                    $('#hsd_make_article_load_spinner').css('display', 'none'); // ローダ非表示
+                    console.log(data);
+                    if(data.status == '0'){
+                        $('#hsd_make_article_info_mes').text('記事を作成しました。GreenFormの該当フォーム(フォームID：' + gf_formid + ')の、「メルマガをつくる」をご覧ください。記事が作成されていない場合は上記項目をご確認いただき、再度お試しくださいませ。');
+                        $('#hsd_make_article_info_mes').css('color', '#2EA122');
+                    }else{
+                        $('#hsd_make_article_info_mes').text('記事の作成に失敗しました。');
+                        $('#hsd_make_article_info_mes').css('color', '#F00');
+                    }
+                    console.log(data);
+                },
+                error: function( data ) {
+                    console.log('save mag error.');
+                    console.log(data);
+                    $('#hsd_make_article_load_spinner').css('display', 'none'); // ローダ非表示
+                    $('#hsd_make_article_info_mes').text('記事の作成に失敗しました。');
+                    $('#hsd_make_article_info_mes').css('color', '#F00');
+                }
+            });
+        }
+
+        function anq_skip(kind){
+            if( kind == 0 ){
+                document.cookie = "hsd_gfplg_anqskip=true;max-age=7776000";
+            }else{
+                document.cookie = "hsd_gfplg_anqskip=true;max-age=94608000"; // 1年
+            }
+        }
+
+        $().ready(function(){
+            // アンケート表示
+            var cookies = document.cookie;
+            var cookiesArray = cookies.split(';');
+            var is_anq_skip = false;
+            for(var c of cookiesArray){
+                var cArray = c.split('=');
+                if( cArray[0] == 'hsd_gfplg_anqskip'){
+                    is_anq_skip = true;
+                    break;
+                }
+            }
+            if( !is_anq_skip ){
+                $('#anq_modal1').modal('show');
+            }
+        });
+    </script>
+{% endblock %}

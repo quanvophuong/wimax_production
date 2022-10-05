@@ -1,0 +1,498 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+{% extends 'default_frame.twig' %}
+
+{% set body_class = 'front_page' %}
+
+{% block stylesheet %}
+    <style>
+        .ec-layoutRole__contents{
+            max-width: 100% !important;
+        }
+        @media screen and (max-width: 640px){
+            #wrap main {
+                width: 100% !important;
+                
+            }
+            #wrap main .formContent{
+                width: 92% !important;
+            }
+        }
+       
+        .slick-slider {
+            margin-bottom: 30px;
+        }
+
+        .slick-dots {
+            position: absolute;
+            bottom: -45px;
+            display: block;
+            width: 100%;
+            padding: 0;
+            list-style: none;
+            text-align: center;
+        }
+
+        .slick-dots li {
+            position: relative;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin: 0 5px;
+            padding: 0;
+
+            cursor: pointer;
+        }
+
+        .slick-dots li button {
+            font-size: 0;
+            line-height: 0;
+            display: block;
+            width: 20px;
+            height: 20px;
+            padding: 5px;
+            cursor: pointer;
+            color: transparent;
+            border: 0;
+            outline: none;
+            background: transparent;
+        }
+
+        .slick-dots li button:hover,
+        .slick-dots li button:focus {
+            outline: none;
+        }
+
+        .slick-dots li button:hover:before,
+        .slick-dots li button:focus:before {
+            opacity: 1;
+        }
+
+        .slick-dots li button:before {
+            content: " ";
+            line-height: 20px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            text-align: center;
+            opacity: .25;
+            background-color: black;
+            border-radius: 50%;
+
+        }
+
+        .slick-dots li.slick-active button:before {
+            opacity: .75;
+            background-color: black;
+        }
+
+        .slick-dots li button.thumbnail img {
+            width: 0;
+            height: 0;
+        }
+
+        #page_homepage .ec-layoutRole__contents{
+            max-width: none !important;
+            display: flex;
+            justify-content: space-between;
+        }
+        #select #wrap {
+            width: calc(100% - 300px);
+        }
+    </style>
+{% endblock %}
+
+{% block javascript %}
+    <script>
+        //sp total toggle
+        $(function () {
+            $('.displayBtn').click(function () {
+                $(this).toggleClass("add");
+                $('.displayArea').slideToggle();
+            });
+        });
+        $(function() {
+            $('.main_visual').slick({
+                dots: true,
+                arrows: false,
+                autoplay: true,
+                speed: 300
+            });
+        });
+        function getNextMonday(date = new Date()) {
+            const dateCopy = new Date(date.getTime());
+
+            const nextMonday = new Date(
+                dateCopy.setDate(
+                    dateCopy.getDate() + ((7 - dateCopy.getDay() + 1) % 7 || 7),
+                ),
+            );
+
+            return nextMonday;
+        }
+
+        function getFirstDayOfNextMonth() {
+            const date = new Date();
+            return new Date(date.getFullYear(), date.getMonth() + 1, 1);
+        }
+        $(function () {
+
+            var current = new Date();
+            var weekday = current.getDay();
+            var month, day;
+            if(weekday == 6 || weekday == 0){
+                var nextMon = getNextMonday(current);
+                month = nextMon.getMonth() + 1;
+                day = nextMon.getDate();
+                console.log(nextMon);
+            }
+            else{
+                if(current.getHours() < 13){
+                    month = current.getMonth() + 1;
+                    day = current.getDate();
+                }
+                else{
+                    current.setTime(current.getTime() + 86400000);
+                    month = current.getMonth() + 1;
+                    day = current.getDate();
+                }
+
+            }
+
+            var txt = month + '月' + day + '日発送予定';
+            $('#current_month').text(txt);
+
+            var nextMonth = getFirstDayOfNextMonth();
+            var nextWeekDay = nextMonth.getDay();
+            month = nextMonth.getMonth() + 1;
+            day = 1;
+            if(nextWeekDay == 6){
+                day = 3;
+            }
+            else if(nextWeekDay == 0){
+                day = 2;
+            }
+            txt = month + '月' + day + '日発送予定';
+            $('#next_month').text(txt);
+
+            $('[name=tab_item]').click(function () {
+                var option = 0;
+                if($("input[name='option']:checked").val() != undefined)
+                    option = parseInt($("input[name='option']:checked").val());
+                if($(this).val() == 4){
+                    $("#noneUsb").attr('checked', true).trigger('click');
+                    $('#usb_part').hide();
+                    $('#usb_value').text('0円')
+                    let total = 8100 + option;
+                    let next = 4800 + option;
+                    $('#option_value').text(option.toLocaleString() + '円')
+                    $('#total').val(total);
+                    $('#next').val(next);
+                    $('#total_value').text(total.toLocaleString() + '円')
+                    $('#next_total').text(next.toLocaleString() + '円')
+                }
+                else{
+                    $('#usb_part').show();
+                    var usb = 0;
+                    if($("input[name='usb']:checked").val() != undefined)
+                        usb = parseInt($("input[name='usb']:checked").val());
+                    $('#usb_value').text( usb.toLocaleString() +'円')
+                    $('#option_value').text(option.toLocaleString() + '円')
+                    let total = 8100 + usb+ option;
+                    let next = 4800 + option;
+                    $('#total').val(total);
+                    $('#next').val(next);
+                    $('#total_value').text(total.toLocaleString() + '円')
+                    $('#next_total').text(next.toLocaleString() + '円')
+                }
+
+            });
+            $('[name=option]').click(function () {
+                var usb = 0;
+                if($("input[name='usb']:checked").val() != undefined)
+                    usb = parseInt($("input[name='usb']:checked").val());
+                let total = 8100 + usb + parseInt($(this).val());
+                let next = 4800 + parseInt($(this).val());
+                $('#option_value').text($(this).val() + '円')
+                $('#total').val(total);
+                $('#next').val(next);
+                $('#total_value').text(total.toLocaleString() + '円')
+                $('#next_total').text(next.toLocaleString() + '円')
+            });
+            $('[name=usb]').click(function () {
+                var option = 0;
+                if($("input[name='option']:checked").val() != undefined)
+                    option = parseInt($("input[name='option']:checked").val());
+                console.log(parseInt($(this).val()));
+                console.log(option);
+                let total = 8100 + parseInt($(this).val()) + option;
+                $('#usb_value').text(parseInt($(this).val()).toLocaleString() + '円')
+                $('#total').val(total);
+                $('#total_value').text(total.toLocaleString() + '円')
+            });
+
+            $('#moveCart').click(function (){
+                var $form = $('#productForm');
+                var product_id = $('input[name=tab_item]:checked').val();
+                var classcategory_id1 = parseInt($('input[name=option]:checked').val());
+                var classcategory_id2 = parseInt($('input[name=usb]:checked').val());
+                var ship = parseInt($('input[name=send]:checked').val());
+                $('#product_id').val(product_id);
+               
+                $('#ship').val(ship);
+                
+                if(classcategory_id1 == 550){
+                    classcategory_id1 = 7;
+                }
+                else if(classcategory_id1 == 275){
+                    classcategory_id1 = 8;
+                }
+                else{
+                    classcategory_id1 = 9;
+                }
+
+                if(classcategory_id2 == 1540){
+                    classcategory_id2 = 10;
+                }
+                else{
+                    classcategory_id2 = 11;
+                }
+
+                if(product_id == 3){
+                    var url = '{{ url('product_add_cart', {id:3}) }}'
+                    if(classcategory_id1 == 9){
+                        if(classcategory_id2 == 11){
+                            $('#ProductClass').val(14)
+                        }
+                        else{
+                            $('#ProductClass').val(15)
+                        }
+                    }
+                    if(classcategory_id1 == 8){
+                        if(classcategory_id2 == 11){
+                            $('#ProductClass').val(16)
+                        }
+                        else{
+                            $('#ProductClass').val(17)
+                        }
+                    }
+                    if(classcategory_id1 == 7){
+                        if(classcategory_id2 == 11){
+                            $('#ProductClass').val(18)
+                        }
+                        else{
+                            $('#ProductClass').val(19)
+                        }
+                    }
+
+                     $('#classcategory_id1').val(classcategory_id1);
+                    $('#classcategory_id2').val(classcategory_id2)
+                }
+                else{
+                    classcategory_id2 = 11;
+                    var url = '{{ url('product_add_cart', {id:4}) }}'
+                    if(classcategory_id1 == 9){
+                        if(classcategory_id2 == 11){
+                            $('#ProductClass').val(20)
+                        }
+                        else{
+                            $('#ProductClass').val(23)
+                        }
+                    }
+                    if(classcategory_id1 == 8){
+                        if(classcategory_id2 == 11){
+                            $('#ProductClass').val(21)
+                        }
+                        else{
+                            $('#ProductClass').val(24)
+                        }
+                    }
+                    if(classcategory_id1 == 7){
+                        if(classcategory_id2 == 11){
+                            $('#ProductClass').val(22)
+                        }
+                        else{
+                            $('#ProductClass').val(25)
+                        }
+                    }
+                     $('#classcategory_id1').val(classcategory_id2);
+                    $('#classcategory_id2').val(classcategory_id1)
+                }
+
+                $.ajax({
+                    url: url,
+                    type: $form.attr('method'),
+                    data: $form.serialize(),
+                    dataType: 'json',
+                    beforeSend: function(xhr, settings) {
+                        // Buttonを無効にする
+                        $('#moveCart').prop('disabled', true);
+                    }
+                }).done(function(data) {
+                    window.location.href = '{{ url('cart') }}'
+                }).fail(function(data) {
+                     alert('{{ 'カートへの追加に失敗しました。'|trans }}');
+                })
+            });
+        });
+    </script>
+{% endblock javascript %}
+
+{% block main %}
+    <div id="wrap" class="formBg">
+        <main style="width: calc(100vw - 300px);">
+            <section class="formContent" style="max-width: 860px;">
+                <h2>端末を選択する</h2>
+                <form action="">
+                    <div class="tabs">
+                        <input id="all" type="radio" name="tab_item" value="3" checked>
+                        <label class="tab_item" for="all">モバイルルーター</label>
+                        <input id="design" type="radio" name="tab_item" value="4">
+                        <label class="tab_item" for="design">ホームルーター</label>
+                        <div class="tab_content" id="all_content">
+                            <div class="boxL">
+                                <img src="/html/user_data/assets/img/common/mobile_img.png" alt="mobile">
+                            </div>
+                            <div class="boxR">
+                                <h4>モバイルプラン</h4>
+                                <ul>
+                                    <li>製品名：Galaxy 5G Mobile Wi-Fi</li>
+                                    <li>重量：約203g</li>
+                                    <li>サイズ：約W147×H76×D10.9mm</li>
+                                    <li>連続通信時間：約1,000分</li>
+                                    <li>（初期設定時・連続待受時間：約790時間（初期設定時）</li>
+                                    <li>Wi-Fi規格：IEEE802.11a/n/ac（5GHz）、IEEE802.11b/g/n（2.4GHz）</li>
+                                    <li>最大通信速度：下り速度 最大2.2Gbps、上り速度 最大183Mbps</li>
+                                    <li>最大接続台数：10台</li>
+                                    <li>充電ポート：USB 3.0 Type-C</li>
+                                    <li>バッテリー容量：5,000mAh</li>
+                                </ul>
+                                <div class="text">
+                                    ※本製品にはACアダプタが付属されておりません。ご希望の場合は、ご注文画面で購入頂けます。
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab_content" id="design_content">
+                            <div class="boxL">
+                                <img src="/html/user_data/assets/img/common/mobile_img.png" alt="mobile">
+                            </div>
+                            <div class="boxR">
+                                <h4>ホームプラン</h4>
+                                <ul>
+                                    <li>製品名：Speed Wi-Fi HOME 5G L12</li>
+                                    <li>重量：約446g</li>
+                                    <li>サイズ：約W101×H179×D99mm</li>
+                                    <li>Wi-Fi規格：IEEE802.11a/b/g/n/ac/ax（2.4GHz/5GHz）</li>
+                                    <li>最大通信速度：下り速度 最大2.7Gbps、上り速度 最大183Mbps</li>
+                                    <li>最大接続台数：40台（2.4GHz:20台/5GHz:20台）</li>
+                                    <li>充電ポート：専用AC</li>
+                                    <li>付属品：専用ACアダプター</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="formContentBlock">
+                        <h3>安心補償オプションを選択</h3>
+                        <div class="formContentBlock__text">端末の故障・破損・水濡れ・紛失・盗難・バッテリーの劣化など、様々な原因のトラブルに適用
+                            される万が一の時も「あんしん」できる端末補償サービスです。</div>
+                        <input type="radio" id="free" name="option" value="550" checked>
+                        <label for="free">
+                            <em>フリー補償</em>
+                            <span>＋550円(税込)／月</span>
+                        </label>
+                        <input type="radio" id="light" name="option" value="275">
+                        <label for="light">
+                            <em>ライト補償</em>
+                            <span>＋275円(税込)／月</span>
+                        </label>
+                        <input type="radio" id="noneOption" name="option" value="0">
+                        <label for="noneOption">
+                            <em>補償なし</em>
+                        </label>
+                        <ul>
+                            <li>※安心補償オプションは、ご契約時のみご加入いただけます。</li>
+                            <li>※ご契約後の解約、フルからライトプランへの変更は可能ですが、再加入はできませんのでご了承ください。</li>
+                        </ul>
+                    </div>
+                    <div class="formContentBlock" id="usb_part">
+                        <h3>USB ACアダプター</h3>
+{#                        <div class="formContentBlock__text">Anker PowerPort mini：2A 12W 2ポート USB急速充電器<br>#}
+{#                            【折りたたみ式プラグ/PowerIQ/超コンパクトサイズ 】iPhone iPad Android各種対応</div>#}
+                        <div class="formContentBlock__text">ケーブル一体型充電器　Type-C</div>
+                        <input type="radio" id="buyUsb" name="usb" value="1540" checked>
+                        <label for="buyUsb">
+                            <em>購入する</em>
+                            <span>＋1,540円(税込)</span>
+                        </label>
+                        <input type="radio" id="noneUsb" name="usb" value="0">
+                        <label for="noneUsb">
+                            <em>購入しない</em>
+                        </label>
+                        <ul>
+{#                            <li>✔3000万人以上が支持する充電製品No.1ブランドを是非お試しください｡</li>#}
+{#                            <li>✔Anker独自のPowerIQにより、フルスピード充電が可能です。</li>#}
+{#                            <li>※USBケーブルは付属しておりますが、ACアダプターは付属しておりません。</li>#}
+{#                            <li>※2AのACアダプターを推奨しております。</li>#}
+                            <li>※レンタル商品に充電用アダプター、ケーブルは付属しておりません。</li>
+                        </ul>
+                    </div>
+                    <div class="formContentBlock">
+                        <h3>お支払いを選択</h3>
+                        <input type="radio" id="creditcard" name="payment" value="" checked>
+                        <label for="creditcard">
+                            <em>クレジットカード</em>
+{#                            <span>※3Dセキュアサービス導入のクレジットカードはご利用できません。</span>#}
+                            <span>※デビットカード、プリペイドカードはご利用できません。</span>
+
+                        </label>
+                    </div>
+                    <div class="formContentBlock">
+                        <h3>発送希望日</h3>
+                        <input type="radio" id="short" name="send" value="1" checked>
+                        <label for="short">
+                            <em>最短発送</em>
+                            <span id="current_month"></span>
+                        </label>
+                        <input type="radio" id="next" name="send" value="2">
+                        <label for="next">
+                            <em>翌月</em>
+                            <span id="next_month"></span>
+                        </label>
+                        <ul>
+                            <li>※「翌月」発送をご選択の場合、ご注文時に初期費用のみ決済させていただきます。</li>
+                            <li>※ご注文が土日祝日の場合、翌営業日の発送となります。</li>
+                            <li>※営業日のご注文は、14時までが当日発送、14時以降が翌営業日発送となります。</li>
+                        </ul>
+                    </div>
+                </form>
+                <form id="productForm" name="form" method="post">
+                    <input type="hidden" id="classcategory_id1" name="classcategory_id1" value="9">
+                    <input type="hidden" id="classcategory_id2" name="classcategory_id2" value="11">
+                    <input type="hidden" id="product_id" name="product_id" value="3">
+                    <input type="hidden" id="ProductClass" name="ProductClass" value="14">
+                    <input type="hidden" id="quantity" name="quantity" value="1">
+                    <input type="hidden" id="ship" name="ship" value="1">
+                    <input type="hidden" name="_token" value="TCCpaSt87KKIpNQU5E6B-M2MsJp-htDYYXlAnq7VRZM">
+                </form>
+            </section>
+        </main>
+    </div>
+
+{#    <div class="ec-sliderRole">#}
+{#        <div class="main_visual">#}
+{#            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc01.jpg') }}"></div>#}
+{#            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc02.jpg') }}"></div>#}
+{#            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc03.jpg') }}"></div>#}
+{#        </div>#}
+{#    </div>#}
+{% endblock %}
