@@ -207,9 +207,7 @@ file that was distributed with this source code.
                                                    class="form-check-input"
                                                    value="{{ child.vars.value }}"{{ child.vars.checked ? ' checked="checked"' }}>
                                             <label class="form-check-label" for="{{ child.vars.id }}">{{ child.vars.label }}</label>
-                                            {%- if statusForm.vars.order_count[status_id].display -%}
-                                                (<a href="{{ url('admin_order', { 'order_status_id': status_id }) }}">{{ statusForm.vars.order_count[status_id].count }}</a>)
-                                            {%- endif %}
+                                            (<a href="{{ url('admin_order', { 'order_status_id': status_id }) }}">{{ statusForm.vars.order_count[status_id].count }}</a>)
                                         </div>
                                     {% endfor %}
                                 </div>
@@ -514,11 +512,15 @@ file that was distributed with this source code.
                                         </th>
                                         <th class="border-top-0 pt-2 pb-2 text-center">注文番号<a href="#" class="js-listSort" data-sortkey="orderer"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
                                         <th class="border-top-0 pt-2 pb-2 text-center text-nowrap">氏名<a href="#" class="js-listSort" data-sortkey="payment_method"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
-                                        <th class="border-top-0 pt-2 pb-2 text-center">ステータス<a href="#" class="js-listSort" data-sortkey="order_status"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
-                                        <th class="border-top-0 pt-2 pb-2 text-center">プラン名<a href="#" class="js-listSort" data-sortkey="purchase_price"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
-                                        <th class="border-top-0 pt-2 pb-2 text-center">ｵﾌﾟｼｮﾝ購入リスト</th>
-                                        <th class="border-top-0 pt-2 pb-2 text-center text-nowrap">クーポン<a href="#" class="js-listSort" data-sortkey="shipping_status"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
-                                        <th class="border-top-0 pt-2 pb-2 text-center">配送方法<a href="#" class="js-listSort" data-sortkey="tracking_number"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">対応状況<a href="#" class="js-listSort" data-sortkey="order_status"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">購入商品名<a href="#" class="js-listSort" data-sortkey="purchase_price"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">安心補償オプション<a href="#" class="js-listSort" data-sortkey="class_category1"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">USB ACアダプター<a href="#" class="js-listSort" data-sortkey="class_category2"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">購入金額</th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">お問い合わせ</th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">出荷状況</th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">お問い合わせ番号</th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">配送方法</th>
                                         <th class="border-top-0 pt-2 pb-2 text-center pr-3"></th>
                                     </tr>
                                     </thead>
@@ -559,11 +561,7 @@ file that was distributed with this source code.
                                                         {% for orderItem in shipping.productOrderItems %}
                                                             <dl>
                                                                 <dd>
-                                                                    {% if orderItem.productId != 3 %}
-                                                                        {{ orderItem.productClass.classCategory1 }}
-                                                                    {% else %}
-                                                                        {{ orderItem.productClass.classCategory2 }}
-                                                                    {% endif %}
+                                                                    {{ orderItem.productClass.classCategory1 }}
                                                                 </dd>
                                                             </dl>
                                                         {% endfor %}
@@ -571,7 +569,25 @@ file that was distributed with this source code.
                                                     {% endfor %}
                                                 </td>
                                                 <td class="align-middle text-center">
+                                                    {% for shipping in Order.shippings %}
+                                                        {% set idx = loop.index0 %}
+                                                        {% set isShowReducedTaxMess = false %}
 
+                                                        {% for orderItem in shipping.productOrderItems %}
+                                                            <dl>
+                                                                <dd>
+                                                                    {{ orderItem.productClass.classCategory2 }}
+                                                                </dd>
+                                                            </dl>
+                                                        {% endfor %}
+
+                                                    {% endfor %}
+                                                </td>
+                                                <td class="align-middle text-right">
+                                                    {{ Order.total|number_format('0', '.', ',') }}
+                                                </td>
+                                                <td class="align-middle text-left">
+                                                    {{ Order.message }}
                                                 </td>
                                                 <td class="align-middle text-center">
                                                     {% if Order.is_multiple %}
@@ -589,6 +605,19 @@ file that was distributed with this source code.
                                                         {% set send_mail_date = Shipping.mail_send_date|date_min %}
                                                         <i class="fa fa-envelope fa-lg text-secondary" aria-hidden="true" data-tooltip="true" data-placement="top" data-original-title="{{ 'admin.order.shipping_mail__completed'|trans({'%date%': send_mail_date}) }}"></i>
                                                     {% endif %}
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <div class="input-group input-group-sm">
+                                                        <input type="text" id="tracking_number_{{ Shipping.id }}" class="form-control update_tracking_number" placeholder="{{ 'admin.order.tracking_number'|trans }}" value="{{ Shipping.trackingNumber }}" data-shipping_id="{{ Shipping.id }}" data-url="{{ url('admin_shipping_update_tracking_number', { id : Shipping.id }) }}" tabindex="{{ loop.index }}"/>
+                                                        <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default update_tracking_number" data-target="#tracking_number_{{ Shipping.id }}">
+                                                        <i class="fa fa-check fa-lg text-secondary" aria-hidden="true"></i>
+                                                    </button>
+                                                </span>
+                                                    </div>
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    {{ Shipping.shipping_delivery_name }}
                                                 </td>
                                                 <td class="align-middle pr-3">
                                                     <div class="text-right">

@@ -28,21 +28,14 @@ if (!class_exists(OrderStatus::class, false)) {
      */
     class OrderStatus extends \Eccube\Entity\Master\AbstractMasterEntity
     {
-        /** 新規受付. */
         const NEW = 1;
-        /** 注文取消し. */
-        const CANCEL = 3;
-        /** 対応中. */
-        const IN_PROGRESS = 4;
-        /** 発送済み. */
-        const DELIVERED = 5;
-        /** 入金済み. */
+        const IN_PROGRESS = 2;
+        const PICKUP = 11;
         const PAID = 6;
-        /** 決済処理中. */
-        const PENDING = 7;
-        /** 購入処理中. */
+        const CANCEL = 3;
+        const DELIVERED = 5;
         const PROCESSING = 8;
-        /** 返品 */
+        const PENDING = 7;
         const RETURNED = 9;
 
         /**

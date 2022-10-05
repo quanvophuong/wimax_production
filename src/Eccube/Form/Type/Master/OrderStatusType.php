@@ -52,8 +52,9 @@ class OrderStatusType extends AbstractType
                 $view->vars['order_count'][$id]['display'] = true;
                 $view->vars['order_count'][$id]['count'] = $count;
             } else {
+                $count = $this->orderRepository->countByOrderStatus($id);
                 $view->vars['order_count'][$id]['display'] = false;
-                $view->vars['order_count'][$id]['count'] = null;
+                $view->vars['order_count'][$id]['count'] = $count;
             }
         }
     }

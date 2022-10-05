@@ -424,6 +424,7 @@ class OrderController extends AbstractController
                 $OrderItems = $Order->getOrderItems();
 
                 foreach ($OrderItems as $OrderItem) {
+                    if (!$OrderItem->isProduct()) continue;
                     $ExportCsvRow = new ExportCsvRow();
 
                     // CSV出力項目と合致するデータを取得.

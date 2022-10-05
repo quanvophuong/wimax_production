@@ -44,7 +44,17 @@ class OrderUpdateProcessor extends AbstractPurchaseProcessor
         if (!$target instanceof Order) {
             return;
         }
-        $OrderStatus = $this->orderStatusRepository->find(OrderStatus::NEW);
+        $OrderItems = $target->getOrderItems();
+        $OrderStatus = OrderStatus::NEW;
+        foreach($OrderItems as $OrderItem){
+            if (!$OrderItem->isProduct()) continue;
+            if ($OrderItem->getShip()==2){
+                $OrderStatus = OrderStatus::IN_PROGRESS;
+                break;
+            }
+        } 
+        
+        $OrderStatus = $this->orderStatusRepository->find($OrderStatus);
         $target->setOrderStatus($OrderStatus);
         $target->setOrderDate(new \DateTime());
     }

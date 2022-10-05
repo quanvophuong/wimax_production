@@ -44,6 +44,8 @@ class OrderRepository extends AbstractRepository
         ,'quantity' => 'oi.quantity'
         ,'payment_method' => 'o.payment_method'
         ,'order_status' => 'o.OrderStatus'
+        ,'class_category1' => 'pc1.sort_no'
+        ,'class_category2' => 'pc2.sort_no'
         ,'purchase_price' => 'o.total'
         ,'shipping_status' => 's.shipping_date'
         ,'tracking_number' => 's.tracking_number'
@@ -92,9 +94,12 @@ class OrderRepository extends AbstractRepository
     public function getQueryBuilderBySearchDataForAdmin($searchData)
     {
         $qb = $this->createQueryBuilder('o')
-            ->select('o, s')
+            ->select('o, s, pc,pc1,pc2')
             ->addSelect('oi', 'pref')
             ->leftJoin('o.OrderItems', 'oi')
+            ->leftJoin('oi.ProductClass', 'pc')
+            ->leftJoin('pc.ClassCategory1', 'pc1')
+            ->leftJoin('pc.ClassCategory2', 'pc2')
             ->leftJoin('o.Pref', 'pref')
             ->innerJoin('o.Shippings', 's');
 

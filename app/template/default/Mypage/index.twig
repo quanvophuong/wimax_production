@@ -51,23 +51,15 @@ file that was distributed with this source code.
                                                 {% for orderItem in shipping.productOrderItems %}
                                                     <dl>
                                                         <dt>{{ orderItem.productName }}</dt>
-                                                        <dd>¥ 4,950</dd>
+                                                        <dd>¥ 4,800</dd>
                                                     </dl>
                                                     <dl>
                                                         <dt>オプション</dt>
                                                         <dd>
-                                                            {% if orderItem.productId != 3 %}
-                                                                {% if orderItem.productClass.classCategory1 == 'フリー補償' %}
-                                                                    ¥ 550
-                                                                {% elseif orderItem.productClass.classCategory1 == 'ライト補償' %}
-                                                                    ¥ 275
-                                                                {% endif %}
-                                                            {% else %}                                                                
-                                                                {% if orderItem.productClass.classCategory2 == 'フリー補償' %}
-                                                                    ¥ 550
-                                                                {% elseif orderItem.productClass.classCategory2 == 'ライト補償' %}
-                                                                    ¥ 275
-                                                                {% endif %}
+                                                            {% if orderItem.productClass.classCategory1 == 'フリー補償' %}
+                                                                ¥ 550
+                                                            {% elseif orderItem.productClass.classCategory1 == 'ライト補償' %}
+                                                                ¥ 275
                                                             {% endif %}
                                                         </dd>
                                                     </dl>
@@ -82,7 +74,7 @@ file that was distributed with this source code.
                                 </td>
                                 <td>
                                     <div class="nextTotal">
-                                        <span class="date">{{ Order.order_date|date_sec }}</span>
+                                        <span class="date">{{ 'now'|date_modify("+#{1} months")|date("Y年m月1日") }}</span>
                                         <span class="price">{{ Order.subtotal|price }}</span>
                                     </div>
                                     <div class="deviceNo">端末番号：{{ Order.order_no }}</div>

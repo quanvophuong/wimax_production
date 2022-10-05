@@ -433,7 +433,9 @@ class ShoppingController extends AbstractShoppingController
             //   'done' => true,
             //   'messages' => "success",
             //]);
-            return $this->redirectToRoute('user_thanks');
+            
+            return $this->redirectToRoute('shopping_complete');
+            // return $this->redirectToRoute('user_thanks');
         }
 
         log_info('[注文処理] フォームエラーのため, 購入エラー画面へ遷移します.', [$Order->getId()]);
