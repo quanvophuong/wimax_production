@@ -28,9 +28,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Eccube\Repository\OrderRepository;
 
 class WithdrawController extends AbstractController
 {
+    /** @var OrderRepository */
+    private $orderRepository;
     /**
      * @var MailService
      */
@@ -77,7 +80,8 @@ class WithdrawController extends AbstractController
         TokenStorageInterface $tokenStorage,
         CartService $cartService,
         OrderHelper $orderHelper,
-        PageRepository $pageRepository
+        PageRepository $pageRepository, 
+        OrderRepository $orderRepository
     ) {
         $this->mailService = $mailService;
         $this->customerStatusRepository = $customerStatusRepository;
@@ -85,6 +89,7 @@ class WithdrawController extends AbstractController
         $this->cartService = $cartService;
         $this->orderHelper = $orderHelper;
         $this->pageRepository = $pageRepository;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -110,60 +115,97 @@ class WithdrawController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($request->get('mode')) {
-                case 'confirm':
-                    log_info('退会確認画面表示');
+        // if ($form->isSubmitted() && $form->isValid()) {
+        //     switch ($request->get('mode')) {
+        //         case 'confirm':
+        //             log_info('退会確認画面表示');
 
-                    return $this->render(
-                        'Mypage/withdraw_confirm.twig',
-                        [
-                            'form' => $form->createView(),
-                            'Page' => $this->pageRepository->getPageByRoute('mypage_withdraw_confirm'),
-                        ]
-                    );
+        //             return $this->render(
+        //                 'Mypage/withdraw_confirm.twig',
+        //                 [
+        //                     'form' => $form->createView(),
+        //                     'Page' => $this->pageRepository->getPageByRoute('mypage_withdraw_confirm'),
+        //                 ]
+        //             );
 
-                case 'complete':
-                    log_info('退会処理開始');
+        //         case 'complete':
+        //             log_info('退会処理開始');
 
-                    /* @var $Customer \Eccube\Entity\Customer */
-                    $Customer = $this->getUser();
-                    $email = $Customer->getEmail();
+        //             /* @var $Customer \Eccube\Entity\Customer */
+        //             $Customer = $this->getUser();
+        //             $email = $Customer->getEmail();
 
-                    // 退会ステータスに変更
-                    $CustomerStatus = $this->customerStatusRepository->find(CustomerStatus::WITHDRAWING);
-                    $Customer->setStatus($CustomerStatus);
-                    $Customer->setEmail(StringUtil::random(60).'@dummy.dummy');
+        //             // 退会ステータスに変更
+        //             $CustomerStatus = $this->customerStatusRepository->find(CustomerStatus::WITHDRAWING);
+        //             $Customer->setStatus($CustomerStatus);
+        //             $Customer->setEmail(StringUtil::random(60).'@dummy.dummy');
 
-                    $this->entityManager->flush();
+        //             $this->entityManager->flush();
 
-                    log_info('退会処理完了');
+        //             log_info('退会処理完了');
 
-                    $event = new EventArgs(
-                        [
-                            'form' => $form,
-                            'Customer' => $Customer,
-                        ], $request
-                    );
-                    $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_WITHDRAW_INDEX_COMPLETE, $event);
+        //             $event = new EventArgs(
+        //                 [
+        //                     'form' => $form,
+        //                     'Customer' => $Customer,
+        //                 ], $request
+        //             );
+        //             $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_WITHDRAW_INDEX_COMPLETE, $event);
 
-                    // メール送信
-                    $this->mailService->sendCustomerWithdrawMail($Customer, $email);
+        //             // メール送信
+        //             $this->mailService->sendCustomerWithdrawMail($Customer, $email);
 
-                    // カートと受注のセッションを削除
-                    $this->cartService->clear();
-                    $this->orderHelper->removeSession();
+        //             // カートと受注のセッションを削除
+        //             $this->cartService->clear();
+        //             $this->orderHelper->removeSession();
 
-                    // ログアウト
-                    $this->tokenStorage->setToken(null);
+        //             // ログアウト
+        //             $this->tokenStorage->setToken(null);
 
-                    log_info('ログアウト完了');
+        //             log_info('ログアウト完了');
 
-                    return $this->redirect($this->generateUrl('mypage_withdraw_complete'));
+        //             return $this->redirect($this->generateUrl('mypage_withdraw_complete'));
+        //     }
+        // }
+
+        $hasOrder = false;
+        $isSecretWithdraw = true;
+        $isPlanWithdraw = true;
+        
+        $isUsingSecret = false;
+        $isUsingPlan = false;
+
+        $Orders = $this->orderRepository->findBy(['Customer'=>$this->getUser()], ['order_date'=>'desc']);
+        if (!empty($Orders)){
+            $hasOrder = true;
+
+            foreach($Orders as $Order){
+                foreach($Order->getOrderItems() as $OrderItem){
+                    if (!$OrderItem->isProduct()) continue;
+                    if($OrderItem->getProductClass()->getClassCategory1()->getId() != 9 || $OrderItem->isSecretWithraw()){
+                        $isUsingSecret = true;
+                    }
+    
+                    if($OrderItem->getProductClass()->getClassCategory2()->getId() == 10 || $OrderItem->isPlanWithraw()){
+                        $isUsingPlan = true;
+                    }
+                    if ($isSecretWithdraw) $isSecretWithdraw = $OrderItem->isSecretWithraw();
+                    if ($isPlanWithdraw) $isPlanWithdraw = $OrderItem->isPlanWithraw();
+                }
             }
         }
 
+        $now_day = date('d');
+        $isCancelAction = $now_day<16;
+        
+        // $Order = $Orders[0];
         return [
+            'hasOrder' => $hasOrder,
+            'isUsingSecret' => $isUsingSecret,
+            'isUsingPlan' => $isUsingPlan,
+            'isSecretWithdraw' => $isSecretWithdraw,
+            'isPlanWithdraw' => $isPlanWithdraw,
+            'isCancelAction' => $isCancelAction,
             'form' => $form->createView(),
         ];
     }

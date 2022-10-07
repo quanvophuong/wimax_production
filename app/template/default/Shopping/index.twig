@@ -85,7 +85,7 @@ file that was distributed with this source code.
                             <input type="hidden" id="customer-email" class="customer-in" name="customer_email" value="{{ Order.email }}">
                         </div>
                     {% endif %}
-                    {% for shipping in Order.shippings %}
+                    {# {% for shipping in Order.shippings %}
                         {% set idx = loop.index0 %}
                         {% set isShowReducedTaxMess = false %}
                         <div class="ec-orderDelivery__actions" style="display: none !important">
@@ -107,7 +107,7 @@ file that was distributed with this source code.
                                 </div>
                             </div>
                         </div>
-                    {% endfor %}
+                    {% endfor %} #}
                     <div class="ec-orderPayment" style="display: none;">
                         <div class="ec-rectHeading">
                             <h2>{{ 'お支払方法'|trans }}</h2>
@@ -169,9 +169,12 @@ file that was distributed with this source code.
                             <dl class="flex">
                                 <dt>配送方法</dt>
                                 <dd>
-                                    <select name="" id="">
-                                        <option value="">ヤマト運輸</option>
-                                    </select>
+                    {% for shipping in Order.shippings %}
+                        {% set idx = loop.index0 %}
+                        {% set isShowReducedTaxMess = false %}
+                                    {{ form_widget(form.Shippings[idx].Delivery) }}
+                                    {{ form_errors(form.Shippings[idx].Delivery) }}
+                    {% endfor %}
                                 </dd>
                             </dl>
                             <dl class="flex">

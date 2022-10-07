@@ -146,11 +146,11 @@ class EntryController extends AbstractController
         /* @var $form \Symfony\Component\Form\FormInterface */
         $form = $builder->getForm();
         $form->handleRequest($request);
-        
+
         log_info('会員登録開始6');
         //dump($form->getErrors());die();
         if ($form->isSubmitted() && $form->isValid()) {
-        log_info('会員登録開始7');
+            log_info('会員登録開始7');
             switch ($request->get('mode')) {
                 case 'confirm':
                     log_info('会員登録確認開始');

@@ -26,7 +26,18 @@
                     ■定期購買情報<br><br>
 
                     ご案内：　 自動継続課金の登録を行いました。<br>
-                    　　　　　・課金額：{{ Order.total|number_format(0, '.', ',') }}円税込<br>
+
+                    　　　　　・課金額：
+                    {% for OrderItem in Order.MergedProductOrderItems %}
+                        {% if OrderItem.productClass.classCategory1 == 'フリー補償' %}
+                            5,350
+                        {% elseif OrderItem.productClass.classCategory1 == 'ライト補償' %}
+                            5,075
+                        {% else %}
+                            4,800
+                        {% endif %}
+                    {% endfor %}
+                    円税込<br>
                     　　　　　・次回課金日：{{ 'now'|date_modify("+#{1} months")|date("y年m月1日") }}<br>
                     　　　　　・課金間隔：毎月1日<br>
                 </div>

@@ -61,9 +61,9 @@ class AddressType extends AbstractType
                 new Assert\NotBlank([]),
             ], $options['addr01_options']['constraints']);
 
-            // $options['addr02_options']['constraints'] = array_merge([
-            //     new Assert\NotBlank([]),
-            // ], $options['addr02_options']['constraints']);
+//            $options['addr02_options']['constraints'] = array_merge([
+//                new Assert\NotBlank([]),
+//            ], $options['addr02_options']['constraints']);
         }
 
         if (!isset($options['options']['error_bubbling'])) {

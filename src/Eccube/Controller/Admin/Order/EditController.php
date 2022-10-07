@@ -52,6 +52,8 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
+use Eccube\Repository\ProductClassRepository;
+use Eccube\Repository\ClassCategoryRepository;
 
 class EditController extends AbstractController
 {
@@ -125,6 +127,9 @@ class EditController extends AbstractController
      */
     private $orderHelper;
 
+    private $productClassRepository;
+    private $classCategoryRepository;
+
     /**
      * EditController constructor.
      *
@@ -157,7 +162,9 @@ class EditController extends AbstractController
         OrderItemTypeRepository $orderItemTypeRepository,
         OrderStatusRepository $orderStatusRepository,
         OrderStateMachine $orderStateMachine,
-        OrderHelper $orderHelper
+        OrderHelper $orderHelper, 
+        ProductClassRepository $productClassRepository,
+        ClassCategoryRepository $classCategoryRepository
     ) {
         $this->taxRuleService = $taxRuleService;
         $this->deviceTypeRepository = $deviceTypeRepository;
@@ -173,6 +180,8 @@ class EditController extends AbstractController
         $this->orderStatusRepository = $orderStatusRepository;
         $this->orderStateMachine = $orderStateMachine;
         $this->orderHelper = $orderHelper;
+        $this->productClassRepository = $productClassRepository;
+        $this->classCategoryRepository = $classCategoryRepository;
     }
 
     /**
@@ -692,5 +701,51 @@ class EditController extends AbstractController
         }
 
         throw new BadRequestHttpException();
+    }
+
+    
+    /**
+     * EC-CUBE標準の「カートに追加」を上書き
+     *
+     * @Route("/%eccube_admin_route%/order/withdraw", name="admin_order_withdraw", methods={"GET", "POST"})
+     */
+    public function withraw(Request $request)
+    {
+        $order_id = $request->get('order_id');
+        $type = $request->get('type');
+        $Order = $this->orderRepository->find($order_id);
+        //dump($Order);
+
+        foreach($Order->getOrderItems() as $OrderItem){
+            if (!$OrderItem->isProduct()) continue;
+            if ($type=='secret'){
+                $NewClassCategory1 = $this->classCategoryRepository->find($OrderItem->getSecretOption());
+                $NewClassCategory2 = $OrderItem->getProductClass()->getClassCategory2();
+                $OrderItem->setSecretOption(null);
+                $OrderItem->setSecretWithraw(false);
+            }
+            if ($type=='plan'){
+                $NewClassCategory1 = $OrderItem->getProductClass()->getClassCategory1();
+                $NewClassCategory2 = $this->classCategoryRepository->find($OrderItem->getPlanOption());
+                $OrderItem->setPlanOption(null);
+                $OrderItem->setPlanWithraw(false);
+            }
+
+            $ProductClass = $this->productClassRepository->findOneBy([
+                'ClassCategory1' => $NewClassCategory1,
+                'ClassCategory2' => $NewClassCategory2,
+            ]);
+            $OrderItem->setProductClass($ProductClass);
+            $OrderItem->setClassCategoryName1($NewClassCategory1->getName());
+            $OrderItem->setClassCategoryName2($NewClassCategory2->getName());
+            $OrderItem->setPrice($ProductClass->getPrice02());
+            $OrderItem->setTax($ProductClass->getPrice02()*$OrderItem->getTaxRate()/100);
+
+            $this->entityManager->persist($OrderItem);
+        }
+
+        $this->entityManager->flush();
+
+        return $this->json(['done' => true]);
     }
 }

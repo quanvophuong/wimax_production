@@ -18,7 +18,7 @@ class EntryTypeExtension extends AbstractTypeExtension
      * @var EntityManagerInterface
      */
     protected $entityManager;
-    
+
     /**
      * ProductClassType constructor.
      *
@@ -63,7 +63,7 @@ class EntryTypeExtension extends AbstractTypeExtension
                 $SexDefault = $this->entityManager->getRepository(Sex::class)->find(1);
                 $Customer->setSex($SexDefault);
             }
-           
+
         });
 
     }

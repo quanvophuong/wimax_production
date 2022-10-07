@@ -15,35 +15,59 @@ file that was distributed with this source code.
 {% set body_class = 'mypage' %}
 
 {% block javascript %}
-    <script>
-        $(function() {
-            $('.btn-modal').each(function(){
-                $(this).on('click', function () {
-                    var target = $(this).data('target');
-                    var modal = document.getElementById(target);
-                    $(modal).fadeIn();
-                    $('body').css('overflow-y', 'hidden');
-                    return false;
+<script>
+    $(function() {
+    $('.btn-modal').each(function(){
+        $(this).on('click', function () {
+
+            var action = $(this).data('action');
+            var target = $(this).data('target');
+            var modal = document.getElementById(target);
+
+            if (action=='withraw'){
+                $.ajax({
+                    url: '{{ url('option_withraw') }}',
+                    type: 'POST',
+                    data: {
+                            'type' : $(this).data('type'),
+                            'is_remove' : $(this).data('remove')
+                        },
+                    dataType: 'json',
+                }).done(function(data) {
+                    if(data['done']){
+                        $(modal).fadeIn();
+                        $('body').css('overflow-y', 'hidden');
+                    }else{
+                        alert(data['messages']);
+                    }
+                }).fail(function(data) {
+                    alert('{{ '失敗しました。'|trans }}');
                 });
-                
-            });
-            $('.modal-close').on('click', function () {
-                $('.js-modal').fadeOut();
-                $('body').css('overflow-y','auto');
+            }else{
+                var target = $(this).data('target');
+                var modal = document.getElementById(target);
+                $(modal).fadeIn();
+                $('body').css('overflow-y', 'hidden');
                 return false;
-            });
-           
+            }    
         });
-    </script>
+
+    });
+    $('.modal-close').on('click', function () {
+        $('form').submit();
+    });
+
+});
+</script>
 {% endblock %}
 
 {% block main %}
 
-<style>
-    footer{
-        background: white !important;
-    }
-</style>
+    <style>
+        footer{
+            background: white !important;
+        }
+    </style>
     <div id="wrap">
         <main id="mypage">
             <section class="mypageContent">
@@ -58,37 +82,63 @@ file that was distributed with this source code.
                     <div class="mypageContentBox__text">安心補償解約の際は「安心補償解約へ」、プラン解約の際は「プラン解約へ」をご選択ください。ポップアップが表示されますので、「解約に関する注意事項」をお読みいただき、「解約する」をご選択ください。</div>
                     <form method="post" action="{{ url('mypage_withdraw') }}">
                         {{ form_widget(form._token) }}
-                        <div class="btn-wrap">
-                            <button type="button" class="btn btn-modal" name="mode" data-target="cancelGuarantee" 
-                                    value="confirm">{{ '安心保障解約へ'|trans }}</button>
-                            <button type="button" class="btn btn-modal" name="mode" data-target="cancelPlan" 
-                                    value="confirm">{{ 'プラン解約へ'|trans }}</button>
-                        </div>
+                        {% if hasOrder %}
+                            <div class="btn-wrap">
+                                <button type="button" class="btn btn-modal" name="mode" data-target="cancelGuarantee" {% if isSecretWithdraw and isCancelAction==false or not isUsingSecret %} disabled {% endif %}
+                                            value="confirm">{% if isSecretWithdraw %}安心補償取消へ{% else %}安心保障解約へ{% endif %}</button>
+                                <button type="button" class="btn btn-modal" name="mode" data-target="cancelPlan" {% if isPlanWithdraw and isCancelAction==false or not isUsingPlan %} disabled {% endif %}
+                                        value="confirm">{% if isPlanWithdraw %}プラン解約取消へ{% else %}プラン解約へ{% endif %}</button>
+                                
+                            </div>
+                        {% else %}
+                            <div class="btn-wrap">
+                                <button type="button" class="btn btn-modal" name="mode" data-target="cancelGuarantee" disabled
+                                        value="confirm">{{ '安心保障解約へ'|trans }}</button>
+                                <button type="button" class="btn btn-modal" name="mode" data-target="cancelPlan"  disabled
+                                        value="confirm">{{ 'プラン解約へ'|trans }}</button>
+                            </div>
+                        {% endif %}
                     </form>
 
                 </div>
             </section>
         </main>
     </div>
-    
+
     <div id="cancelGuarantee" class="modal js-modal modalfix" style="display: none;">
         <div class="modal-bg modal-close"></div>
         <div class="modal-content">
-            <h3>解約に関する注意事項</h3>
-            <p>こちらでは安心保障解約を行います。<br>「解約する」を選択いただくと、自動で解約手続きが完了いたします。</p>
+            <h3>{% if isSecretWithdraw %}解約取消に関する注意事項{% else %}解約に関する注意事項{% endif %}</h3>
+            <p>
+                {% if isSecretWithdraw %}
+                    こちらでは安心補償解約の取消を行います。<br />解約いただいた月の15日までは、解約を取り消していただくことが可能です。
+                {% else %}
+                    こちらでは安心保障解約を行います。<br>「解約する」を選択いただくと、自動で解約手続きが完了いたします。
+                {% endif %}
+            </p>
             <ul class="btn-wrap">
                 <li><a href="" class="border-btn modal-btn">戻る</a></li>
-                <li><button class="btn btn-modal" data-target="cancel1">解約する</button></li>
+                <li>
+                    <button class="btn btn-modal" data-action="withraw" data-type="secret" data-remove={% if isSecretWithdraw %} '0' {% else %} '1' {% endif %} data-target="cancel1">
+                        {% if isSecretWithdraw %}解約を取り消す{% else %}解約する{% endif %}
+                    </button>
+                </li>
             </ul>
         </div>
     </div>
     <div id="cancel1" class="modal js-modal modalfix">
         <div class="modal-bg modal-close"></div>
         <div class="modal-content">
-            <h3>安心保障解約について</h3>
-            <p>安心保障解約を承りました。<br>引き続き弊社をご愛顧賜りますようお願い申し上げます。</p>
+            <h3>{% if isSecretWithdraw %}安心補償解約の取消について{% else %}安心保障解約について{% endif %}</h3>
+            <p>
+                {% if isSecretWithdraw %}
+                    安心補償解約の取消を承りました。<br />引き続き弊社をご愛顧賜りますようお願い申し上げます。
+                {% else %}
+                    安心保障解約を承りました。<br>引き続き弊社をご愛顧賜りますようお願い申し上げます。
+                {% endif %}
+            </p>
             <ul class="btn-wrap">
-                <li><a href="" class="btn border-btn">マイページへ</a></li>
+                <li><a href="{{ url('mypage') }}" class="btn border-btn">マイページへ</a></li>
             </ul>
         </div>
     </div>
@@ -96,11 +146,22 @@ file that was distributed with this source code.
     <div id="cancelPlan" class="modal js-modal modalfix">
         <div class="modal-bg modal-close"></div>
         <div class="modal-content">
-            <h3>解約に関する注意事項</h3>
-            <p>こちらではプラン契約を行います。<br /><br /><br /><br /><br /></p>
+            <h3>{% if isPlanWithdraw %}解約取消に関する注意事項{% else %}解約に関する注意事項{% endif %}</h3>
+            <p>
+                {% if isPlanWithdraw %}
+                    こちらではプラン解約の取消を行います。<br />解約いただいた月の15日までは、解約を取り消していただくことが可能です。<br /><br />
+                {% else %}
+                    こちらではプラン契約を行います。<br />「解約する」を選択いただくと、その月の15日まででれば自動で、<br />
+                    月の16日以降であれば、弊社スタッフが手動で解約手続きを行わせていただきます。<br />
+                {% endif %}
+            </p>
             <ul class="btn-wrap">
                 <li><a href="" class="border-btn modal-btn">戻る</a></li>
-                <li><button class="btn btn-modal" data-target="cancel2">解約する</button></li>
+                <li>
+                    <button class="btn btn-modal" data-action="withraw" data-type="plan" data-remove={% if isPlanWithdraw %} '0' {% else %} '1' {% endif %} data-target="cancel2">
+                        {% if isPlanWithdraw %}解約を取り消す{% else %}解約する{% endif %}
+                    </button>
+                </li>
             </ul>
         </div>
     </div>
@@ -108,13 +169,20 @@ file that was distributed with this source code.
     <div id="cancel2" class="modal js-modal modalfix">
         <div class="modal-bg modal-close"></div>
         <div class="modal-content">
-            <h3>プラン解約について</h3>
-            <p>プラン解約を承りました。<br>弊社サービスをご利用いただきありがとうございました。<br>またのご利用をお待ちしております</p>
+            <h3>{% if isPlanWithdraw %}プラン解約の取消について{% else %}プラン解約について{% endif %}</h3>
+            <p>
+                {% if isPlanWithdraw %}
+                    プラン解約の取消を承りました。<br />引き続き弊社をご愛顧賜りますようお願い申し上げます。
+                {% else %}
+                    プラン解約を承りました。<br>弊社サービスをご利用いただきありがとうございました。<br>またのご利用をお待ちしております。
+                {% endif %}
+                 
+            </p>
             <ul class="btn-wrap">
-                <li><a href="" class="btn border-btn">マイページへ</a></li>
+                <li><a href="{{ url('mypage') }}" class="btn border-btn">マイページへ</a></li>
             </ul>
         </div>
     </div>
-    
-    
+
+
 {% endblock %}

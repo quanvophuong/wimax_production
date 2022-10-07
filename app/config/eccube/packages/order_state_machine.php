@@ -49,7 +49,7 @@ $container->loadFromExtension('framework', [
                         (string) Status::PENDING,
                         (string) Status::RETURNED,
                     ],
-                    'to' => (string) Status::NEW, 
+                    'to' => (string) Status::NEW,
                 ],
                 'in_progress' => [
                     'from' => [
@@ -62,7 +62,7 @@ $container->loadFromExtension('framework', [
                         (string) Status::PENDING,
                         (string) Status::RETURNED,
                     ],
-                    'to' => (string) Status::IN_PROGRESS, 
+                    'to' => (string) Status::IN_PROGRESS,
                 ],
                 'pick_up' => [
                     'from' => [
@@ -75,7 +75,7 @@ $container->loadFromExtension('framework', [
                         (string) Status::PENDING,
                         (string) Status::RETURNED,
                     ],
-                    'to' => (string) Status::PICKUP, 
+                    'to' => (string) Status::PICKUP,
                 ],
                 'pay' => [
                     'from' => [
@@ -90,7 +90,7 @@ $container->loadFromExtension('framework', [
                     ],
                     'to' => (string) Status::PAID,
                 ],
-               
+
                 'cancel' => [
                     'from' => [
                         (string) Status::NEW,
