@@ -10,7 +10,11 @@
         color: #0B7AB6;
         font-weight: bold;
     }
+    ul#credit_form>li>dl>dd{
+        display:block;
+    }
     .error {
+        display:block;
       color: #e74c3c;
     }
     .bg-load-overlay{
@@ -25,7 +29,7 @@
                 e.preventDefault();
                 var form = $('#shopping-form');
                 if(form.valid()){
-                    var url = '{{ url('card_change') }}'
+                    var url = '{{ url('plugin_stripe_payment_gateway_update_card') }}'
                     $.ajax({
                         url: url,
                         type: form.attr('method'),
@@ -44,7 +48,7 @@
 <div id="wrap">
     <main id="mypage">
         <section class="mypageContent customerContent">
-            <h2>マイページ/お届け先編集</h2>
+            <h2>マイページ/クレジットカード情報変更</h2>
             <div class="mypageContent__name">{{ 'ようこそ%last_name% %first_name%さん'|trans({ '%last_name%': app.user.name01, '%first_name%': app.user.name02 }) }}</div>
                 {% include 'Mypage/navi.twig' %}
             <div class="mypageContentBox">
@@ -64,7 +68,7 @@
                     </div>
                 </div>
                 <form id="shopping-form" method="post" action="{{ url("card_change") }}">
-                    <ul>
+                    <ul id="credit_form">
                         <li>
                             <dl>
                                 <dt>カード番号</dt>

@@ -192,53 +192,24 @@ file that was distributed with this source code.
                 if($(this).val() == 4){
                     $("#noneUsb").attr('checked', true).trigger('click');
                     $('#usb_part').hide();
-                    $('#usb_value').text('0円')
-                    let total = 8100 + option;
-                    let next = 4800 + option;
-                    $('#option_value').text(option.toLocaleString() + '円')
-                    $('#total').val(total);
-                    $('#next').val(next);
-                    $('#total_value').text(total.toLocaleString() + '円')
-                    $('#next_total').text(next.toLocaleString() + '円')
+                    $('#usb_value').text('0円');
+                    calcAmount();
                 }
                 else{
                     $('#usb_part').show();
-                    var usb = 0;
-                    if($("input[name='usb']:checked").val() != undefined)
-                        usb = parseInt($("input[name='usb']:checked").val());
-                    $('#usb_value').text( usb.toLocaleString() +'円')
-                    $('#option_value').text(option.toLocaleString() + '円')
-                    let total = 8100 + usb+ option;
-                    let next = 4800 + option;
-                    $('#total').val(total);
-                    $('#next').val(next);
-                    $('#total_value').text(total.toLocaleString() + '円')
-                    $('#next_total').text(next.toLocaleString() + '円')
+                    calcAmount();
                 }
 
             });
             $('[name=option]').click(function () {
-                var usb = 0;
-                if($("input[name='usb']:checked").val() != undefined)
-                    usb = parseInt($("input[name='usb']:checked").val());
-                let total = 8100 + usb + parseInt($(this).val());
-                let next = 4800 + parseInt($(this).val());
-                $('#option_value').text($(this).val() + '円')
-                $('#total').val(total);
-                $('#next').val(next);
-                $('#total_value').text(total.toLocaleString() + '円')
-                $('#next_total').text(next.toLocaleString() + '円')
+                calcAmount();
             });
             $('[name=usb]').click(function () {
-                var option = 0;
-                if($("input[name='option']:checked").val() != undefined)
-                    option = parseInt($("input[name='option']:checked").val());
-                console.log(parseInt($(this).val()));
-                console.log(option);
-                let total = 8100 + parseInt($(this).val()) + option;
-                $('#usb_value').text(parseInt($(this).val()).toLocaleString() + '円')
-                $('#total').val(total);
-                $('#total_value').text(total.toLocaleString() + '円')
+                calcAmount();
+            });
+            
+            $('[name=send]').click(function () {
+                calcAmount()
             });
 
             $('#moveCart').click(function (){
@@ -345,6 +316,33 @@ file that was distributed with this source code.
                 })
             });
         });
+
+        function calcAmount(){
+            var optionSend = 1;
+            if($("input[name='send']:checked").val() != undefined)
+                    optionSend = parseInt($("input[name='send']:checked").val());
+            
+            var option = 0;
+            if($("input[name='option']:checked").val() != undefined)
+                option = parseInt($("input[name='option']:checked").val());
+            var usb = 0;
+            if($("input[name='usb']:checked").val() != undefined)
+                usb = parseInt($("input[name='usb']:checked").val());
+
+            var total = 3300;
+            let next = 4800 + option;
+            if (optionSend == 1){
+                total += 4800 + option;
+            }
+            total += usb;
+
+            $('#total').val(total);
+            
+            $('#option_value').text(option.toLocaleString() + '円');
+            $('#usb_value').text(usb.toLocaleString() + '円');
+            $('#total_value').text(total.toLocaleString() + '円');
+            $('#next_total').text(next.toLocaleString() + '円')
+        }
     </script>
 {% endblock javascript %}
 

@@ -21,6 +21,10 @@ use Stripe\Customer as StripeCustomer;
 use Stripe\Exception\CardException;
 use Stripe\Stripe;
 
+use Plugin\StripePaymentGateway\StripeClient;
+use Plugin\StripePaymentGateway\Repository\StripeConfigRepository;
+use Plugin\StripePaymentGateway\Entity\StripeCustomer as EccubeStripeCustomer;
+
 class CreditController extends AbstractController{
     /**
      * @var TokenStorage
@@ -36,15 +40,18 @@ class CreditController extends AbstractController{
      * @var EncoderFactoryInterface
      */
     protected $encoderFactory;
+    protected $stripeConfigRepository;
 
     public function __construct(
         CustomerRepository $customerRepository,
         EncoderFactoryInterface $encoderFactory,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        StripeConfigRepository $stripeConfigRepository
     ) {
         $this->customerRepository = $customerRepository;
         $this->encoderFactory = $encoderFactory;
         $this->tokenStorage = $tokenStorage;
+        $this->stripeConfigRepository = $stripeConfigRepository;
     }
 
     /**
@@ -181,9 +188,6 @@ class CreditController extends AbstractController{
              'done' => true,
              'status' => 'success',
         ]);
-
-
-
     }
     /**
      * EC-CUBE標準の「カート追加」を上書き
@@ -192,6 +196,18 @@ class CreditController extends AbstractController{
      */
      public function changeCard(Request $request){
         $Customer = $this->getUser();
+
+        
+        $StripeConfig = $this->stripeConfigRepository->get();
+        $stripeClient = new StripeClient($StripeConfig->secret_key);
+
+
+        // $StripeCustomer = $this->entityManager->getRepository(EccubeStripeCustomer::class)->findOneBy(['Customer'=>$Customer]);
+        dump($StripeCustomer);die();
+
+
+
+
         $LoginCustomer = clone $Customer;
         $this->entityManager->detach($LoginCustomer);
         $previous_password = $Customer->getPassword();
@@ -205,6 +221,7 @@ class CreditController extends AbstractController{
             ],
             $request
         );
+        
 
 
         $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_CHANGE_INDEX_INITIALIZE, $event);

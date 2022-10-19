@@ -51,23 +51,26 @@ file that was distributed with this source code.
                     <form method="post" action="{{ url('mypage_change') }}" novalidate class="h-adr">
                         <span class="p-country-name" style="display:none;">Japan</span>
                         {{ form_widget(form._token) }}
-                        <ul>
+                        <ul id="mypage_form">
                             <li>
                                 <dl>
                                     <dt>お名前<span class="required">必須</span></dt>
-                                    <dd class="ec-halfInput{{ has_errors(form.name.name01, form.name.name02) ? ' error' }}">
+                                    <dd class="mypage_name ec-halfInput{{ has_errors(form.name.name01, form.name.name02) ? ' error' }}">
                                         {{ form_widget(form.name.name01, { 'attr': { 'maxlength': 16,'placeholder': '姓', 'class' : 'width-m' }}) }}
+                                        {{ form_errors(form.name.name01) }}
                                         {{ form_widget(form.name.name02, { 'attr': { 'maxlength': 16,'placeholder': '名', 'class' : 'width-m' }}) }}
+                                        {{ form_errors(form.name.name02) }}
                                     </dd>
                                 </dl>
                             </li>
                             <li>
                                 <dl>
                                     <dt>フリガナ<span class="required">必須</span></dt>
-                                    <dd class="ec-halfInput{{ has_errors(form.kana.kana01, form.kana.kana02) ? ' error' }}">
+                                    <dd class="mypage_name ec-halfInput{{ has_errors(form.kana.kana01, form.kana.kana02) ? ' error' }}">
                                         {{ form_widget(form.kana.kana01, { 'attr': { 'maxlength': 25,'placeholder': 'セイ', 'class' : 'width-m' }}) }}
+                                        {{ form_errors(form.kana.kana01) }}
                                         {{ form_widget(form.kana.kana02, { 'attr': { 'maxlength': 25,'placeholder': 'メイ', 'class' : 'width-m' }}) }}
-
+                                        {{ form_errors(form.kana.kana02) }}
                                     </dd>
                                 </dl>
                             </li>
@@ -88,6 +91,7 @@ file that was distributed with this source code.
                                         {{ form_widget(form.postal_code, { 'attr': { 'class' : 'width-s p-postal-code' }}) }}
                                         <a href="https://www.post.japanpost.jp/zipcode/" target="_blank"
                                            class="search-post"><span>{{ '郵便番号検索'|trans }}</span></a>
+                                        {{ form_errors(form.postal_code) }}
 
                                     </dd>
                                 </dl>
@@ -95,20 +99,21 @@ file that was distributed with this source code.
                                     <dt></dt>
                                     <dd class="ec-select{{ has_errors(form.address.pref) ? ' error' }}">
                                         {{ form_widget(form.address.pref, { 'attr': { 'class' : 'width-m select-css  p-region-id' }}) }}
+                                        {{ form_errors(form.address.pref) }}
                                     </dd>
                                 </dl>
                                 <dl>
                                     <dt></dt>
                                     <dd class="ec-input{{ has_errors(form.address.addr01) ? ' error' }}">
                                         {{ form_widget(form.address.addr01, { 'attr': { 'placeholder': '市区町村名(例：大阪市北区)', 'class' : 'width-l p-locality p-street-address' }}) }}
-
+                                        {{ form_errors(form.address.addr01) }}
                                     </dd>
                                 </dl>
                                 <dl>
                                     <dt></dt>
                                     <dd class="ec-input{{ has_errors(form.address.addr02) ? ' error' }}">
-                                        {{ form_widget(form.address.addr02,  { 'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)', 'class' : 'width-l p-extended-address' }}) }}
-
+                                        {{ form_widget(form.address.addr02,  { 'required':false,'attr': { 'placeholder': '番地・ビル名(例：西梅田1丁目6-8)', 'class' : 'width-l p-extended-address' }}) }}
+                                        {{ form_errors(form.address.addr02) }}
                                     </dd>
                                 </dl>
                             </li>
@@ -129,23 +134,34 @@ file that was distributed with this source code.
                                         {{ form_errors(form.email.first) }}
                                     </dd>
                                 </dl>
+                                <dl>
+                                    <dt></dt>
+                                    <dd class="ec-input{{ has_errors(form.email.second) ? ' error' }}">
+                                        {{ form_widget(form.email.second, { 'attr': { 'placeholder': '確認のためもう一度入力してください', 'class' : 'width-l' }}) }}
+                                        {{ form_errors(form.email.second) }}
+                                    </dd>
+                                </dl>
                             </li>
                             <li>
                                 <dl>
                                     <dt>パスワード<span class="required">必須</span></dt>
-                                    <dd class="ec-input{{ has_errors(form.email.second) ? ' error' }}">
-                                        {{ form_widget(form.email.second, { 'attr': { 'placeholder': '確認のためもう一度入力してください', 'class' : 'width-l' }}) }}
-                                        {{ form_errors(form.email.second) }}
+                                    <dd class="ec-input{{ has_errors(form.password.first) ? ' error' }}">
+                                        {{ form_widget(form.password.first, {
+                                            'attr': { 'placeholder': '半角英数記号%min%〜%max%文字'|trans({ '%min%': eccube_config.eccube_password_min_len, '%max%': eccube_config.eccube_password_max_len }) },
+                                            'type': 'password'
+                                        }) }}
+                                        {{ form_errors(form.password.first) }}
+                                        {#                                    <input type="password" name="" value="" placeholder="********" class="width-l"> #}
                                     </dd>
                                 </dl>
                                 <dl>
                                     <dt></dt>
                                     <dd class="ec-input{{ has_errors(form.password.second) ? ' error' }}">
                                         {{ form_widget(form.password.second, {
-                                            'attr': { 'placeholder': '確認のためもう一度入力してください'|trans },
+                                            'attr': { 'placeholder': '確認のためもう一度入力してください'|trans({ '%min%': eccube_config.eccube_password_min_len, '%max%': eccube_config.eccube_password_max_len }) },
                                             'type': 'password'
                                         }) }}
-                                        {{ form_errors(form.password.second) }}
+                                        {{ form_errors(form.password.first) }}
                                         {#                                    <input type="password" name="" value="" placeholder="確認のためもう一度ご入力ください。" class="width-l"> #}
                                     </dd>
                                 </dl>

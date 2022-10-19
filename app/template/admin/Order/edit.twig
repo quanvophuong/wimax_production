@@ -144,6 +144,12 @@ file that was distributed with this source code.
                 return false;
             });
 
+            $('.pdf-order-print').click(function() {
+                $('form').attr('action', this.href);
+                $('form').submit();
+                return false;
+            });
+
             // お届け時間の初期表示
             $('#order_Shipping_Delivery').change();
 
@@ -542,6 +548,7 @@ file that was distributed with this source code.
                                             <button type="button" class="btn btn-ec-regular copy-customer">{{ 'admin.order.copy_orderer'|trans }}</button>
                                             {% if Order.id is not empty %}
                                                 <a class="btn btn-ec-regular pdf-print" href="{{ url('admin_order_export_pdf') }}?ids[]={{ Order.Shippings[0].id }}">{{ 'admin.order.output_delivery_note'|trans }}</a>
+                                                <a class="btn btn-ec-regular pdf-order-print" href="{{ url('admin_order_pdf_order_download') }}?ids[]={{ Order.Shippings[0].id }}">注文書出力</a>
                                             {% endif %}
                                         </div>
                                         {% if Order.id is not empty %}

@@ -268,7 +268,7 @@ class PrService extends StripeService {
             $Shipping->setAddr02($shipping_info['addr02']);
         }
         $Shipping->setDelivery($Delivery);
-        $Shipping->setShippingDeliveryName($Delivery->getName());
+        $Shipping->setShippingDeliveryName($Delivery->getServiceName());
         return $Shipping;
     }
 

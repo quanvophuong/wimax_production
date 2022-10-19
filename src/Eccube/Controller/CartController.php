@@ -108,7 +108,6 @@ class CartController extends AbstractController
                     $least[$Cart->getCartKey()] = $this->baseInfo->getDeliveryFreeAmount() - $Cart->getTotalPrice();
                 }
             }
-
             $totalPrice += $Cart->getTotalPrice();
             $totalQuantity += $Cart->getQuantity();
         }

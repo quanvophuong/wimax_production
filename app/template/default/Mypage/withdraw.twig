@@ -49,7 +49,7 @@ file that was distributed with this source code.
                 $(modal).fadeIn();
                 $('body').css('overflow-y', 'hidden');
                 return false;
-            }    
+            }
         });
 
     });
@@ -85,10 +85,10 @@ file that was distributed with this source code.
                         {% if hasOrder %}
                             <div class="btn-wrap">
                                 <button type="button" class="btn btn-modal" name="mode" data-target="cancelGuarantee" {% if isSecretWithdraw and isCancelAction==false or not isUsingSecret %} disabled {% endif %}
-                                            value="confirm">{% if isSecretWithdraw %}安心補償取消へ{% else %}安心保障解約へ{% endif %}</button>
+                                        value="confirm">{% if isSecretWithdraw %}安心補償取消へ{% else %}安心保障解約へ{% endif %}</button>
                                 <button type="button" class="btn btn-modal" name="mode" data-target="cancelPlan" {% if isPlanWithdraw and isCancelAction==false or not isUsingPlan %} disabled {% endif %}
                                         value="confirm">{% if isPlanWithdraw %}プラン解約取消へ{% else %}プラン解約へ{% endif %}</button>
-                                
+
                             </div>
                         {% else %}
                             <div class="btn-wrap">
@@ -120,7 +120,7 @@ file that was distributed with this source code.
                 <li><a href="" class="border-btn modal-btn">戻る</a></li>
                 <li>
                     <button class="btn btn-modal" data-action="withraw" data-type="secret" data-remove={% if isSecretWithdraw %} '0' {% else %} '1' {% endif %} data-target="cancel1">
-                        {% if isSecretWithdraw %}解約を取り消す{% else %}解約する{% endif %}
+                    {% if isSecretWithdraw %}解約を取り消す{% else %}解約する{% endif %}
                     </button>
                 </li>
             </ul>
@@ -159,7 +159,7 @@ file that was distributed with this source code.
                 <li><a href="" class="border-btn modal-btn">戻る</a></li>
                 <li>
                     <button class="btn btn-modal" data-action="withraw" data-type="plan" data-remove={% if isPlanWithdraw %} '0' {% else %} '1' {% endif %} data-target="cancel2">
-                        {% if isPlanWithdraw %}解約を取り消す{% else %}解約する{% endif %}
+                    {% if isPlanWithdraw %}解約を取り消す{% else %}解約する{% endif %}
                     </button>
                 </li>
             </ul>
@@ -176,7 +176,7 @@ file that was distributed with this source code.
                 {% else %}
                     プラン解約を承りました。<br>弊社サービスをご利用いただきありがとうございました。<br>またのご利用をお待ちしております。
                 {% endif %}
-                 
+
             </p>
             <ul class="btn-wrap">
                 <li><a href="{{ url('mypage') }}" class="btn border-btn">マイページへ</a></li>

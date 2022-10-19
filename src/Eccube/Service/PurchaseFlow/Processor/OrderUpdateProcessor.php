@@ -48,8 +48,6 @@ class OrderUpdateProcessor extends AbstractPurchaseProcessor
         $OrderStatus = OrderStatus::NEW;
         foreach($OrderItems as $OrderItem){
             if (!$OrderItem->isProduct()) continue;
-
-
             if ($OrderItem->getShip()==2){
                 $OrderStatus = OrderStatus::IN_PROGRESS;
                 break;

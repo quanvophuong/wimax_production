@@ -80,7 +80,7 @@ class WithdrawController extends AbstractController
         TokenStorageInterface $tokenStorage,
         CartService $cartService,
         OrderHelper $orderHelper,
-        PageRepository $pageRepository, 
+        PageRepository $pageRepository,
         OrderRepository $orderRepository
     ) {
         $this->mailService = $mailService;
@@ -171,7 +171,7 @@ class WithdrawController extends AbstractController
         $hasOrder = false;
         $isSecretWithdraw = true;
         $isPlanWithdraw = true;
-        
+
         $isUsingSecret = false;
         $isUsingPlan = false;
 
@@ -185,7 +185,7 @@ class WithdrawController extends AbstractController
                     if($OrderItem->getProductClass()->getClassCategory1()->getId() != 9 || $OrderItem->isSecretWithraw()){
                         $isUsingSecret = true;
                     }
-    
+
                     if($OrderItem->getProductClass()->getClassCategory2()->getId() == 10 || $OrderItem->isPlanWithraw()){
                         $isUsingPlan = true;
                     }
@@ -197,7 +197,7 @@ class WithdrawController extends AbstractController
 
         $now_day = date('d');
         $isCancelAction = $now_day<16;
-        
+
         // $Order = $Orders[0];
         return [
             'hasOrder' => $hasOrder,

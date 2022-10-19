@@ -512,6 +512,9 @@ class OrderController extends AbstractController
                         if ($allShipped) {
                             $this->orderStateMachine->apply($Order, $OrderStatus);
                         }
+
+                        $this->mailService->sendShippingNotifyMail($Shipping);
+                        $Shipping->setMailSendDate(new \DateTime());
                     } else {
                         $this->orderStateMachine->apply($Order, $OrderStatus);
                     }
@@ -730,6 +733,97 @@ class OrderController extends AbstractController
         } else {
             $response->headers->set('Content-Disposition', 'inline; filename="'.$pdfFileName.'"');
         }
+
+        log_info('OrderPdf download success!', ['Order ID' => implode(',', $request->get('ids', []))]);
+
+        $isDefault = isset($arrData['default']) ? $arrData['default'] : false;
+        if ($isDefault) {
+            // Save input to DB
+            $arrData['admin'] = $this->getUser();
+            $this->orderPdfRepository->save($arrData);
+        }
+
+        return $response;
+    }
+
+    
+    /**
+     * @Route("/%eccube_admin_route%/order/export/pdf/orderdownload", name="admin_order_pdf_order_download", methods={"POST"})
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function exportPdfOrderDownload(Request $request, OrderPdfService $orderPdfService)
+    {
+        // /**
+        //  * @var FormBuilder
+        //  */
+        // $builder = $this->formFactory->createBuilder(OrderPdfType::class);
+
+        // /* @var \Symfony\Component\Form\Form $form */
+        // $form = $builder->getForm();
+        // $form->handleRequest($request);
+
+        // Validation
+        // if (!$form->isValid()) {
+        //     log_info('The parameter is invalid!');
+
+        //     return $this->render('@admin/Order/order_pdf.twig', [
+        //         'form' => $form->createView(),
+        //     ]);
+        // }
+
+        // $arrData = $form->getData();
+
+        // 購入情報からPDFを作成する
+        $OrderPdf = $this->orderPdfRepository->find(1);
+        $arrData['ids'] = $request->get('ids');
+        $arrData['title'] = '注文書';
+        $arrData['message1'] = '';
+        $arrData['message2'] = '';
+        $arrData['message3'] = '';
+        $arrData['note1'] = '';
+        $arrData['note2'] = '';
+        $arrData['note3'] = '';
+        if (!empty($OrderPdf)){
+            $arrData['message1'] = $OrderPdf->getMessage1();
+            $arrData['message2'] = $OrderPdf->getMessage2();
+            $arrData['message3'] = $OrderPdf->getMessage3();
+            $arrData['note1'] = $OrderPdf->getNote1();
+            $arrData['note2'] = $OrderPdf->getNote2();
+            $arrData['note3'] = $OrderPdf->getNote3();
+        }
+        $status = $orderPdfService->makePdfOrder($arrData);
+
+        // 異常終了した場合の処理
+        if (!$status) {
+            $this->addError('admin.order.export.pdf.download.failure', 'admin');
+            log_info('Unable to create pdf files! Process have problems!');
+
+            return $this->render('@admin/Order/order_pdf.twig', [
+                'form' => $form->createView(),
+            ]);
+        }
+
+        // TCPDF::Outputを実行するとプロパティが初期化されるため、ファイル名を事前に取得しておく
+        $pdfFileName = $orderPdfService->getPdfOrderFileName();
+
+        // ダウンロードする
+        $response = new Response(
+            $orderPdfService->outputPdf(),
+            200,
+            ['content-type' => 'application/pdf']
+        );
+
+        //$downloadKind = $form->get('download_kind')->getData();
+
+        // レスポンスヘッダーにContent-Dispositionをセットし、ファイル名を指定
+        //if ($downloadKind == 1) {
+            $response->headers->set('Content-Disposition', 'attachment; filename="'.$pdfFileName.'"');
+        //} else {
+        //    $response->headers->set('Content-Disposition', 'inline; filename="'.$pdfFileName.'"');
+        //}
 
         log_info('OrderPdf download success!', ['Order ID' => implode(',', $request->get('ids', []))]);
 

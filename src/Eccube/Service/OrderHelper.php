@@ -456,7 +456,7 @@ class OrderHelper
         // 初期の配送業者を設定
         $Delivery = current($Deliveries);
         $Shipping->setDelivery($Delivery);
-        $Shipping->setShippingDeliveryName($Delivery->getName());
+        $Shipping->setShippingDeliveryName($Delivery->getServiceName());
     }
 
     /**

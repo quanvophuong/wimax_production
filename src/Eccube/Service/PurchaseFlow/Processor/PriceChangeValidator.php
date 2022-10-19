@@ -38,10 +38,19 @@ class PriceChangeValidator extends ItemValidator
         if ($item instanceof OrderItem) {
             $price = $item->getPrice();
             $realPrice = $item->getProductClass()->getPrice02();
+            if($item->getShip()==2){
+                $realPrice = 3000;
+                if ($item->getClassCategoryName2()=='購入する'); $realPrice+= 1400;
+            }
         } else {
             // CartItem::priceは税込金額.
             $price = $item->getPrice();
             $realPrice = $item->getProductClass()->getPrice02IncTax();
+            
+            if($item->getShip()==2){
+                $realPrice = 3300;
+                if ($item->getProductClass()->getClassCategory2()->getId()==10); $realPrice+= 1540;
+            }
         }
 
         if ($price != $realPrice) {

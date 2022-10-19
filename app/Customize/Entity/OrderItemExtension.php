@@ -19,25 +19,25 @@ trait OrderItemExtension
      */
     private $secret_withraw;
 
-        /**
-         * @return boolean
-         */
-        public function isSecretWithraw()
-        {
-            return $this->secret_withraw;
-        }
+    /**
+     * @return boolean
+     */
+    public function isSecretWithraw()
+    {
+        return $this->secret_withraw;
+    }
 
-        /**
-         * @param boolean $secret_withraw
-         *
-         * @return this
-         */
-        public function setSecretWithraw($secret_withraw)
-        {
-            $this->secret_withraw = $secret_withraw;
+    /**
+     * @param boolean $secret_withraw
+     *
+     * @return this
+     */
+    public function setSecretWithraw($secret_withraw)
+    {
+        $this->secret_withraw = $secret_withraw;
 
-            return $this;
-        }
+        return $this;
+    }
     /**
      * @var boolean
      *
@@ -45,25 +45,25 @@ trait OrderItemExtension
      */
     private $plan_withraw;
 
-        /**
-         * @return boolean
-         */
-        public function isPlanWithraw()
-        {
-            return $this->plan_withraw;
-        }
+    /**
+     * @return boolean
+     */
+    public function isPlanWithraw()
+    {
+        return $this->plan_withraw;
+    }
 
-        /**
-         * @param boolean $plan_withraw
-         *
-         * @return this
-         */
-        public function setPlanWithraw($plan_withraw)
-        {
-            $this->plan_withraw = $plan_withraw;
+    /**
+     * @param boolean $plan_withraw
+     *
+     * @return this
+     */
+    public function setPlanWithraw($plan_withraw)
+    {
+        $this->plan_withraw = $plan_withraw;
 
-            return $this;
-        }
+        return $this;
+    }
 
     /**
      * @var int
@@ -107,24 +107,24 @@ trait OrderItemExtension
 
     public function getShip(): ?string
     {
-    log_info(
-                    'OrderItemExtension GET',
-                    [
-                        'ship' => $this->ship,
-                    ]
-                );
+        log_info(
+            'OrderItemExtension GET',
+            [
+                'ship' => $this->ship,
+            ]
+        );
         return $this->ship;
     }
 
     public function setShip(?string $ship): self
     {
         $this->ship = $ship;
-log_info(
-                'OrderItemExtension SET',
-                [
-                    'ship' => $ship,
-                ]
-            );
+        log_info(
+            'OrderItemExtension SET',
+            [
+                'ship' => $ship,
+            ]
+        );
         return $this;
     }
 }

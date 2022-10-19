@@ -49,16 +49,16 @@ file that was distributed with this source code.
                 console.log(hr)
                 console.log(url);
                 $.ajax({
-                        url: url,
-                        type: form.attr('method'),
-                        data: form.serialize(),
-                        dataType: 'json',
-                    }).done(function(data) {
-                        window.location.href = hr;
-                    }).fail(function(data) {
-                        alert('{{ '失敗しました。'|trans }}');
-                    })
-                
+                    url: url,
+                    type: form.attr('method'),
+                    data: form.serialize(),
+                    dataType: 'json',
+                }).done(function(data) {
+                    window.location.href = hr;
+                }).fail(function(data) {
+                    alert('{{ '失敗しました。'|trans }}');
+                })
+
             })
         })
 
@@ -169,19 +169,24 @@ file that was distributed with this source code.
                             <dl class="flex">
                                 <dt>配送方法</dt>
                                 <dd>
-                    {% for shipping in Order.shippings %}
-                        {% set idx = loop.index0 %}
-                        {% set isShowReducedTaxMess = false %}
-                                    {{ form_widget(form.Shippings[idx].Delivery) }}
-                                    {{ form_errors(form.Shippings[idx].Delivery) }}
-                    {% endfor %}
+                                    {% for shipping in Order.shippings %}
+                                        {% set idx = loop.index0 %}
+                                        {% set isShowReducedTaxMess = false %}
+                                        {{ form_widget(form.Shippings[idx].Delivery) }}
+                                        {{ form_errors(form.Shippings[idx].Delivery) }}
+                                    {% endfor %}
                                 </dd>
                             </dl>
                             <dl class="flex">
                                 <dt>お届け時間</dt>
                                 <dd>
                                     <select name="" id="">
-                                        <option value="">指定不可</option>
+                                        <option value="">指定なし</option>
+                                        <option value="8:00 - 12:00">8:00 - 12:00</option>
+                                        <option value="14:00 - 16:00">14:00 - 16:00</option>
+                                        <option value="16:00 - 18:00">16:00 - 18:00</option>
+                                        <option value="18:00 - 20:00">18:00 - 20:00</option>
+                                        <option value="19:00 - 21:00">19:00 - 21:00</option>
                                     </select>
                                 </dd>
                             </dl>
@@ -255,12 +260,14 @@ file that was distributed with this source code.
                                                         <dd>{% if orderItem.ship == 1 %} 最短 {% else %} 翌月 {% endif %}</dd>
                                                     </dl>
                                                 </li>
-{#                                                <li>#}
-{#                                                    <dl>#}
-{#                                                        <dt>USB ACアダプター:</dt>#}
-{#                                                        <dd>{% if orderItem.productId != 3 %} {{ orderItem.productClass.classCategory2 }} {% else %} {{ orderItem.productClass.classCategory1 }} {% endif %}</dd>#}
-{#                                                    </dl>#}
-{#                                                </li>#}
+                                                {% if(orderItem.productName == "モバイルプラン") %}
+                                                    <li>
+                                                        <dl>
+                                                            <dt>USB ACアダプター:</dt>
+                                                            <dd>{% if orderItem.productId != 3 %} {{ orderItem.productClass.classCategory2 }} {% else %} {{ orderItem.productClass.classCategory1 }} {% endif %}</dd>
+                                                        </dl>
+                                                    </li>
+                                                {% endif %}
                                             </ul>
                                         {% endfor %}
                                     </ul>

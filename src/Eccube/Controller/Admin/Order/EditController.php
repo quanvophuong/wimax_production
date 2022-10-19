@@ -162,7 +162,7 @@ class EditController extends AbstractController
         OrderItemTypeRepository $orderItemTypeRepository,
         OrderStatusRepository $orderStatusRepository,
         OrderStateMachine $orderStateMachine,
-        OrderHelper $orderHelper, 
+        OrderHelper $orderHelper,
         ProductClassRepository $productClassRepository,
         ClassCategoryRepository $classCategoryRepository
     ) {
@@ -703,7 +703,7 @@ class EditController extends AbstractController
         throw new BadRequestHttpException();
     }
 
-    
+
     /**
      * EC-CUBE標準の「カートに追加」を上書き
      *

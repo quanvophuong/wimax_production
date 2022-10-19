@@ -23,6 +23,7 @@ include_once(dirname(__FILE__).'/../vendor/stripe/stripe-php/init.php');
 
 use Stripe\PaymentMethod;
 use Stripe\PaymentIntent;
+use Stripe\Customer as StripeLibCustomer;
 
 class StripePaymentController extends AbstractController {
 
@@ -360,4 +361,57 @@ class StripePaymentController extends AbstractController {
         }
     }
 
+
+    /**
+     * @Route("/plugin/stripe_payment_gateway/update_card", name="plugin_stripe_payment_gateway_update_card")
+     */
+    public function updateCard(Request $request){
+        $Customer = $this->getUser();
+
+        $StripeConfig = $this->entityManager->getRepository(StripeConfig::class)->getConfigByOrder(null);        
+        $stripeClient = new StripeClient($StripeConfig->secret_key);
+
+        $StripeCustomer = $this->entityManager->getRepository(StripeCustomer::class)->findOneBy(['Customer'=>$Customer]);
+        
+        if (empty($StripeCustomer)){
+            $StripeCustomer = new StripeCustomer();
+
+            $StripeLibCustomer = StripeLibCustomer::create([
+                "email" => $Customer->getEmail()
+            ]);
+            $stripe_customer_id = $StripeLibCustomer->id;
+
+            $StripeCustomer->setCustomer($Customer);
+            $StripeCustomer->setStripeCustomerId($stripeCustomerId);
+        }else{
+            $stripe_customer_id = $StripeCustomer->getStripeCustomerId();
+        }
+
+        $stripeCard = PaymentMethod::create([
+            'type' => 'card',
+            'card' => [
+                'number' => $request->get('card_number'),
+                'exp_month' => $request->get('card_month'),
+                'exp_year' => $request->get('card_year'),
+                'cvc' =>  $request->get('card_cvc'),
+            ]
+        ]);
+
+        $payment_method = PaymentMethod::retrieve($stripeCard->id);
+
+        $stripeCardAttach = $payment_method->attach(
+            [
+                "customer" => $stripe_customer_id
+            ]
+        );
+
+        $this->entityManager->persist($StripeCustomer);
+        $this->entityManager->flush();
+        
+        return $this->json([
+            'done' => true,
+            'messages' => "success",
+        ]);
+    }
+    
 }

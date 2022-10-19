@@ -74,11 +74,11 @@ file that was distributed with this source code.
                                     </td>
                                     <td>
                                         {% for orderItem in Order.MergedProductOrderItems %}
-                                        {% if not orderItem.isPlanWithraw %}
-                                        <div class="nextTotal">
-                                            <span class="date">{{ 'now'|date_modify("+#{1} months")|date("Y年m月1日") }}</span>
-                                            <span class="price">
-                                            
+                                            {% if not orderItem.isPlanWithraw %}
+                                                <div class="nextTotal">
+                                                    <span class="date">{{ 'now'|date_modify("+#{1} months")|date("Y年m月1日") }}</span>
+                                                    <span class="price">
+
                                                     {% if orderItem.productClass.classCategory1 == 'フリー補償' %}
                                                         ¥ 5,350
                                                     {% elseif orderItem.productClass.classCategory1 == 'ライト補償' %}
@@ -87,8 +87,8 @@ file that was distributed with this source code.
                                                         ¥ 4,800
                                                     {% endif %}
                                             </span>
-                                        </div>
-                                        {% endif %}
+                                                </div>
+                                            {% endif %}
                                         {% endfor %}
                                         <div class="deviceNo">端末番号：{{ Order.order_no }}</div>
                                     </td>

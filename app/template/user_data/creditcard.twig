@@ -9,6 +9,9 @@
             padding: 0 10px !important;
             height: 40px !important;
         }
+        ul#creditcard_form>li>dl>dd{
+            display:block;
+        }
         .error {
           color: #e74c3c;
         }
@@ -161,7 +164,7 @@
                 <form id="shopping-form" method="post" action="{{ url("card_pay") }}" data-cc-on-file="false" data-stripe-publishable-key="pk_test_51HPQf3I7V9uu8qK5pPZ8ZyLPvfoFtBIFWmD5Hl5BbGlhuEgGfABCr2YuuJkujJUrb3daN9qQJhmGhev2K4fbYQQY00GdczvBIy" role="form">
                     
                     <input type="hidden" id="price" name="price" value="">
-                    <ul>
+                    <ul id="creditcard_form">
                         <li>
                             <dl>
                                 <dt>カード番号</dt>
@@ -211,7 +214,7 @@
                         <li>
                             <dl>
                                 <dt>パスワード</dt>
-                                <dd>
+                                <dd style="display: block;">
                                     <input type="password" name="card_cvc" id="card_cvc" value="" placeholder="***" class="width-s card_cvc" maxlength="4" required>
                                 </dd>
                             </dl>
@@ -229,7 +232,7 @@
                     </ul>
 
                     <div class="warning">
-                        以上の内容で間違いなければ、「支払を行う」ボタンをクリックしてください。<br>
+                        以上の内容で間違いなければ、「変更する」ボタンをクリックしてください。<br>
                         なお、ボタンの２度押しは絶対に行わないでください。二重請求となる恐れがございます。
                     </div>
 

@@ -140,7 +140,7 @@ class ShippingType extends AbstractType
                 'addr02_options' => [
                     'required' => false,
                     'constraints' => [
-                        new Assert\NotBlank(),
+                        // new Assert\NotBlank(),
                         new Assert\Length([
                             'max' => $this->eccubeConfig['eccube_mtext_len'],
                         ]),
@@ -292,7 +292,7 @@ class ShippingType extends AbstractType
                 $form = $event->getForm();
                 $Shipping = $event->getData();
                 $Delivery = $Shipping->getDelivery();
-                $Shipping->setShippingDeliveryName($Delivery ? $Delivery->getName() : null);
+                $Shipping->setShippingDeliveryName($Delivery ? $Delivery->getServiceName() : null);
                 $DeliveryTime = $form['DeliveryTime']->getData();
                 if ($DeliveryTime) {
                     $Shipping->setShippingDeliveryTime($DeliveryTime->getDeliveryTime());

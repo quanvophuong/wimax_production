@@ -23,7 +23,7 @@ class CartService extends \Eccube\Service\CartService
         if ($classCategory2 && ! $classCategory2->isVisible()) {
             return false;
         }
-
+        
         $cartItem = new CartItem();
         $cartItem->setProductClass($productClass)
                  ->setPrice($productClass->getPrice02IncTax())
@@ -37,6 +37,12 @@ class CartService extends \Eccube\Service\CartService
                            'ship' => $options['ship'],
                         ]
                     );
+            
+            if($cartItem->getShip()==2){
+                $realPrice = 3300;
+                if ($classCategory2->getId()==10) $realPrice+= 1540;
+                $cartItem->setPrice($realPrice);
+            }
         }
 
         $cartItems = $this->mergeAllCartItems([$cartItem]);

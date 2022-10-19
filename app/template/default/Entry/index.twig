@@ -150,10 +150,10 @@ file that was distributed with this source code.
                                 <dt></dt>
                                 <dd class="ec-input{{ has_errors(form.password.second) ? ' error' }}">
                                     {{ form_widget(form.password.second, {
-                                        'attr': { 'placeholder': '確認のためもう一度入力してください'|trans },
+                                        'attr': { 'placeholder': '確認のためもう一度入力してください'|trans({ '%min%': eccube_config.eccube_password_min_len, '%max%': eccube_config.eccube_password_max_len }) },
                                         'type': 'password'
                                     }) }}
-                                    {{ form_errors(form.password.second) }}
+                                    {{ form_errors(form.password.first) }}
                                     {#                                    <input type="password" name="" value="" placeholder="確認のためもう一度ご入力ください。" class="width-l"> #}
                                 </dd>
                             </dl>

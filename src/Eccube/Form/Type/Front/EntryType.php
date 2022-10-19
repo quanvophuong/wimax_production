@@ -24,6 +24,7 @@ use Eccube\Form\Type\PhoneNumberType;
 use Eccube\Form\Type\PostalType;
 use Eccube\Form\Type\RepeatedEmailType;
 use Eccube\Form\Type\RepeatedPasswordType;
+use Google\Service\CloudAsset\Asset;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -76,7 +77,14 @@ class EntryType extends AbstractType
                 'required' => true,
             ])
             ->add('email', RepeatedEmailType::class)
-            ->add('password', RepeatedPasswordType::class)
+            ->add('password', RepeatedPasswordType::class,[
+                'constraints' => [
+                    new Assert\Regex([
+                        'pattern' => '/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,32}$/',
+                        'message' => 'パスワードは半角英数字記号8～32文字で入力してください。',
+                    ])
+                ]
+            ])
             ->add('birth', BirthdayType::class, [
                 'required' => false,
                 'input' => 'datetime',

@@ -92,7 +92,6 @@ class ShippingType extends AbstractType
                     $SaleType = $ProductClass->getSaleType();
                     $SaleTypes[$SaleType->getId()] = $SaleType;
                 }
-
                 // 販売種別に紐づく配送業者を取得.
                 $Deliveries = $this->deliveryRepository->getDeliveries($SaleTypes);
 
@@ -247,7 +246,7 @@ class ShippingType extends AbstractType
             /** @var Delivery $Delivery */
             $Delivery = $form['Delivery']->getData();
             if ($Delivery) {
-                $Shipping->setShippingDeliveryName($Delivery->getName());
+                $Shipping->setShippingDeliveryName($Delivery->getServiceName());
             } else {
                 $Shipping->setShippingDeliveryName(null);
             }

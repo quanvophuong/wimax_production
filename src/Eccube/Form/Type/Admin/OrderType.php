@@ -144,7 +144,7 @@ class OrderType extends AbstractType
                 'addr02_options' => [
                     'required' => false,
                     'constraints' => [
-                        new Assert\NotBlank(),
+                        // new Assert\NotBlank(),
                         new Assert\Length([
                             'max' => $this->eccubeConfig['eccube_mtext_len'],
                         ]),
