@@ -25,6 +25,7 @@ use Eccube\Repository\OrderRepository;
 use Eccube\Repository\ProductClassRepository;
 use Eccube\Service\Cart\CartItemAllocator;
 use Eccube\Service\Cart\CartItemComparator;
+use Eccube\Common\EccubeConfig;
 use Eccube\Util\StringUtil;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -89,11 +90,13 @@ class CartService
      */
     protected $authorizationChecker;
 
+    protected $eccubeConfig;
     /**
      * CartService constructor.
      */
     public function __construct(
         SessionInterface $session,
+        EccubeConfig $eccubeConfig,
         EntityManagerInterface $entityManager,
         ProductClassRepository $productClassRepository,
         CartRepository $cartRepository,
@@ -112,6 +115,7 @@ class CartService
         $this->orderRepository = $orderRepository;
         $this->tokenStorage = $tokenStorage;
         $this->authorizationChecker = $authorizationChecker;
+        $this->eccubeConfig = $eccubeConfig;
     }
 
     /**

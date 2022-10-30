@@ -136,3 +136,9 @@ parameters:
     eccube_2fa_enabled: '%env(ECCUBE_2FA_ENABLED)%'
     eccube_2fa_cookie_name: '%env(ECCUBE_2FA_COOKIE_NAME)%'
     eccube_2fa_expire: '%env(ECCUBE_2FA_EXPIRE)%'
+
+    free_max_monthly_amount: 4364
+    free_max_init_amount: 3000
+    free_max_secret_free: 500
+    free_max_secret_brand: 250
+    free_max_ac_use: 1400

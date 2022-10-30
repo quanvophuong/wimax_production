@@ -17,12 +17,23 @@ use Eccube\Entity\ItemInterface;
 use Eccube\Entity\OrderItem;
 use Eccube\Service\PurchaseFlow\ItemValidator;
 use Eccube\Service\PurchaseFlow\PurchaseContext;
+use Eccube\Common\EccubeConfig;
 
 /**
  * 販売価格の変更検知.
  */
 class PriceChangeValidator extends ItemValidator
 {
+    protected $eccubeConfig;
+    /**
+     *
+     * @param EccubeConfig $eccubeConfig
+     */
+    public function __construct(EccubeConfig $eccubeConfig)
+    {
+        $this->eccubeConfig = $eccubeConfig;
+    }
+
     /**
      * @param ItemInterface $item
      * @param PurchaseContext $context
@@ -34,23 +45,26 @@ class PriceChangeValidator extends ItemValidator
         if (!$item->isProduct()) {
             return;
         }
+        $realPrice = $this->eccubeConfig['free_max_init_amount'];
+        $ProductClass = $item->getProductClass();
+        if ($item->getShip()==1){
+            $realPrice += $this->eccubeConfig['free_max_monthly_amount'];
+            if ($ProductClass->getClassCategory1()->getId()==7){
+                $realPrice += $this->eccubeConfig['free_max_secret_free'];
+            }elseif($ProductClass->getClassCategory1()->getId()==8){
+                $realPrice += $this->eccubeConfig['free_max_secret_brand'];
+            }
+        }
+
+        if ($ProductClass->getClassCategory2()->getId()==10) $realPrice += $this->eccubeConfig['free_max_ac_use'];
 
         if ($item instanceof OrderItem) {
             $price = $item->getPrice();
-            $realPrice = $item->getProductClass()->getPrice02();
-            if($item->getShip()==2){
-                $realPrice = 3000;
-                if ($item->getClassCategoryName2()=='購入する'); $realPrice+= 1400;
-            }
+            $realPrice = $realPrice;
         } else {
             // CartItem::priceは税込金額.
             $price = $item->getPrice();
-            $realPrice = $item->getProductClass()->getPrice02IncTax();
-            
-            if($item->getShip()==2){
-                $realPrice = 3300;
-                if ($item->getProductClass()->getClassCategory2()->getId()==10); $realPrice+= 1540;
-            }
+            $realPrice = intVal($realPrice * 1.1);
         }
 
         if ($price != $realPrice) {

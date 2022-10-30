@@ -54,3 +54,19 @@ a.btnclass:after {
     border-radius: 30px;
     overflow: hidden;
 }
+
+@media (max-width: 1400px) {
+    .btnclass {
+        width: 250px;
+        top: auto !important;
+        bottom: 80px;
+        left: 300px !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .btnclass {
+        bottom: 60px;
+        left: 180px !important;
+    }
+}

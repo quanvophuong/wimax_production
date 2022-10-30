@@ -30,7 +30,7 @@ use Eccube\Entity\Master\TaxDisplayType;
      */
     class OrderItem extends \Eccube\Entity\AbstractEntity implements ItemInterface
     {
-        use PointRateTrait, \Customize\Entity\OrderItemExtension;
+        use PointRateTrait, \Customize\Entity\OrderItemExtension, \Plugin\StripeRec\Entity\OrderItemTrait;
 
         /**
          * Get price IncTax

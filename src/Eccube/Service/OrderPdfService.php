@@ -531,36 +531,36 @@ class OrderPdfService extends TcpdfFpdi
             $arrOrder[$i][3] = '¥3,300';
             ++$i;
 
-            $arrOrder[$i][0] = $OrderItem->getProductName();
-            $arrOrder[$i][1] = '1';
-            $arrOrder[$i][2] = '¥4,364';
-            $arrOrder[$i][3] = '¥4,800';
-            ++$i;
-            
-            $arrOrder[$i][0] = '安心補償オプション＊' . $OrderItem->getClassCategoryName1();
-            $arrOrder[$i][1] = '1';
-            if ($OrderItem->getClassCategoryName1()=='フリー補償'){
-                $arrOrder[$i][2] = '¥500';
-                $arrOrder[$i][3] = '¥550';
-            }elseif($OrderItem->getClassCategoryName1()=='ライト補償'){
-                $arrOrder[$i][2] = '¥250';
-                $arrOrder[$i][3] = '¥275';
-            }else{
-                $arrOrder[$i][2] = '¥0';
-                $arrOrder[$i][3] = '¥0';
-            }
-            ++$i;
+            if ($OrderItem->getShip()==1){
 
-            $arrOrder[$i][0] = 'USB ACアダプター＊' . $OrderItem->getClassCategoryName2();
-            $arrOrder[$i][1] = '1';
+                $arrOrder[$i][0] = $OrderItem->getProductName();
+                $arrOrder[$i][1] = '1';
+                $arrOrder[$i][2] = '¥4,364';
+                $arrOrder[$i][3] = '¥4,800';
+                ++$i;
+                
+                $arrOrder[$i][0] = '安心補償オプション＊' . $OrderItem->getClassCategoryName1();
+                $arrOrder[$i][1] = '1';
+                if ($OrderItem->getClassCategoryName1()=='フリー補償'){
+                    $arrOrder[$i][2] = '¥500';
+                    $arrOrder[$i][3] = '¥550';
+                }elseif($OrderItem->getClassCategoryName1()=='ライト補償'){
+                    $arrOrder[$i][2] = '¥250';
+                    $arrOrder[$i][3] = '¥275';
+                }else{
+                    $arrOrder[$i][2] = '¥0';
+                    $arrOrder[$i][3] = '¥0';
+                }
+                ++$i;
+            }
+
             if ($OrderItem->getClassCategoryName2()=='購入する'){
+                $arrOrder[$i][0] = 'USB ACアダプター＊' . $OrderItem->getClassCategoryName2();
+                $arrOrder[$i][1] = '1';
                 $arrOrder[$i][2] = '¥1,400';
                 $arrOrder[$i][3] = '¥1,540';
-            }else{
-                $arrOrder[$i][2] = '¥0';
-                $arrOrder[$i][3] = '¥0';
+                ++$i;
             }
-            ++$i;
         }
 
         if (!$Order->isMultiple()) {

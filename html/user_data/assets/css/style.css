@@ -2147,7 +2147,7 @@ section .rellax.pos3 {
 
 @media screen and (max-width: 640px) {
   #wrap main .formContent form .tabs .tab_item {
-    width: 40%;
+    width: 44%;
     margin-right: 5px;
   }
 }
@@ -2178,6 +2178,7 @@ section .rellax.pos3 {
 
 #wrap main .formContent form .tabs .tab_content .boxL {
   width: 43%;
+  text-align: center;
 }
 
 @media screen and (max-width: 640px) {
@@ -3058,3 +3059,23 @@ section .rellax.pos3 {
 }
 
 /*# sourceMappingURL=style.css.map */
+
+
+#wrap main .formContent form .formContentBlock label[for=creditcard] {
+  display: flex;
+}
+
+#wrap main .formContent form .formContentBlock label[for=creditcard]>div:first-child {
+  width: 60%;
+}
+
+@media screen and (max-width: 640px) {
+  #wrap main .formContent form .formContentBlock label[for=creditcard] {
+    display: block;
+  }
+
+  #wrap main .formContent form .formContentBlock label[for=creditcard]>div:first-child {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+}

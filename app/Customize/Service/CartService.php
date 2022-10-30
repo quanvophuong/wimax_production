@@ -9,6 +9,12 @@ use Eccube\Entity\ProductClass;
 
 class CartService extends \Eccube\Service\CartService
 {
+
+    /**
+     * @var array
+     */
+    protected $eccubeConfig;
+
     /**
      * @param array{string, string} $options
      */
@@ -38,11 +44,19 @@ class CartService extends \Eccube\Service\CartService
                         ]
                     );
             
-            if($cartItem->getShip()==2){
-                $realPrice = 3300;
-                if ($classCategory2->getId()==10) $realPrice+= 1540;
-                $cartItem->setPrice($realPrice);
+            $price = $this->eccubeConfig['free_max_init_amount'];
+            if ($cartItem->getShip()==1){
+                $price += $this->eccubeConfig['free_max_monthly_amount'];
+                if ($classCategory1->getId()==7){
+                    $price += $this->eccubeConfig['free_max_secret_free'];
+                }elseif($classCategory1->getId()==8){
+                    $price += $this->eccubeConfig['free_max_secret_brand'];
+                }
             }
+            
+            if ($classCategory2->getId()==10) $price += $this->eccubeConfig['free_max_ac_use'];
+            
+            $cartItem->setPrice(intVal($price*1.1));
         }
 
         $cartItems = $this->mergeAllCartItems([$cartItem]);

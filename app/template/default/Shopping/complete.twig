@@ -21,7 +21,7 @@
                 </div>
                 <div>
 
-                    ご注文番号：{{ Order.orderNo}}<br><br>
+                    ご注文番号：{{ Order.orderNo }}<br><br>
 
                     ■定期購買情報<br><br>
 
@@ -38,7 +38,7 @@
                         {% endif %}
                     {% endfor %}
                     円税込<br>
-                    　　　　　・次回課金日：{{ 'now'|date_modify("+#{1} months")|date("y年m月1日") }}<br>
+                    　　　　　・次回課金日：{{ 'now'|date_modify("+#{1} months")|date("Y年m月1日") }}<br>
                     　　　　　・課金間隔：毎月1日<br>
                 </div>
                 <div class="btn-wrap">
@@ -56,7 +56,7 @@
     (function(){
         var uqid   = "5dae53Dceda2XD48";
         var cid    = "576";
-        var uid   = "{{ Order.id }}";
+        var uid   = "{{ Order.orderNo }}";
         var uid2   = "";
         var af   = "";
         var pid    = "";
@@ -68,7 +68,7 @@
         document.body.appendChild(a)})();
 </script>
 <!--adtown-->
-<div id="atown-conversion-tag" data-atown-conversion-tag="https://ad.atown.jp/adserver/ap.af?aid=10225&u1=＜{{ Order.id }}＞" style="display: none;"></div>
+<div id="atown-conversion-tag" data-atown-conversion-tag="https://ad.atown.jp/adserver/ap.af?aid=10225&u1=＜{{ Order.orderNo }}＞" style="display: none;"></div>
 <script type="text/javascript" src="https://ad.atown.jp/adserver/js/lib/clickaction/action.js"></script>
 <!--rentracks-->
 <script type="text/javascript">
@@ -99,7 +99,7 @@
     _rt.cname = '';
     _rt.ctel = '';
     _rt.cemail = '';
-    _rt.cinfo = '{{ Order.id }}';
+    _rt.cinfo = '{{ Order.orderNo }}';
     rt_tracktag();
     });
     }(function(){}));
@@ -110,7 +110,7 @@
     <script>
         a8sales({
             "pid": "s00000016921004",
-            "order_number": "{{ Order.id }}",
+            "order_number": "{{ Order.orderNo }}",
             "currency": "JPY",
             "items": [
                 {
@@ -124,13 +124,14 @@
 </script>
 <!--sphere-->
 <script>
-    (function acsTrack(){
-        var _ARGSV = "{{ Order.id }}";
-        var KEYS = {cid : ["CL_", "ACT_", "cid_auth_get_type"], plid : ["PL_", "APT_", "plid_auth_get_type"]};
-        var turl = "https://sphere.ntg-lab.com/track.php?p=" + PV + "&args=" + _ARGSV;
-            var cks = document.cookie.split("; ").reduce(function(ret, s){ var kv = s.split("="); if(kv[0] && kv[1]) ret[kv[0]] = kv[1]; return ret; }, []);
-        turl = Object.keys(KEYS).reduce(function(url, k){ var vk = KEYS[k][0] + PV; var tk = KEYS[k][1] + PV; var v = "", t = ""; if(cks[vk]){ v = cks[vk]; if(cks[tk]) t = cks[tk]; }else if(localStorage.getItem(vk)){ v = localStorage.getItem(vk); t = "ls"; } if(v) url += "&" + k + "=" + v; if(t) url += "&" + KEYS[k][2] + "=" + t; return url; }, turl);
-        var xhr = new XMLHttpRequest(); xhr.open("GET", turl); xhr.send(); })();
+(function acsTrack(){
+var PV = "ph6d2hqi9xa9";
+var _ARGSV = "{{ Order.orderNo }}";
+var KEYS = {cid : ["CL_", "ACT_", "cid_auth_get_type"], plid : ["PL_", "APT_", "plid_auth_get_type"]};
+var turl = "https://sphere.ntg-lab.com/track.php?p=" + PV + "&args=" + _ARGSV;
+var cks = document.cookie.split("; ").reduce(function(ret, s){ var kv = s.split("="); if(kv[0] && kv[1]) ret[kv[0]] = kv[1]; return ret; }, []);
+turl = Object.keys(KEYS).reduce(function(url, k){ var vk = KEYS[k][0] + PV; var tk = KEYS[k][1] + PV; var v = "", t = ""; if(cks[vk]){ v = cks[vk]; if(cks[tk]) t = cks[tk]; }else if(localStorage.getItem(vk)){ v = localStorage.getItem(vk); t = "ls"; } if(v) url += "&" + k + "=" + v; if(t) url += "&" + KEYS[k][2] + "=" + t; return url; }, turl);
+var xhr = new XMLHttpRequest(); xhr.open("GET", turl); xhr.send(); })();
 </script>
 
 {% endblock %}

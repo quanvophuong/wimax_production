@@ -845,14 +845,5 @@ if (!class_exists('\Eccube\Entity\OrderItem')) {
             return $this;
         }
 
-        /**
-         * Get orderItemType
-         *
-         * @return \Eccube\Entity\Master\OrderItemType
-         */
-        public function getOrderItemType()
-        {
-            return $this->OrderItemType;
-        }
     }
 }

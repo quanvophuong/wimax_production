@@ -127,4 +127,66 @@ trait OrderItemExtension
         );
         return $this;
     }
+
+    public function getSumPrice()
+    {
+        $price = 3300 + 4800;
+        $secret_option = $this->ProductClass->getClassCategory1()->getId();
+        $ac_option = $this->ProductClass->getClassCategory2()->getId();
+        switch ($secret_option) {
+            case 7:
+                $price += 550;
+                break;
+            case 8:
+                $price += 275;
+                break;
+            default:
+                break;
+        }
+
+        if ($ac_option==10) $price += 1540;
+        return $price;
+    }
+
+    public function getInitPrice()
+    {
+        $price = 3300;
+        if ($this->ship==1){
+            $price += 4800;
+            $secret_option = $this->ProductClass->getClassCategory1()->getId();
+            switch ($secret_option) {
+                case 7:
+                    $price += 550;
+                    break;
+                case 8:
+                    $price += 275;
+                    break;
+                default:
+                    break;
+            }
+    
+        }
+        $ac_option = $this->ProductClass->getClassCategory2()->getId();
+
+        if ($ac_option==10) $price += 1540;
+        return $price;
+    }
+
+    public function getNextPrice()
+    {
+        $price = 4800;
+        $secret_option = $this->ProductClass->getClassCategory1()->getId();
+        switch ($secret_option) {
+            case 7:
+                $price += 550;
+                break;
+            case 8:
+                $price += 275;
+                break;
+            default:
+                break;
+        }
+
+        return $price;
+    }
 }

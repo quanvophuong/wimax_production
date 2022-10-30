@@ -38,7 +38,7 @@ use Eccube\Entity\Payment;
 
 class StripeClient
 {
-    public $zeroDecimalCurrencies = ["BIF", "CLP", "DJF", "GNF", "JPY", "KMF", "KRW", "MGA", "PYG", "RWF", "UGX", "VND", "VUV", "XAF", "XOF", "XPF"];
+    public $zeroDecimalCurrencies = ["JPY", "BIF", "CLP", "DJF", "GNF", "JPY", "KMF", "KRW", "MGA", "PYG", "RWF", "UGX", "VND", "VUV", "XAF", "XOF", "XPF"];
 
     public static $errorMessages = array(
         'card_declined'=>'カードを請求できませんでした。',
@@ -91,7 +91,7 @@ class StripeClient
 
     public function getAmountToSentInStripe($amount, $currency)
     {
-        if(!in_array($currency, $this->zeroDecimalCurrencies)){
+        if(!in_array(strtoupper($currency), $this->zeroDecimalCurrencies)){
             return (int)($amount*100);
         }
         return (int)$amount;

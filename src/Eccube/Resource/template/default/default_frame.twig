@@ -60,6 +60,7 @@ file that was distributed with this source code.
     <link rel="stylesheet" href="{{ asset('assets/css/customize.css', 'user_data') }}">
 </head>
 <body id="page_{{ app.request.get('_route') }}" class="{{ body_class|default('other_page') }}">
+{{ include('tag_manager.twig') }}
 {# Layout: BODY_AFTER #}
 {% if Layout.BodyAfter %}
     {{ include('block.twig', {'Blocks': Layout.BodyAfter}) }}

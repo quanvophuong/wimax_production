@@ -40,6 +40,15 @@ file that was distributed with this source code.
         footer{
             background: white !important;
         }
+
+        .input-group{
+            margin-bottom:16px;
+        }
+        .input-group input, .error.ec-input .input-group input{
+            margin-bottom:0px;
+            border-top-right-radius: 0px !important;
+            border-bottom-right-radius: 0px !important;
+        }
     </style>
     <div id="wrap">
         <main id="mypage">
@@ -146,10 +155,15 @@ file that was distributed with this source code.
                                 <dl>
                                     <dt>パスワード<span class="required">必須</span></dt>
                                     <dd class="ec-input{{ has_errors(form.password.first) ? ' error' }}">
-                                        {{ form_widget(form.password.first, {
-                                            'attr': { 'placeholder': '半角英数記号%min%〜%max%文字'|trans({ '%min%': eccube_config.eccube_password_min_len, '%max%': eccube_config.eccube_password_max_len }) },
-                                            'type': 'password'
-                                        }) }}
+                                        <div class="input-group" id="show_hide_password">
+                                            {{ form_widget(form.password.first, {
+                                                'attr': { 'placeholder': '半角英数%min%文字以上'|trans({ '%min%': eccube_config.eccube_password_min_len }), 'maxlength': 32 },
+                                                'type': 'password'
+                                            }) }}
+                                            <div class="input-group-addon">
+                                                <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                            </div>
+                                        </div>
                                         {{ form_errors(form.password.first) }}
                                         {#                                    <input type="password" name="" value="" placeholder="********" class="width-l"> #}
                                     </dd>
@@ -157,10 +171,15 @@ file that was distributed with this source code.
                                 <dl>
                                     <dt></dt>
                                     <dd class="ec-input{{ has_errors(form.password.second) ? ' error' }}">
-                                        {{ form_widget(form.password.second, {
-                                            'attr': { 'placeholder': '確認のためもう一度入力してください'|trans({ '%min%': eccube_config.eccube_password_min_len, '%max%': eccube_config.eccube_password_max_len }) },
-                                            'type': 'password'
-                                        }) }}
+                                        <div class="input-group" id="show_hide_confirm_password">
+                                            {{ form_widget(form.password.second, {
+                                                'attr': { 'placeholder': '確認のためもう一度入力してください'|trans({ '%min%': eccube_config.eccube_password_min_len, '%max%': eccube_config.eccube_password_max_len }), 'maxlength': 32 },
+                                                'type': 'password'
+                                            }) }}
+                                            <div class="input-group-addon">
+                                                <a href=""><i class="fa fa-eye-slash" aria-hidden="true"></i></a>
+                                            </div>
+                                        </div>
                                         {{ form_errors(form.password.first) }}
                                         {#                                    <input type="password" name="" value="" placeholder="確認のためもう一度ご入力ください。" class="width-l"> #}
                                     </dd>
@@ -227,4 +246,32 @@ file that was distributed with this source code.
             </section>
         </main>
     </div>
+    <script>
+        $(document).ready(function() {
+            $("#show_hide_password a").on('click', function(event) {
+                event.preventDefault();
+                if($('#show_hide_password input').attr("type") == "text"){
+                    $('#show_hide_password input').attr('type', 'password');
+                    $('#show_hide_password i').addClass( "fa-eye-slash" );
+                    $('#show_hide_password i').removeClass( "fa-eye" );
+                }else if($('#show_hide_password input').attr("type") == "password"){
+                    $('#show_hide_password input').attr('type', 'text');
+                    $('#show_hide_password i').removeClass( "fa-eye-slash" );
+                    $('#show_hide_password i').addClass( "fa-eye" );
+                }
+            }); 
+            $("#show_hide_confirm_password a").on('click', function(event) {
+                event.preventDefault();
+                if($('#show_hide_confirm_password input').attr("type") == "text"){
+                    $('#show_hide_confirm_password input').attr('type', 'password');
+                    $('#show_hide_confirm_password i').addClass( "fa-eye-slash" );
+                    $('#show_hide_confirm_password i').removeClass( "fa-eye" );
+                }else if($('#show_hide_confirm_password input').attr("type") == "password"){
+                    $('#show_hide_confirm_password input').attr('type', 'text');
+                    $('#show_hide_confirm_password i').removeClass( "fa-eye-slash" );
+                    $('#show_hide_confirm_password i').addClass( "fa-eye" );
+                }
+            });
+        });
+    </script>
 {% endblock %}

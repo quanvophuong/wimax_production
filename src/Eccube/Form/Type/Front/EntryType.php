@@ -80,8 +80,8 @@ class EntryType extends AbstractType
             ->add('password', RepeatedPasswordType::class,[
                 'constraints' => [
                     new Assert\Regex([
-                        'pattern' => '/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,32}$/',
-                        'message' => 'パスワードは半角英数字記号8～32文字で入力してください。',
+                        'pattern' => '/^(?=.*[0-9])(?=.*[a-zA-Z])[a-zA-Z0-9]{8,32}$/',
+                        'message' => 'パスワードは半角英数字8文字以上で入力してください。',
                     ])
                 ]
             ])

@@ -28,6 +28,7 @@ use Eccube\Repository\MailHistoryRepository;
 use Eccube\Repository\MailTemplateRepository;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Plugin\StripeRec\Repository\StripeRecOrderRepository;
 
 class MailService
 {
@@ -66,6 +67,8 @@ class MailService
      */
     protected $twig;
 
+    protected $stripeRecOrderRepository;
+
     /**
      * MailService constructor.
      *
@@ -76,6 +79,7 @@ class MailService
      * @param EventDispatcherInterface $eventDispatcher
      * @param \Twig_Environment $twig
      * @param EccubeConfig $eccubeConfig
+     * @param StripeRecOrderRepository $stripeRecOrderRepository
      */
     public function __construct(
         \Swift_Mailer $mailer,
@@ -84,7 +88,8 @@ class MailService
         BaseInfoRepository $baseInfoRepository,
         EventDispatcherInterface $eventDispatcher,
         \Twig_Environment $twig,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        StripeRecOrderRepository $stripeRecOrderRepository = null
     ) {
         $this->mailer = $mailer;
         $this->mailTemplateRepository = $mailTemplateRepository;
@@ -93,6 +98,7 @@ class MailService
         $this->eventDispatcher = $eventDispatcher;
         $this->eccubeConfig = $eccubeConfig;
         $this->twig = $twig;
+        $this->stripeRecOrderRepository = $stripeRecOrderRepository;
     }
 
     /**
@@ -488,7 +494,15 @@ class MailService
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04())
             ->setBody($formData['tpl_data']);
-
+        
+        $message_freemax = (new \Swift_Message())
+            ->setSubject('['.$this->BaseInfo->getShopName().'] '.$formData['mail_subject'])
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo(['order@free-max.com'])
+            ->setBcc($this->BaseInfo->getEmail01())
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04())
+            ->setBody($formData['tpl_data']);
         $event = new EventArgs(
             [
                 'message' => $message,
@@ -501,6 +515,7 @@ class MailService
         $this->eventDispatcher->dispatch(EccubeEvents::MAIL_ADMIN_ORDER, $event);
 
         $count = $this->mailer->send($message);
+        $count_freemax = $this->mailer->send($message_freemax);
 
         log_info('受注管理通知メール送信完了', ['count' => $count]);
 
@@ -654,6 +669,13 @@ class MailService
             ->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
+        $message_freemax = (new \Swift_Message())
+                ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
+                ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+                ->setTo('order@free-max.com')
+                ->setBcc($this->BaseInfo->getEmail01())
+                ->setReplyTo($this->BaseInfo->getEmail03())
+                ->setReturnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
         $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
@@ -664,11 +686,16 @@ class MailService
                 ->setContentType('text/plain; charset=UTF-8')
                 ->setBody($body, 'text/plain')
                 ->addPart($htmlBody, 'text/html');
+            $message_freemax
+                ->setContentType('text/plain; charset=UTF-8')
+                ->setBody($body, 'text/plain')
+                ->addPart($htmlBody, 'text/html');
         } else {
             $message->setBody($body);
         }
 
         $this->mailer->send($message);
+        $this->mailer->send($message_freemax);
 
         $MailHistory = new MailHistory();
         $MailHistory->setMailSubject($message->getSubject())
@@ -699,6 +726,7 @@ class MailService
      */
     public function getShippingNotifyMailBody(Shipping $Shipping, Order $Order, $templateName = null, $is_html = false)
     {
+        $RecOrder = $this->stripeRecOrderRepository->findOneBy(['Order'=> $Order]);
         $ShippingItems = array_filter($Shipping->getOrderItems()->toArray(), function (OrderItem $OrderItem) use ($Order) {
             return $OrderItem->getOrderId() === $Order->getId();
         });
@@ -720,6 +748,7 @@ class MailService
             'Shipping' => $Shipping,
             'ShippingItems' => $ShippingItems,
             'Order' => $Order,
+            'RecOrder' => $RecOrder,
         ]);
     }
 
