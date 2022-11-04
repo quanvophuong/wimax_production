@@ -29,7 +29,7 @@ class ConfigService{
     const PAID_MAIL_NAME = "Stripe 支払い成功メール";
     const PAY_FAILED_MAIL_NAME = "Stripe 定期支払い失敗メール";
     const PAY_UPCOMING = "Stripe 定期支払い待機メール";
-    const REC_CANCELED = "Stripe 定期支払いキャンセル済みメール";
+    const REC_CANCELED = "Stripe サブスク停止メール";
     const REC_ORDER_THANKS = '定期支払いご注文ありがとうございます';
 
     //===========================

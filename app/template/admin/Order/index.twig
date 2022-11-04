@@ -38,6 +38,26 @@ file that was distributed with this source code.
 
     <script>
         $(function() {
+
+            $('.btn_stripe').click(function() {
+                var order_id = $(this).attr('data-id');
+                var url = '{{ url('admin_order_update_stripe') }}';
+                 $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: {'order_id': order_id}
+                }).done(function(data, textStatus, jqXHR) {
+                    console.log(data)
+                    if(data == "OK"){
+                        alert('正常に反映されました。');
+                    }
+                    return true;
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                 alert('反映に失敗しました。再度お試しください。');
+                    return false;
+                });
+            });
+
             // datetimepicker で value が消えてしまうので data-value に保持しておく
             $('input.datetimepicker-input').each(function() {
                 $(this).data('value', $(this).val());
@@ -652,6 +672,11 @@ file that was distributed with this source code.
                                                                data-preview-notify-mail-url="{{ url('admin_shipping_preview_notify_mail', { id: Shipping.id}) }}"
                                                                data-tooltip="true" data-placement="top" title data-original-title="{{ 'admin.order.to_shipped'|trans }}">
                                                                 <i class="fa fa-check fa-lg text-secondary" aria-hidden="true"></i>
+                                                            </a>
+                                                        </div>
+                                                        <div class="px-1 d-inline-block">
+                                                            <a class="btn btn-ec-actionIcon btn_stripe" id="btn_stripe" data-id="{{ Order.id }}" data-tooltip="true" data-placement="top" title="Stripeに注文番号反映">
+                                                                <i class="fa fa-cc-stripe fa-lg text-secondary" aria-hidden="true"></i>
                                                             </a>
                                                         </div>
                                                     </div>

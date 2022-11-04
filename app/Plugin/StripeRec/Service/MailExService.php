@@ -107,7 +107,7 @@ class MailExService extends MailService{
         $body = $engine->render($template_path, $param, null);
         $htmlFileName = $this->getHtmlTemplate($template_path);
 
-        $message = $this->initialMsg($rec_order, $template);
+        $message = $this->initialMsgCustom($rec_order, $template, 'user_only', '');
 
         $message->setBody($body);
         if($htmlFileName){
@@ -135,7 +135,7 @@ class MailExService extends MailService{
         $body = $engine->render($template_path, $param, null);
         $htmlFileName = $this->getHtmlTemplate($template_path);
 
-        $message = $this->initialMsg($rec_order, $template);
+        $message = $this->initialMsgCustom($rec_order, $template, 'admin_only', 'info@free-max.com');
 
         $message->setBody($body);
         if($htmlFileName){
@@ -163,7 +163,7 @@ class MailExService extends MailService{
         $body = $engine->render($template_path, $param, null);
         $htmlFileName = $this->getHtmlTemplate($template_path);
 
-        $message = $this->initialMsg($rec_order, $template);
+        $message = $this->initialMsgCustom($rec_order, $template, 'with_admin', 'info@free-max.com');
 
         $message->setBody($body);
         if($htmlFileName){
@@ -289,4 +289,21 @@ class MailExService extends MailService{
         log_info(RecurringHookController::LOG_IF . "send");
     }
 
+    public function initialMsgCustom($rec_order, $template, $receive_type, $admin_email){
+        if($receive_type == 'admin_only'){
+            $receive_emails = [$admin_email];
+        }elseif ($receive_type == 'with_admin'){
+            $receive_emails = [$rec_order->getOrder()->getEmail(), $admin_email];
+        }else{
+            $receive_emails = [$rec_order->getOrder()->getEmail()];
+        }
+        $message = (new \Swift_Message())
+            ->setSubject('['.$this->BaseInfo->getShopName().'] '.$template->getMailSubject())
+            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
+            ->setTo($receive_emails)
+            ->setBcc($this->BaseInfo->getEmail01())
+            ->setReplyTo($this->BaseInfo->getEmail03())
+            ->setReturnPath($this->BaseInfo->getEmail04());
+        return $message;
+    }
 }

@@ -40,7 +40,11 @@ use Eccube\Service\OrderStateMachine;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
 use Eccube\Util\FormUtil;
 use Knp\Component\Pager\PaginatorInterface;
+use Plugin\StripeRec\Repository\StripeRecOrderRepository;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Stripe\Invoice;
+use Stripe\PaymentIntent;
+use Stripe\Subscription;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -124,6 +128,11 @@ class OrderController extends AbstractController
     protected $mailService;
 
     /**
+     * @var StripeRecOrderRepository
+     */
+    protected $stripeRecOrderRepository;
+
+    /**
      * OrderController constructor.
      *
      * @param PurchaseFlow $orderPurchaseFlow
@@ -138,7 +147,8 @@ class OrderController extends AbstractController
      * @param OrderRepository $orderRepository
      * @param OrderPdfRepository $orderPdfRepository
      * @param ValidatorInterface $validator
-     * @param OrderStateMachine $orderStateMachine ;
+     * @param OrderStateMachine $orderStateMachine
+     * @param StripeRecOrderRepository $stripeRecOrderRepository
      */
     public function __construct(
         PurchaseFlow $orderPurchaseFlow,
@@ -154,7 +164,8 @@ class OrderController extends AbstractController
         OrderPdfRepository $orderPdfRepository,
         ValidatorInterface $validator,
         OrderStateMachine $orderStateMachine,
-        MailService $mailService
+        MailService $mailService,
+        StripeRecOrderRepository $stripeRecOrderRepository
     ) {
         $this->purchaseFlow = $orderPurchaseFlow;
         $this->csvExportService = $csvExportService;
@@ -170,6 +181,7 @@ class OrderController extends AbstractController
         $this->validator = $validator;
         $this->orderStateMachine = $orderStateMachine;
         $this->mailService = $mailService;
+        $this->stripeRecOrderRepository = $stripeRecOrderRepository;
     }
 
     /**
@@ -835,5 +847,41 @@ class OrderController extends AbstractController
         }
 
         return $response;
+    }
+
+    /**
+     * @Route("/%eccube_admin_route%/order/update-stripe", name="admin_order_update_stripe", methods={"POST"})
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function updateStripe(Request $request)
+    {
+        if($request->getMethod() == "POST"){
+            $order_id = $request->request->get('order_id');
+            $targeted_stripe_rec_order = $this->stripeRecOrderRepository->findOneBy(['Order' => $order_id]);
+
+            if(!empty($targeted_stripe_rec_order)){
+                $subscription_id = $targeted_stripe_rec_order->getSubscriptionId();
+                $subscription = Subscription::retrieve($subscription_id);
+
+                $latest_invoice = $subscription->latest_invoice;
+                $invoice = Invoice::retrieve($latest_invoice);
+
+                $payment_intent_id = $invoice->payment_intent;
+
+                // update payment intent description
+                $update_pi_desc = PaymentIntent::update($payment_intent_id,[
+                    'description' => $targeted_stripe_rec_order->getOrder()->getOrderNo()
+                ]);
+
+                if($update_pi_desc){
+                    return new Response('OK');
+                }
+            }
+
+            return new Response('NG',404);
+        }
     }
 }

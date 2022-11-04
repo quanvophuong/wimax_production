@@ -162,10 +162,10 @@ class RecurringService{
             $order = $rec_order->getOrder();
             if($order){
                 if (!$this->hasOverlappedPaidOrder($rec_order)) {
-                    $NewOrder = $this->createNewOrder($rec_order, OrderStatus::PAID);
-                    $this->dispatcher->dispatch(StripeRecEvent::REC_ORDER_SUBSCRIPTION_PAID, new EventArgs([
-                        'rec_order' =>  $rec_order,
-                    ]));
+                    $Order = $this->updateOrder($rec_order, OrderStatus::PAID);
+                    // $this->dispatcher->dispatch(StripeRecEvent::REC_ORDER_SUBSCRIPTION_PAID, new EventArgs([
+                    //     'rec_order' =>  $rec_order,
+                    // ]));
                 }
                 
                 if($rec_order->getLastChargeId() !== $object->charge){
@@ -183,7 +183,7 @@ class RecurringService{
         switch($type){
             case "invoice.paid":
                 log_info("sending mail invoice.paid");
-                $this->mail_service->sendPaidMail($rec_order);
+                //$this->mail_service->sendPaidMail($rec_order);
             break;
             case "invoice.upcoming":
                 log_info("sending mail invoice.paid");
@@ -474,6 +474,32 @@ class RecurringService{
             }            
             return $res;
         }
+    }
+
+    public function updateOrder($rec_order, $paid_status_id = OrderStatus::PAID) 
+    {
+        log_info("create new order");
+        $Order = $rec_order->getOrder();
+        
+        $Today = new \DateTime();
+        $Order->setPaymentDate($Today);
+        $OrderStatus = $this->em->getRepository(OrderStatus::class)->find($paid_status_id);
+        $Order->setOrderStatus($OrderStatus);
+        $Order->setRecorder($rec_order);
+        
+        if ($rec_order->getInvoiceData()) {
+            $Order->setInvoiceid($rec_order->getInvoiceData()->id);
+        }
+        
+        if ($rec_order->getPaymentCount() == 0) {
+            $Order->setIsInitialRec(true);
+        } else {
+            $Order->setIsInitialRec(false);
+        }
+        $this->em->persist($Order);
+        $this->em->flush();
+
+        return $Order;
     }
 
     public function createNewOrder($rec_order, $paid_status_id = OrderStatus::PAID) 

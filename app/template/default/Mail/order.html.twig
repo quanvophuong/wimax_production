@@ -55,16 +55,18 @@ file that was distributed with this source code.
                                 <br />
                             <hr style="border-top: 2px dashed #8c8b8b;">
                             ［初回ご利用額］<br/>
-                                月額料金　　　　{{ Order.MergedProductOrderItems[0].nextPrice|number_format }}円<br/>
-                                初期費用　　　　{{ Order.MergedProductOrderItems[0].initPrice|number_format }}円<br/>
+                                月額料金　　　　{% if Order.MergedProductOrderItems[0].ship == 1 %}4,800円{% else %}0円{% endif %}<br/>
+                                初期費用　　　　3,300円<br/>
                                 <br />
                                 端末補償　　　　{{ Order.MergedProductOrderItems[0].productClass.classCategory1 }}
                                         {% if Order.MergedProductOrderItems[0].productClass.classCategory1 == 'フリー補償' %}
                                             (550円)
                                         {% elseif Order.MergedProductOrderItems[0].productClass.classCategory1 == 'ライト補償' %}
                                             (275円)
+                                        {% else %}
+                                            (0円)
                                         {% endif %}<br/>
-                                利用開始　　　　{% if Order.ship == '1' %}
+                                利用開始　　　　{% if Order.MergedProductOrderItems[0].ship == '1' %}
                                             最短
                                         {% else %}
                                             翌月
@@ -139,20 +141,28 @@ file that was distributed with this source code.
                             マイページＵＲＬ：https://free-max.com/mypage/<br/>
                             <br/>		
                             【ご注文後の注意点】<br/>
-                            ・ご契約者様とクレジットカードの名義人が異なる場合、商品の発送ができません。<br/>
-                            ・商品発送後のキャンセルはお受けできません。<br/>
-                            ・店頭でのお受け取りを希望された場合、翌営業日の14時～18時の間にお越しください。<br/>
+                            商品発送後のキャンセルはお受けできません。<br/>
+                            店頭受取を選択された場合、平日11:00～18:00の間でお受け取りをご希望の時間帯を、当社まで事前にご連絡ください。<br/>
                             <br/>		
                             【ご解約時の注意点】<br/>
-                            ・端末はレンタルとなります。下記をご確認いただきご返送ください。<br/>
-                            <br/>		
-                            【ご返却方法】<br/>
-                            返却品内容|モバイルルーター<br/>
-                            ・WiFiルーター本体<br/>
-                            <br/>		
-                            返却品内容｜ホームルーター<br/>
-                            ・WiFiルーター本体<br/>
-                            ・専用ACアダプター<br/>	
+                            必ず当社ＨＰのマイページよりお手続きください。<br/>
+                            ご解約の締切日は毎月15日となります。16日以降のご解約申請に関しましては、翌月末でのご解約となりますので予めご了承ください。<br/>
+                            <br/>
+                            【ご返却について】<br/>
+                            端末はレンタルとなります。また、ご返却にかかる費用はお客様のご負担となります。<br/>
+                            <br/>				
+                            【返却先住所】<br/>
+                            〒160-0023　東京都新宿区西新宿7-18-19　新宿税理士ビル第二別館佐竹ビル２Ｆ<br/>
+                            FreeMax+5G　宛<br/>
+                            050-8882-5589<br/>
+                            <br/>				
+                            【返却品内容】<br/>
+                            モバイルルーターをご契約のお客様<br/>
+                            ・モバイルルーター本体<br/>
+                            <br/>
+                            ホームルーターをご契約のお客様<br/>
+                            ・ホームルーター本体<br/>
+                            ・専用ACアダプター<br/>
                             <br/>		
                             ※返却時に破損や水没が見られる場合や端末の紛失盗難の場合に、機器損害金（端末補償オプションの加入プランにより異なる）をお支払いいただく場合がございます。<br/>
                             <hr style="border-top: 2px dashed #8c8b8b;">

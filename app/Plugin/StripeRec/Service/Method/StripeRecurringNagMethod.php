@@ -1103,7 +1103,8 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             }
 
         }
-
+        $next_payday = new \DateTime($next_payday->format('Y-m-d 09:30:00'));
+        //dump($next_payday);die();
         $phase_first_prod = [
             'items' => [
                 [
