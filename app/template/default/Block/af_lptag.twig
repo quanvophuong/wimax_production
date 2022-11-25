@@ -1,130 +1,53 @@
-{% if app.request.get('_route') == 'shopping_complete' %}
-    <script>
-    (function(){
-        var uqid   = "5dae53Dceda2XD48";
-        var cid    = "576";
-        var uid   = "注文番号";
-        var uid2   = "";
-        var af   = "";
-        var pid    = "";
-        var amount = "";
+<!--Mfro-->
+<script>
+(function(){
+var uqid = "5dae53Dceda2XD48";
+var cid  = "576";
 
-        var a=document.createElement("script");
-        a.src="//ad.mtrf.net/ac/action_js.php";
-        a.id="afadaction-"+Date.now();
-        a.addEventListener("load",function(){(new fpcAction(a.id)).action(cid, af, [uid, uid2], pid, amount, uqid)});
-        document.body.appendChild(a)})();
+var a=document.createElement("script");
+a.dataset.uqid=uqid;a.dataset.cid=cid;a.id="afadfpc-"+Date.now();
+a.src="//ad.mtrf.net/fpc/cookie_js.php?scriptId="+encodeURIComponent(a.id);
+document.body.appendChild(a);
+})();
 </script>
-    <div id="atown-conversion-tag" data-atown-conversion-tag="https://ad.atown.jp/adserver/ap.af?aid=10225&u1=＜識別子＞" style="display: none;"></div><script type="text/javascript" src="https://ad.atown.jp/adserver/js/lib/clickaction/action.js"></script>
-    <script type="text/javascript">
-    (function(){
-    function loadScriptRTCV(callback){
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'https://www.rentracks.jp/js/itp/rt.track.js?t=' + (new Date()).getTime();
-    if ( script.readyState ) {
-    script.onreadystatechange = function() {
-    if ( script.readyState === 'loaded' || script.readyState === 'complete' ) {
-    script.onreadystatechange = null;
-    callback();
-    };
-    };
-    } else {
-    script.onload = function() {
-    callback();
-    };
-    };
-    document.getElementsByTagName('head')[0].appendChild(script);
-    }
-
-    loadScriptRTCV(function(){
-    _rt.sid = 3848;
-    _rt.pid = 10852;
-    _rt.price = 0;
-    _rt.reward = -1;
-    _rt.cname = '';
-    _rt.ctel = '';
-    _rt.cemail = '';
-    _rt.cinfo = '【成果特定に必要な識別記号を格納した変数をここに入れてください（UTF-8でのURLエンコードが必要です）】';
-    rt_tracktag();
-    });
-    }(function(){}));
-    </script>
-    <span id="a8sales"></span>
-    <script src="//statics.a8.net/a8sales/a8sales.js"></script>
-    <script>
-        a8sales({
-            "pid": "s00000016921004",
-            "order_number": "注文番号",
-            "currency": "JPY",
-            "items": [
-                {
-                    "code": "a8",
-                    "price": 3000,
-                    "quantity": 1
-                },
-            ],
-            "total_price": 3000,
-        });
-    </script>
-
-    <script>
-    (function acsTrack(){
-        var PV = "ph6d2hqi9xa9";
-        var KEYS = {cid : ["CL_", "ACT_", "cid_auth_get_type"], plid : ["PL_", "APT_", "plid_auth_get_type"]};
-        var turl = "https://sphere.ntg-lab.com/track.php?p=" + PV;
-            var cks = document.cookie.split("; ").reduce(function(ret, s){ var kv = s.split("="); if(kv[0] && kv[1]) ret[kv[0]] = kv[1]; return ret; }, []);
-        turl = Object.keys(KEYS).reduce(function(url, k){ var vk = KEYS[k][0] + PV; var tk = KEYS[k][1] + PV; var v = "", t = ""; if(cks[vk]){ v = cks[vk]; if(cks[tk]) t = cks[tk]; }else if(localStorage.getItem(vk)){ v = localStorage.getItem(vk); t = "ls"; } if(v) url += "&" + k + "=" + v; if(t) url += "&" + KEYS[k][2] + "=" + t; return url; }, turl);
-        var xhr = new XMLHttpRequest(); xhr.open("GET", turl); xhr.send(); })();
+<!--GMO-->
+<script type="text/javascript" src="https://ad.atown.jp/adserver/js/lib/clickaction/click.js"></script>
+<!--rentracks-->
+<script type="text/javascript">
+(function(callback){
+var script = document.createElement("script");
+script.type = "text/javascript";
+script.src = "https://www.rentracks.jp/js/itp/rt.track.js?t=" + (new Date()).getTime();
+if ( script.readyState ) {
+script.onreadystatechange = function() {
+if ( script.readyState === "loaded" || script.readyState === "complete" ) {
+script.onreadystatechange = null;
+callback();
+}
+};
+} else {
+script.onload = function() {
+callback();
+};
+}
+document.getElementsByTagName("head")[0].appendChild(script);
+}(function(){}));
 </script>
-{% else %}
-    <script>
-    (function(){
-        var uqid = "5dae53Dceda2XD48";
-        var cid  = "576";
-
-        var a=document.createElement("script");
-        a.dataset.uqid=uqid;a.dataset.cid=cid;a.id="afadfpc-"+Date.now();
-        a.src="//ad.mtrf.net/fpc/cookie_js.php?scriptId="+encodeURIComponent(a.id);
-        document.body.appendChild(a);
-    })();
+<!--sphere-->
+<script>
+(function acsKeep(){
+var PK = "p";
+var IMK = "im";
+var LKEYS = {cid : ["cid", "CL_", "ACT_"], gclid : ["plid", "PL_", "APT_"]};
+var DKEYS = ["gclid"];
+var PDIR = "./";
+var durl = "https://sphere.ntg-lab.com/direct.php";
+function saveCookies(data){ var p = data[PK]; var out = Object.keys(LKEYS).reduce(function(ret, k){ if(k in data && data[k]) ret[k] = data[k]; return ret; }, {}); if(!p || !Object.keys(out).length) return;
+var purl = PDIR + "lptag.php?p=" + p; Object.keys(out).forEach(function(k){ purl += "&" + LKEYS[k][0] + "=" + out[k]; localStorage.setItem(LKEYS[k][1] + p, out[k]); });
+var xhr = new XMLHttpRequest(); var args = "; expires=" + new Date(new Date().getTime() + 63072000000).toUTCString() + "; path=/; SameSite=None; Secure"; xhr.open("GET", purl);
+xhr.onloadend = function(){ if(xhr.status === 200) return; Object.keys(out).forEach(function(k){ document.cookie = LKEYS[k][1] + p + "=" + decodeURIComponent(out[k]) + args; if(LKEYS[k][2]) document.cookie = LKEYS[k][2] + p + "=js" + args; }); }; xhr.send(); }
+var data = location.search.substring(1).split("&").reduce(function(ret, s){ var kv = s.split("="); if(kv[1]) ret[kv[0]] = kv[1]; return ret; }, {}); if(!(IMK in data)){ saveCookies(data); return; }
+durl += "?im=" + data[IMK] + "&navi=" + performance.navigation.type; DKEYS.forEach(function(k){ if(!(k in data)) return; durl += "&" + k + "=" + data[k]; });
+var xhr = new XMLHttpRequest(); xhr.open("GET", durl); function merge(a, b){ return Object.keys(LKEYS).reduce(function(ret, k){ if(k in b && !(k in a)) ret[k] = b[k]; return ret; }, a); }
+xhr.onloadend = function(){ if(xhr.status !== 200) return; try{ var xhr_data = JSON.parse(xhr.responseText); if(PK != "p"){ xhr_data[PK] = xhr_data["p"]; } saveCookies(merge(xhr_data, data)); }catch(_){ } }; xhr.send(); })();
 </script>
-    <script type="text/javascript" src="https://ad.atown.jp/adserver/js/lib/clickaction/click.js"></script>
-    <script type="text/javascript">
-    (function(callback){
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = "https://www.rentracks.jp/js/itp/rt.track.js?t=" + (new Date()).getTime();
-    if ( script.readyState ) {
-    script.onreadystatechange = function() {
-    if ( script.readyState === "loaded" || script.readyState === "complete" ) {
-    script.onreadystatechange = null;
-    callback();
-    }
-    };
-    } else {
-    script.onload = function() {
-    callback();
-    };
-    }
-    document.getElementsByTagName("head")[0].appendChild(script);
-    }(function(){}));
-    </script>
-    <script>
-    (function acsKeep(){
-        var PK = "p";
-        var IMK = "im";
-        var LKEYS = {cid : ["cid", "CL_", "ACT_"], gclid : ["plid", "PL_", "APT_"]};
-        var DKEYS = ["gclid"];
-        var PDIR = "https://free-max.com/";
-        var durl = "https://sphere.ntg-lab.com/direct.php";
-            function saveCookies(data){ var p = data[PK]; var out = Object.keys(LKEYS).reduce(function(ret, k){ if(k in data && data[k]) ret[k] = data[k]; return ret; }, {}); if(!p || !Object.keys(out).length) return;
-                var purl = PDIR + "lptag.php?p=" + p; Object.keys(out).forEach(function(k){ purl += "&" + LKEYS[k][0] + "=" + out[k]; localStorage.setItem(LKEYS[k][1] + p, out[k]); });
-                var xhr = new XMLHttpRequest(); var args = ""; expires="" + new Date(new Date().getTime() + 63072000000).toUTCString() + "; path=/; SameSite=None; Secure"; xhr.open("GET", purl);
-                xhr.onloadend = function(){ if(xhr.status === 200) return; Object.keys(out).forEach(function(k){ document.cookie = LKEYS[k][1] + p + "=" + decodeURIComponent(out[k]) + args; if(LKEYS[k][2]) document.cookie = LKEYS[k][2] + p + "=js" + args; }); }; xhr.send(); }
-        var data = location.search.substring(1).split("&").reduce(function(ret, s){ var kv = s.split("="); if(kv[1]) ret[kv[0]] = kv[1]; return ret; }, {}); if(!(IMK in data)){ saveCookies(data); return; }
-        durl += "?im=" + data[IMK] + "&navi=" + performance.navigation.type; DKEYS.forEach(function(k){ if(!(k in data)) return; durl += "&" + k + "=" + data[k]; });
-        var xhr = new XMLHttpRequest(); xhr.open("GET", durl); function merge(a, b){ return Object.keys(LKEYS).reduce(function(ret, k){ if(k in b && !(k in a)) ret[k] = b[k]; return ret; }, a); }
-        xhr.onloadend = function(){ if(xhr.status !== 200) return; try{ var xhr_data = JSON.parse(xhr.responseText); if(PK != "p"){ xhr_data[PK] = xhr_data["p"]; } saveCookies(merge(xhr_data, data)); }catch(_){ } }; xhr.send(); })();
-</script>
-{% endif %}

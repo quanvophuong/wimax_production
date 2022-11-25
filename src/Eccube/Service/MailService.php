@@ -123,7 +123,7 @@ class MailService
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$Customer->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
+            //->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
 
@@ -182,7 +182,7 @@ class MailService
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$Customer->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
+            //->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
 
@@ -240,7 +240,7 @@ class MailService
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$email])
-            ->setBcc($this->BaseInfo->getEmail01())
+            //->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
 
@@ -353,11 +353,12 @@ class MailService
             'Order' => $Order,
         ]);
 
+        $send_mails = [$Order->getEmail(), 'order@free-max.com'];
         $message = (new \Swift_Message())
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            ->setTo([$Order->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
+            ->setTo($send_mails)
+            //->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
 
@@ -431,7 +432,7 @@ class MailService
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail03() => $this->BaseInfo->getShopName()])
             ->setTo([$Customer->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
+            //->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
 
@@ -486,23 +487,16 @@ class MailService
     {
         log_info('受注管理通知メール送信開始');
 
+        $send_mails = [$Order->getEmail(), 'order@free-max.com'];
         $message = (new \Swift_Message())
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$formData['mail_subject'])
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            ->setTo([$Order->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
+            ->setTo($send_mails)
+            //->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04())
             ->setBody($formData['tpl_data']);
         
-        $message_freemax = (new \Swift_Message())
-            ->setSubject('['.$this->BaseInfo->getShopName().'] '.$formData['mail_subject'])
-            ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            ->setTo(['order@free-max.com'])
-            ->setBcc($this->BaseInfo->getEmail01())
-            ->setReplyTo($this->BaseInfo->getEmail03())
-            ->setReturnPath($this->BaseInfo->getEmail04())
-            ->setBody($formData['tpl_data']);
         $event = new EventArgs(
             [
                 'message' => $message,
@@ -515,7 +509,6 @@ class MailService
         $this->eventDispatcher->dispatch(EccubeEvents::MAIL_ADMIN_ORDER, $event);
 
         $count = $this->mailer->send($message);
-        $count_freemax = $this->mailer->send($message_freemax);
 
         log_info('受注管理通知メール送信完了', ['count' => $count]);
 
@@ -605,7 +598,7 @@ class MailService
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$Customer->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
+            //->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
 
@@ -662,20 +655,14 @@ class MailService
         $Order = $Shipping->getOrder();
         $body = $this->getShippingNotifyMailBody($Shipping, $Order, $MailTemplate->getFileName());
 
+        $send_mails = [$Order->getEmail(), 'order@free-max.com'];
         $message = (new \Swift_Message())
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-            ->setTo($Order->getEmail())
-            ->setBcc($this->BaseInfo->getEmail01())
+            ->setTo($send_mails)
+            //->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
-        $message_freemax = (new \Swift_Message())
-                ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
-                ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
-                ->setTo('order@free-max.com')
-                ->setBcc($this->BaseInfo->getEmail01())
-                ->setReplyTo($this->BaseInfo->getEmail03())
-                ->setReturnPath($this->BaseInfo->getEmail04());
 
         // HTMLテンプレートが存在する場合
         $htmlFileName = $this->getHtmlTemplate($MailTemplate->getFileName());
@@ -686,16 +673,11 @@ class MailService
                 ->setContentType('text/plain; charset=UTF-8')
                 ->setBody($body, 'text/plain')
                 ->addPart($htmlBody, 'text/html');
-            $message_freemax
-                ->setContentType('text/plain; charset=UTF-8')
-                ->setBody($body, 'text/plain')
-                ->addPart($htmlBody, 'text/html');
         } else {
             $message->setBody($body);
         }
 
         $this->mailer->send($message);
-        $this->mailer->send($message_freemax);
 
         $MailHistory = new MailHistory();
         $MailHistory->setMailSubject($message->getSubject())

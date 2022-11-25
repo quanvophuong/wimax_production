@@ -181,7 +181,7 @@ class MailExService extends MailService{
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$template->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$rec_order->getOrder()->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
+            //->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
         return $message;
@@ -301,7 +301,7 @@ class MailExService extends MailService{
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$template->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo($receive_emails)
-            ->setBcc($this->BaseInfo->getEmail01())
+            //->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
         return $message;

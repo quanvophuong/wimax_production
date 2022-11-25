@@ -1,0 +1,4784 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: UiPress\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-06-12 12:06+0200\n"
+"PO-Revision-Date: 2022-09-26 10:47+0100\n"
+"Last-Translator: \n"
+"Language-Team: Croatian\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 "
+"&& (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Generator: Poedit 3.1.1\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: uipress.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Loco-Version: 2.6.2; wp-6.0\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
+
+#: admin/apps/admin-pages/admin-pages.php:110
+#: admin/apps/menu-creator/menu-creator.php:1304
+msgid "Apply to subsites"
+msgstr "Prijavite se na podstranice"
+
+#: admin/apps/admin-pages/admin-pages.php:121
+msgid "Menu Icon"
+msgstr "Ikona izbornika"
+
+#: admin/apps/admin-pages/admin-pages.php:131
+msgid "Manually add to menu?"
+msgstr "RuÄno dodati u izbornik?"
+
+#: admin/apps/admin-pages/admin-pages.php:250
+msgid "Admin Pages - Beta"
+msgstr "Administratorske stranice - Beta"
+
+#: admin/apps/admin-pages/admin-pages.php:251
+msgid "Creates custom admin pages."
+msgstr "Stvara prilagoÄ‘ene administratorske stranice."
+
+#: admin/apps/admin-pages/admin-pages.php:255
+msgid "Disable custom admin pages?"
+msgstr "OnemoguÄ‡iti prilagoÄ‘ene administratorske stranice?"
+
+#: admin/apps/admin-pages/admin-pages.php:256
+msgid "If disabled, the admin pages will not be available to any users."
+msgstr ""
+"Ako je onemoguÄ‡eno, administratorske stranice neÄ‡e biti dostupne nijednom "
+"korisniku."
+
+#: admin/apps/admin-pages/admin-pages.php:263
+msgid "Admin Page Slug"
+msgstr "Slug administratorske stranice"
+
+#: admin/apps/admin-pages/admin-pages.php:264
+msgid ""
+"This defaults to admin-pages. Changes to this will need you to resave permalink "
+"structure."
+msgstr ""
+"Ovo je zadano na administratorskim stranicama. Promjene ovoga morat Ä‡ete "
+"ponovno spremiti strukturu trajne veze."
+
+#: admin/apps/admin-pages/admin-pages.php:271
+msgid "Who can edit and create admin pages?"
+msgstr "Tko moÅ¾e ureÄ‘ivati i kreirati administratorske stranice?"
+
+#: admin/apps/admin-pages/admin-pages.php:272
+msgid ""
+"Editing and creation of admin pages will be disabled for the users or roles you "
+"select"
+msgstr ""
+"UreÄ‘ivanje i stvaranje administratorskih stranica bit Ä‡e onemoguÄ‡eno za "
+"korisnike ili uloge koje odaberete"
+
+#: admin/apps/admin-pages/admin-pages.php:280
+msgid "Who can see admin pages?"
+msgstr "Tko moÅ¾e vidjeti administratorske stranice?"
+
+#: admin/apps/admin-pages/admin-pages.php:281
+msgid "UiPress will only show admin pages for the users or roles you select"
+msgstr ""
+"UiPress Ä‡e prikazati samo administratorske stranice za korisnike ili uloge koje "
+"odaberete"
+
+#: admin/apps/admin-pages/admin-pages.php:320
+msgctxt "post type general name"
+msgid "Admin Page"
+msgstr "Administratorska stranica"
+
+#: admin/apps/admin-pages/admin-pages.php:321
+msgctxt "post type singular name"
+msgid "Admin Page"
+msgstr "Administratorska stranica"
+
+#: admin/apps/admin-pages/admin-pages.php:322
+msgctxt "admin menu"
+msgid "Admin Pages"
+msgstr "Administratorske stranice"
+
+#: admin/apps/admin-pages/admin-pages.php:323
+msgctxt "add new on admin bar"
+msgid "Admin Page"
+msgstr "Administratorska stranica"
+
+#: admin/apps/admin-pages/admin-pages.php:324
+msgctxt "Admin Page"
+msgid "Add New"
+msgstr "Dodaj novi"
+
+#: admin/apps/admin-pages/admin-pages.php:325
+msgid "Add New Admin Page"
+msgstr "Dodaj novu administratorsku stranicu"
+
+#: admin/apps/admin-pages/admin-pages.php:326
+msgid "New Admin Page"
+msgstr "Nova administratorska stranica"
+
+#: admin/apps/admin-pages/admin-pages.php:327
+msgid "Edit Admin Page"
+msgstr "Uredite stranicu administratora"
+
+#: admin/apps/admin-pages/admin-pages.php:328
+msgid "View Admin Page"
+msgstr "Pogledajte stranicu administratora"
+
+#: admin/apps/admin-pages/admin-pages.php:329
+msgid "All Admin Pages"
+msgstr "Sve administratorske stranice"
+
+#: admin/apps/admin-pages/admin-pages.php:330
+msgid "Search Admin Pages"
+msgstr "PretraÅ¾ite stranice administratora"
+
+#: admin/apps/admin-pages/admin-pages.php:331
+msgid "No Admin Pages found."
+msgstr "Nije pronaÄ‘ena nijedna administratorska stranica."
+
+#: admin/apps/admin-pages/admin-pages.php:332
+msgid "No Admin Pages found in Trash."
+msgstr "U Otpadu nije pronaÄ‘ena nijedna administratorska stranica."
+
+#: admin/apps/admin-pages/admin-pages.php:336
+#: admin/apps/menu-creator/menu-creator.php:667
+#: admin/apps/users/uip-history.php:161
+msgid "Description."
+msgstr "Opis."
+
+#: admin/apps/content/content.php:96
+msgid "Content Page"
+msgstr "Stranica sa sadrÅ¾ajem"
+
+#: admin/apps/content/content.php:97
+msgid "Creates content page"
+msgstr "Stvara sadrÅ¾ajnu stranicu"
+
+#: admin/apps/content/content.php:101
+msgid "Disable Content Page?"
+msgstr "OnemoguÄ‡iti stranicu sa sadrÅ¾ajem?"
+
+#: admin/apps/content/content.php:102
+msgid "If disabled, the content page will not be available to any users."
+msgstr ""
+"Ako je onemoguÄ‡ena, stranica sa sadrÅ¾ajem neÄ‡e biti dostupna nijednom "
+"korisniku."
+
+#: admin/apps/content/content.php:109
+msgid "Content Page Disabled for"
+msgstr "Stranica sa sadrÅ¾ajem onemoguÄ‡ena za"
+
+#: admin/apps/content/content.php:110
+msgid ""
+"When the content page module is disabled, the content page will not be accesible "
+"for the users / roles"
+msgstr ""
+"Kada je modul stranice sa sadrÅ¾ajem onemoguÄ‡en, stranica sa sadrÅ¾ajem neÄ‡e "
+"biti dostupna korisnicima/ulogama"
+
+#: admin/apps/content/content.php:118
+msgid "Post types available in content page"
+msgstr "Vrste postova dostupne na stranici sa sadrÅ¾ajem"
+
+#: admin/apps/content/content.php:119
+msgid "Only the selected post types will be available in the content page."
+msgstr "Na stranici sa sadrÅ¾ajem bit Ä‡e dostupne samo odabrane vrste postova."
+
+#: admin/apps/content/content.php:127
+msgid "Enable private library mode"
+msgstr "OmoguÄ‡ite naÄin rada privatne knjiÅ¾nice"
+
+#: admin/apps/content/content.php:128
+msgid ""
+"When enabled, the content page will only show content created by or uploaded by "
+"the currently logged in user. This also includes folders"
+msgstr ""
+"Kada je omoguÄ‡eno, stranica sa sadrÅ¾ajem Ä‡e prikazivati samo sadrÅ¾aj koji je "
+"kreirao ili prenio trenutno prijavljen korisnik. To takoÄ‘er ukljuÄuje mape"
+
+#: admin/apps/content/content.php:184
+msgid "Original Title / Value"
+msgstr "Izvorni naslov/vrijednost"
+
+#: admin/apps/content/content.php:188 admin/classes/styles.php:693
+msgid "Text"
+msgstr "Tekst"
+
+#: admin/apps/content/content.php:192 admin/apps/content/content.php:2033
+msgid "Date Created"
+msgstr "Datum kreiranja"
+
+#: admin/apps/content/content.php:196
+msgid "File Extension (attachments only)"
+msgstr "ProÅ¡irenje datoteke (samo privici)"
+
+#: admin/apps/content/content.php:200
+msgid "Sequence Number"
+msgstr "Redni broj"
+
+#: admin/apps/content/content.php:204
+msgid "Meta Value"
+msgstr "Meta vrijednost"
+
+#: admin/apps/content/content.php:208
+msgid "Find and Replace"
+msgstr "PronaÄ‘ite i zamijenite"
+
+#: admin/apps/content/content.php:266 admin/classes/uipress-app.php:1731
+#: admin/classes/uipress-app.php:2073
+msgid "No preferences supplied to save"
+msgstr "Nisu navedene postavke za spremanje"
+
+#: admin/apps/content/content.php:288 admin/classes/uipress-app.php:1742
+#: admin/classes/uipress-app.php:2095
+msgid "Preferences saved"
+msgstr "Postavke su spremljene"
+
+#: admin/apps/content/content.php:291 admin/classes/uipress-app.php:1746
+#: admin/classes/uipress-app.php:2098
+msgid "Unable to save user preferences"
+msgstr "Nije moguÄ‡e spremiti korisniÄke postavke"
+
+#: admin/apps/content/content.php:320 admin/apps/content/content.php:328
+#: admin/apps/content/content.php:957
+msgid "Unable to save attachment"
+msgstr "Nije moguÄ‡e spremiti privitak"
+
+#: admin/apps/content/content.php:337
+msgid "Image Saved"
+msgstr "Slika je spremljena"
+
+#: admin/apps/content/content.php:370
+msgid "Failed to upload file"
+msgstr "Prijenos datoteke nije uspio"
+
+#: admin/apps/content/content.php:400
+msgid "Items uploaded"
+msgstr "Stavke prenesene"
+
+#: admin/apps/content/content.php:423
+msgid "Views updated"
+msgstr "Pregledi su aÅ¾urirani"
+
+#: admin/apps/content/content.php:455 admin/apps/content/content.php:517
+#: admin/apps/content/content.php:579 admin/apps/content/content.php:769
+#: admin/apps/menu-creator/menu-creator.php:752
+#: admin/apps/menu-creator/menu-creator.php:777
+#: admin/apps/menu-creator/menu-creator.php:814
+#: admin/apps/menu-creator/menu-creator.php:867
+#: admin/apps/menu-creator/menu-creator.php:936
+#: admin/apps/users/uip-user-groups.php:309 admin/classes/folders.php:528
+#: admin/classes/settings.php:308 admin/classes/uipress-app.php:1357
+msgid "Something went wrong"
+msgstr "NeÅ¡to je poÅ¡lo po zlu"
+
+#: admin/apps/content/content.php:460
+msgid "Items duplicated successfully"
+msgstr "Stavke su uspjeÅ¡no duplicirane"
+
+#: admin/apps/content/content.php:463
+msgid "Itms couldn't be duplicated"
+msgstr "Nije bilo moguÄ‡e kopirati stavke"
+
+#: admin/apps/content/content.php:501 admin/apps/content/content.php:543
+msgid "No Meta Key provided"
+msgstr "Meta kljuÄ nije naveden"
+
+#: admin/apps/content/content.php:583
+msgid "Attributes Updated"
+msgstr "Atributi aÅ¾urirani"
+
+#: admin/apps/content/content.php:774
+msgid "Items deleted successfully"
+msgstr "Stavke su uspjeÅ¡no izbrisane"
+
+#: admin/apps/content/content.php:777
+msgid "Itms couldn't be deleted"
+msgstr "Nije bilo moguÄ‡e izbrisati stavke"
+
+#: admin/apps/content/content.php:799 admin/classes/folders.php:452
+#: admin/classes/folders.php:484
+msgid "No content to move"
+msgstr "Nema sadrÅ¾aja za premjeÅ¡tanje"
+
+#: admin/apps/content/content.php:812 admin/classes/folders.php:466
+#: admin/classes/folders.php:497
+msgid "Content moved"
+msgstr "SadrÅ¾aj je premjeÅ¡ten"
+
+#: admin/apps/content/content.php:938
+msgid "Unable to update item"
+msgstr "Nije moguÄ‡e aÅ¾urirati stavku"
+
+#: admin/apps/content/content.php:968
+msgid "Item updated"
+msgstr "Stavka je aÅ¾urirana"
+
+#: admin/apps/content/content.php:1007
+msgid "Items updated"
+msgstr "Stavke su aÅ¾urirane"
+
+#: admin/apps/content/content.php:1319 admin/apps/content/content.php:1611
+msgid "Content"
+msgstr "SadrÅ¾aj"
+
+#: admin/apps/content/content.php:1362
+#: admin/apps/menu-creator/menu-creator.php:1096 admin/classes/uipress-app.php:1325
+msgid "Pro Feature"
+msgstr "Pro znaÄajka"
+
+#: admin/apps/content/content.php:1365
+msgid "Upgrade to UiPress Pro to unlock the content page and content folders"
+msgstr ""
+"Nadogradite na UiPress Pro da biste otkljuÄali stranicu sa sadrÅ¾ajem i mape sa "
+"sadrÅ¾ajem"
+
+#: admin/apps/content/content.php:1367
+#: admin/apps/menu-creator/menu-creator.php:1101
+msgid "See UiPress Pro Plans"
+msgstr "Pogledajte UiPress Pro planove"
+
+#: admin/apps/content/content.php:1411
+msgid "Update Tags and Categories"
+msgstr "AÅ¾urirajte oznake i kategorije"
+
+#: admin/apps/content/content.php:1418 admin/apps/content/content.php:1831
+#: admin/apps/content/content.php:1836 admin/apps/content/content.php:2068
+#: admin/apps/content/content.php:2071
+msgid "Categories"
+msgstr "Kategorije"
+
+#: admin/apps/content/content.php:1419 admin/apps/content/content.php:1837
+#: admin/apps/content/content.php:2072
+msgid "Search categories..."
+msgstr "TraÅ¾i kategorije..."
+
+#: admin/apps/content/content.php:1424
+msgid "Keep existing categories"
+msgstr "ZadrÅ¾ite postojeÄ‡e kategorije"
+
+#: admin/apps/content/content.php:1433 admin/apps/content/content.php:1843
+#: admin/apps/content/content.php:1847 admin/apps/content/content.php:2080
+#: admin/apps/content/content.php:2083
+msgid "Tags"
+msgstr "Oznake"
+
+#: admin/apps/content/content.php:1434 admin/apps/content/content.php:1848
+#: admin/apps/content/content.php:2084
+msgid "Search tags..."
+msgstr "TraÅ¾i oznake..."
+
+#: admin/apps/content/content.php:1439
+msgid "Keep existing tags"
+msgstr "ZadrÅ¾ite postojeÄ‡e oznake"
+
+#: admin/apps/content/content.php:1448 admin/apps/content/content.php:1686
+#: admin/classes/uipress-app.php:1373
+msgid "Update"
+msgstr "AÅ¾uriraj"
+
+#: admin/apps/content/content.php:1465 admin/apps/content/content.php:2567
+msgid "Batch Rename"
+msgstr "Skupno preimenovanje"
+
+#: admin/apps/content/content.php:1473
+msgid "Attribute to rename"
+msgstr "Atribut za preimenovanje"
+
+#: admin/apps/content/content.php:1480 admin/apps/content/content.php:2323
+#: admin/apps/menu-creator/menu-creator.php:1151
+#: admin/apps/menu-creator/menu-creator.php:1651
+#: admin/apps/menu-creator/menu-creator.php:1652 admin/apps/users/uip-users.php:311
+#: admin/apps/users/uip-users.php:389 admin/apps/users/uip-users.php:1213
+#: admin/classes/uipress-app.php:1371
+msgid "Name"
+msgstr "Ime"
+
+#: admin/apps/content/content.php:1481
+msgid "Meta Key"
+msgstr "Meta kljuÄ"
+
+#: admin/apps/content/content.php:1482
+msgid "Alt Tag (Attachments only)"
+msgstr "Alt oznaka (samo privici)"
+
+#: admin/apps/content/content.php:1487
+msgid "Meta Key Name"
+msgstr "Naziv meta kljuÄa"
+
+#: admin/apps/content/content.php:1498
+msgid "Filename Structure"
+msgstr "Struktura naziva datoteke"
+
+#: admin/apps/content/content.php:1506
+msgid "Rename Item"
+msgstr "Preimenujte stavku"
+
+#: admin/apps/content/content.php:1514 admin/apps/overview/overview.php:812
+msgid "Add"
+msgstr "Dodati"
+
+#: admin/apps/content/content.php:1540
+msgid "New Text"
+msgstr "Novi tekst"
+
+#: admin/apps/content/content.php:1542
+msgid "Date Format"
+msgstr "Oblik datuma"
+
+#: admin/apps/content/content.php:1544
+msgid "Start Number"
+msgstr "PoÄetni broj"
+
+#: admin/apps/content/content.php:1546
+msgid "Meta key Name"
+msgstr "Naziv meta kljuÄa"
+
+#: admin/apps/content/content.php:1548
+msgid "Find"
+msgstr "PronaÄ‡i"
+
+#: admin/apps/content/content.php:1552
+msgid "Replace"
+msgstr "Zamijeniti"
+
+#: admin/apps/content/content.php:1576 admin/apps/content/content.php:1593
+#: admin/apps/menu-creator/menu-creator.php:1464
+msgid "Preview"
+msgstr "Pregled"
+
+#: admin/apps/content/content.php:1579
+msgid "Current"
+msgstr "Trenutno"
+
+#: admin/apps/content/content.php:1580
+#: admin/apps/menu-creator/menu-creator.php:1136
+msgid "New"
+msgstr "Novi"
+
+#: admin/apps/content/content.php:1594
+msgid "Rename"
+msgstr "Preimenovati"
+
+#: admin/apps/content/content.php:1618 admin/classes/uipress-app.php:1365
+msgid "All Content"
+msgstr "Sav sadrÅ¾aj"
+
+#: admin/apps/content/content.php:1679
+#: admin/apps/menu-creator/menu-creator.php:1225 admin/apps/users/uip-users.php:541
+msgid "Delete"
+msgstr "Izbrisati"
+
+#: admin/apps/content/content.php:1684
+msgid "Edit Image"
+msgstr "Uredi sliku"
+
+#: admin/apps/content/content.php:1715 admin/apps/users/uip-users.php:309
+msgid "Details"
+msgstr "Pojedinosti"
+
+#: admin/apps/content/content.php:1771 admin/apps/content/content.php:1772
+#: admin/apps/overview/overview.php:715
+msgid "Title"
+msgstr "Titula"
+
+#: admin/apps/content/content.php:1778
+msgid "Alt Text"
+msgstr "Alternativni tekst"
+
+#: admin/apps/content/content.php:1779
+msgid "Alt"
+msgstr "Alt"
+
+#: admin/apps/content/content.php:1783 admin/apps/content/content.php:1784
+msgid "Caption"
+msgstr "Naslov"
+
+#: admin/apps/content/content.php:1788 admin/apps/content/content.php:1789
+#: admin/apps/users/uip-users.php:1353
+msgid "Description"
+msgstr "Opis"
+
+#: admin/apps/content/content.php:1799
+msgid "Meta Data"
+msgstr "Meta podaci"
+
+#: admin/apps/content/content.php:1819 admin/apps/content/content.php:1824
+#: admin/apps/content/content.php:2339
+#: admin/apps/menu-creator/menu-creator.php:1155
+#: admin/apps/menu-creator/menu-creator.php:1294 admin/classes/uipress-app.php:1151
+msgid "Status"
+msgstr "Status"
+
+#: admin/apps/content/content.php:1825
+msgid "Search status..."
+msgstr "Status pretrage..."
+
+#: admin/apps/content/content.php:1927
+msgid "Filters"
+msgstr "Filtri"
+
+#: admin/apps/content/content.php:1932
+msgid "Upload"
+msgstr "UÄitaj"
+
+#: admin/apps/content/content.php:1954
+msgid "Items Per Page"
+msgstr "Stavke po stranici"
+
+#: admin/apps/content/content.php:1964
+msgid "Columns"
+msgstr "Kolumne"
+
+#: admin/apps/content/content.php:1976
+msgid "Search..."
+msgstr "TraÅ¾i..."
+
+#: admin/apps/content/content.php:1984
+msgid "of"
+msgstr "od"
+
+#: admin/apps/content/content.php:1987
+msgid "items"
+msgstr "stavke"
+
+#: admin/apps/content/content.php:2011 admin/apps/content/content.php:2014
+msgid "Post Types"
+msgstr "Vrste postova"
+
+#: admin/apps/content/content.php:2015
+msgid "Search Post Types..."
+msgstr "PretraÅ¾i vrste postova..."
+
+#: admin/apps/content/content.php:2022 admin/apps/content/content.php:2025
+msgid "Post Status"
+msgstr "Status objave"
+
+#: admin/apps/content/content.php:2026
+msgid "Search Post Statuses..."
+msgstr "PretraÅ¾i statuse objava..."
+
+#: admin/apps/content/content.php:2039
+msgid "Posted On"
+msgstr "Objavljeno dana"
+
+#: admin/apps/content/content.php:2040
+msgid "Posted After"
+msgstr "Objavljeno nakon"
+
+#: admin/apps/content/content.php:2041
+msgid "Posted Before"
+msgstr "Objavljeno prije"
+
+#: admin/apps/content/content.php:2056 admin/apps/content/content.php:2059
+msgid "Media Types"
+msgstr "Vrste medija"
+
+#: admin/apps/content/content.php:2060
+msgid "Search Media Types..."
+msgstr "TraÅ¾i vrste medija..."
+
+#: admin/apps/content/content.php:2089
+msgid "Clear Filters"
+msgstr "OÄisti filtere"
+
+#: admin/apps/content/content.php:2090
+msgid "Save as view"
+msgstr "Spremi kao prikaz"
+
+#: admin/apps/content/content.php:2136
+msgid "Posted"
+msgstr "Objavljeno"
+
+#: admin/apps/content/content.php:2327
+msgid "Type"
+msgstr "Tip"
+
+#: admin/apps/content/content.php:2331
+msgid "Author"
+msgstr "Autor"
+
+#: admin/apps/content/content.php:2335
+#: admin/apps/menu-creator/menu-creator.php:1159
+#: admin/apps/overview/overview.php:904 admin/apps/users/uip-users.php:1333
+msgid "Date"
+msgstr "Datum"
+
+#: admin/apps/content/content.php:2483
+msgid "Load More"
+msgstr "UÄitaj viÅ¡e"
+
+#: admin/apps/content/content.php:2492
+msgid "No content found"
+msgstr "Nije pronaÄ‘en sadrÅ¾aj"
+
+#: admin/apps/content/content.php:2511 admin/apps/users/uip-users.php:547
+#: admin/classes/uipress-app.php:1327
+msgid "View"
+msgstr "Pogled"
+
+#: admin/apps/content/content.php:2518
+#: admin/apps/menu-creator/menu-creator.php:1203 admin/apps/users/uip-users.php:523
+#: admin/classes/uipress-app.php:1328
+msgid "Edit"
+msgstr "Uredi"
+
+#: admin/apps/content/content.php:2525
+msgid "Quick Edit"
+msgstr "Brzo ureÄ‘ivanje"
+
+#: admin/apps/content/content.php:2532
+#: admin/apps/menu-creator/menu-creator.php:1210
+msgid "Duplicate"
+msgstr "Duplikat"
+
+#: admin/apps/content/content.php:2540
+msgid "Delete Item"
+msgstr "IzbriÅ¡i stavku"
+
+#: admin/apps/content/content.php:2560
+msgid "items selected"
+msgstr "odabrane stavke"
+
+#: admin/apps/content/content.php:2573
+msgid "Categories & Tags"
+msgstr "Kategorije i oznake"
+
+#: admin/apps/content/content.php:2579
+msgid "Delete Selected"
+msgstr "ObriÅ¡i odabrano"
+
+#: admin/apps/content/content.php:2585
+msgid "Clear Selection"
+msgstr "OÄisti odabir"
+
+#: admin/apps/content/content.php:2607
+msgid "Create New View"
+msgstr "Napravite novi pogled"
+
+#: admin/apps/content/content.php:2612
+msgid "View name"
+msgstr "PrikaÅ¾i naziv"
+
+#: admin/apps/content/content.php:2615
+msgid "View Name"
+msgstr "PrikaÅ¾i naziv"
+
+#: admin/apps/content/content.php:2623
+#: admin/apps/menu-creator/menu-creator.php:1709
+#: admin/apps/overview/overview.php:836 admin/classes/styles.php:437
+msgid "Save"
+msgstr "UÅ¡tedjeti"
+
+#: admin/apps/menu-creator/menu-creator.php:405
+#: admin/apps/menu-creator/menu-creator.php:1044
+#: admin/apps/menu-creator/menu-creator.php:1052
+#: admin/apps/menu-creator/menu-creator.php:1131
+#: admin/apps/menu-creator/menu-creator.php:1699
+msgid "Menu Creator"
+msgstr "Kreator izbornika"
+
+#: admin/apps/menu-creator/menu-creator.php:406
+msgid "Creates custom admin menus."
+msgstr "Stvara prilagoÄ‘ene administratorske izbornike."
+
+#: admin/apps/menu-creator/menu-creator.php:410
+msgid "Disable Menu Creator?"
+msgstr "OnemoguÄ‡iti Kreator izbornika?"
+
+#: admin/apps/menu-creator/menu-creator.php:411
+msgid "If disabled, the menu creator will not be available to any users."
+msgstr ""
+"Ako je onemoguÄ‡eno, kreator izbornika neÄ‡e biti dostupan nijednom korisniku."
+
+#: admin/apps/menu-creator/menu-creator.php:651
+msgctxt "post type general name"
+msgid "Admin Menu"
+msgstr "Administratorski izbornik"
+
+#: admin/apps/menu-creator/menu-creator.php:652
+msgctxt "post type singular name"
+msgid "admin menu"
+msgstr "administratorski izbornik"
+
+#: admin/apps/menu-creator/menu-creator.php:653
+msgctxt "admin menu"
+msgid "Admin Menus"
+msgstr "Administrativni izbornici"
+
+#: admin/apps/menu-creator/menu-creator.php:654
+msgctxt "add new on admin bar"
+msgid "Admin Menu"
+msgstr "Administratorski izbornik"
+
+#: admin/apps/menu-creator/menu-creator.php:655
+msgctxt "Admin Menu"
+msgid "Add New"
+msgstr "Dodaj novi"
+
+#: admin/apps/menu-creator/menu-creator.php:656
+msgid "Add New Admin Menu"
+msgstr "Dodaj novi izbornik administratora"
+
+#: admin/apps/menu-creator/menu-creator.php:657
+msgid "New Admin Menu"
+msgstr "Novi administratorski izbornik"
+
+#: admin/apps/menu-creator/menu-creator.php:658
+msgid "Edit Admin Menu"
+msgstr "Uredi administratorski izbornik"
+
+#: admin/apps/menu-creator/menu-creator.php:659
+msgid "View Admin Menu"
+msgstr "Pogledajte izbornik administratora"
+
+#: admin/apps/menu-creator/menu-creator.php:660
+msgid "All Admin Menus"
+msgstr "Svi administratorski izbornici"
+
+#: admin/apps/menu-creator/menu-creator.php:661
+msgid "Search Admin Menus"
+msgstr "TraÅ¾i Admin izbornike"
+
+#: admin/apps/menu-creator/menu-creator.php:662
+msgid "No Admin Menus found."
+msgstr "Nije pronaÄ‘en nijedan administratorski izbornik."
+
+#: admin/apps/menu-creator/menu-creator.php:663
+msgid "No Admin Menus found in Trash."
+msgstr "U Otpadu nisu pronaÄ‘eni administratorski izbornici."
+
+#: admin/apps/menu-creator/menu-creator.php:759
+msgid "Status Updated"
+msgstr "Status aÅ¾uriran"
+
+#: admin/apps/menu-creator/menu-creator.php:783
+msgid "You don't have permission to delete this"
+msgstr "Nemate dopuÅ¡tenje za brisanje ovoga"
+
+#: admin/apps/menu-creator/menu-creator.php:791
+msgid "Unable to delete menu"
+msgstr "Nije moguÄ‡e izbrisati izbornik"
+
+#: admin/apps/menu-creator/menu-creator.php:796
+msgid "Menu deleted"
+msgstr "Izbornik je izbrisan"
+
+#: admin/apps/menu-creator/menu-creator.php:820
+msgid "Unable to duplicate menu, menu is corrupted"
+msgstr "Nije moguÄ‡e duplicirati izbornik, izbornik je oÅ¡teÄ‡en"
+
+#: admin/apps/menu-creator/menu-creator.php:826
+msgid "(copy)"
+msgstr "(kopirati)"
+
+#: admin/apps/menu-creator/menu-creator.php:834
+msgid "Unable to duplicate menu"
+msgstr "Nije moguÄ‡e duplicirati izbornik"
+
+#: admin/apps/menu-creator/menu-creator.php:844
+msgid "Menu duplicated"
+msgstr "Izbornik je dupliciran"
+
+#: admin/apps/menu-creator/menu-creator.php:873
+msgid "Unable to save, menu is corrupted"
+msgstr "Nije moguÄ‡e spremiti, izbornik je oÅ¡teÄ‡en"
+
+#: admin/apps/menu-creator/menu-creator.php:894
+msgid "Unable to save menu"
+msgstr "Nije moguÄ‡e spremiti izbornik"
+
+#: admin/apps/menu-creator/menu-creator.php:917
+msgid "Menu Saved"
+msgstr "Izbornik spremljen"
+
+#: admin/apps/menu-creator/menu-creator.php:962 admin/apps/users/uip-users.php:1321
+#: admin/classes/settings.php:328
+msgid "User"
+msgstr "Korisnik"
+
+#: admin/apps/menu-creator/menu-creator.php:977
+#: admin/apps/menu-creator/menu-creator.php:988 admin/apps/users/uip-users.php:1285
+#: admin/classes/settings.php:343 admin/classes/settings.php:354
+msgid "Role"
+msgstr "Uloga"
+
+#: admin/apps/menu-creator/menu-creator.php:995 admin/classes/settings.php:361
+msgid "Nothing found for term:"
+msgstr "NiÅ¡ta nije pronaÄ‘eno za termin:"
+
+#: admin/apps/menu-creator/menu-creator.php:1044
+#, php-format
+msgid "%s Menu Creator"
+msgstr "%s Kreator izbornika"
+
+#: admin/apps/menu-creator/menu-creator.php:1099
+msgid "Upgrade to UiPress Pro to unlock the menu creator"
+msgstr "Nadogradite na UiPress Pro da biste otkljuÄali kreator izbornika"
+
+#: admin/apps/menu-creator/menu-creator.php:1142
+msgid "Looks like you haven't created any admin menus yet"
+msgstr "ÄŒini se da joÅ¡ niste izradili nijedan administratorski izbornik"
+
+#: admin/apps/menu-creator/menu-creator.php:1143
+msgid "Create your first admin menu"
+msgstr "Napravite svoj prvi administratorski izbornik"
+
+#: admin/apps/menu-creator/menu-creator.php:1217
+#: admin/apps/menu-creator/menu-creator.php:1718 admin/apps/users/uip-users.php:559
+#: admin/classes/settings.php:248 admin/classes/styles.php:447
+msgid "Export"
+msgstr "Izvoz"
+
+#: admin/apps/menu-creator/menu-creator.php:1264
+msgid ""
+"Menu creator isn't optimised for mobile devices. For best results switch to a "
+"larger screen"
+msgstr ""
+"Kreator izbornika nije optimiziran za mobilne ureÄ‘aje. Za najbolje rezultate "
+"prijeÄ‘ite na veÄ‡i zaslon"
+
+#: admin/apps/menu-creator/menu-creator.php:1279
+msgid "Menu Items"
+msgstr "Stavke izbornika"
+
+#: admin/apps/menu-creator/menu-creator.php:1283
+msgid "Menu Settings"
+msgstr "Postavke izbornika"
+
+#: admin/apps/menu-creator/menu-creator.php:1314
+#: admin/apps/menu-creator/menu-creator.php:1315
+msgid "Menu Name"
+msgstr "Naziv izbornika"
+
+#: admin/apps/menu-creator/menu-creator.php:1319
+msgid "Menu Applies to"
+msgstr "Izbornik se odnosi na"
+
+#: admin/apps/menu-creator/menu-creator.php:1323
+msgid "Inclusive"
+msgstr "Inkluzivno"
+
+#: admin/apps/menu-creator/menu-creator.php:1327
+msgid "Exclusive"
+msgstr "Ekskluzivan"
+
+#: admin/apps/menu-creator/menu-creator.php:1331
+msgid ""
+"In Inclusive mode, this menu will load for all Usernames and roles selected "
+"below."
+msgstr ""
+"U ukljuÄenom naÄinu rada, ovaj izbornik Ä‡e se uÄitati za sva korisniÄka imena i "
+"uloge odabrane u nastavku."
+
+#: admin/apps/menu-creator/menu-creator.php:1334
+msgid ""
+"In Exclusive mode, this menu will load for every user except those Usernames and "
+"roles selected below."
+msgstr ""
+"U ekskluzivnom naÄinu rada, ovaj izbornik Ä‡e se uÄitati za svakog korisnika "
+"osim dolje odabranih korisniÄkih imena i uloga."
+
+#: admin/apps/menu-creator/menu-creator.php:1340
+msgid "Choose users or roles..."
+msgstr "Odaberite korisnike ili uloge..."
+
+#: admin/apps/menu-creator/menu-creator.php:1342
+msgid "Search roles and users..."
+msgstr "TraÅ¾i uloge i korisnike..."
+
+#: admin/apps/menu-creator/menu-creator.php:1351
+msgid "Custom Items"
+msgstr "PrilagoÄ‘eni artikli"
+
+#: admin/apps/menu-creator/menu-creator.php:1355
+msgid "New Separator"
+msgstr "Novi separator"
+
+#: admin/apps/menu-creator/menu-creator.php:1358
+msgid "New Custom Link"
+msgstr "Nova prilagoÄ‘ena veza"
+
+#: admin/apps/menu-creator/menu-creator.php:1363
+msgid "Available Menu Items"
+msgstr "Dostupne stavke izbornika"
+
+#: admin/apps/menu-creator/menu-creator.php:1370
+msgid "Search menu items"
+msgstr "PretraÅ¾ivanje stavki izbornika"
+
+#: admin/apps/menu-creator/menu-creator.php:1518
+msgid "Add some menu items from the left toolbar to get started"
+msgstr "Dodajte neke stavke izbornika s lijeve alatne trake da biste zapoÄeli"
+
+#: admin/apps/menu-creator/menu-creator.php:1537
+msgid "Separator"
+msgstr "Separator"
+
+#: admin/apps/menu-creator/menu-creator.php:1642
+msgid "Edit Menu Item"
+msgstr "Uredi stavku izbornika"
+
+#: admin/apps/menu-creator/menu-creator.php:1656
+#: admin/apps/menu-creator/menu-creator.php:1657
+msgid "Link"
+msgstr "Veza"
+
+#: admin/apps/menu-creator/menu-creator.php:1661
+msgid "Classes"
+msgstr "Nastava"
+
+#: admin/apps/menu-creator/menu-creator.php:1663
+msgid "Custom classes"
+msgstr "PrilagoÄ‘ene klase"
+
+#: admin/apps/menu-creator/menu-creator.php:1667
+msgid "Opens in new tab?"
+msgstr "Otvara se u novoj kartici?"
+
+#: admin/apps/menu-creator/menu-creator.php:1677
+msgid "Icon"
+msgstr "Ikona"
+
+#: admin/apps/menu-creator/menu-creator.php:1702
+msgid "Back to all menus"
+msgstr "Povratak na sve izbornike"
+
+#: admin/apps/menu-creator/menu-creator.php:1727
+msgid "Import Menu"
+msgstr "Izbornik za uvoz"
+
+#: admin/apps/menu-creator/menu-creator.php:1736 admin/classes/settings.php:265
+msgid "Reset Settings"
+msgstr "PoniÅ¡ti postavke"
+
+#: admin/apps/overview/analytics.php:74
+msgid "Analytics account removed"
+msgstr "Analytics raÄun je uklonjen"
+
+#: admin/apps/overview/analytics.php:93
+msgid "Unable to connect account"
+msgstr "Nije moguÄ‡e povezati raÄun"
+
+#: admin/apps/overview/analytics.php:106
+msgid "Analytics account connected"
+msgstr "Analytics raÄun povezan"
+
+#: admin/apps/overview/analytics.php:310 admin/apps/overview/analytics.php:718
+#: admin/apps/overview/overview.php:761
+msgid "Site Users"
+msgstr "Korisnici stranice"
+
+#: admin/apps/overview/analytics.php:318 admin/apps/overview/overview.php:762
+msgid "Site Users (comparison period)"
+msgstr "Korisnici web-mjesta (razdoblje za usporedbu)"
+
+#: admin/apps/overview/analytics.php:383 admin/apps/overview/analytics.php:700
+#: admin/apps/overview/overview.php:759
+msgid "Page Views"
+msgstr "Prikazi stranice"
+
+#: admin/apps/overview/analytics.php:391
+msgid "Page Views (comparison period)"
+msgstr "Prikazi stranice (razdoblje za usporedbu)"
+
+#: admin/apps/overview/analytics.php:608 admin/apps/overview/analytics.php:709
+msgid "Page Speed"
+msgstr "Brzina stranice"
+
+#: admin/apps/overview/analytics.php:616
+msgid "Page Speed (comparison period)"
+msgstr "Brzina stranice (razdoblje za usporedbu)"
+
+#: admin/apps/overview/analytics.php:663 admin/apps/overview/analytics.php:703
+#: admin/apps/overview/analytics.php:712 admin/apps/overview/analytics.php:721
+#: admin/apps/overview/analytics.php:730 admin/apps/overview/analytics.php:739
+#: admin/apps/overview/analytics.php:748 admin/apps/overview/analytics.php:757
+#: admin/apps/overview/analytics.php:766 admin/apps/overview/analytics.php:775
+#: admin/apps/overview/analytics.php:784 admin/apps/overview/analytics.php:793
+#: admin/apps/overview/analytics.php:802 admin/apps/overview/analytics.php:811
+#: admin/apps/overview/analytics.php:820 admin/apps/overview/analytics.php:829
+#: admin/apps/overview/analytics.php:838 admin/apps/overview/analytics.php:847
+#: admin/apps/overview/analytics.php:856 admin/apps/overview/analytics.php:865
+#: admin/apps/overview/analytics.php:874 admin/apps/overview/analytics.php:883
+msgid "Analytics"
+msgstr "Analitika"
+
+#: admin/apps/overview/analytics.php:665
+msgid "Creates the google analytics cards for the overview page."
+msgstr "Stvara kartice Google analitike za stranicu pregleda."
+
+#: admin/apps/overview/analytics.php:681
+msgid "Google Analytics disabled for"
+msgstr "Google Analytics onemoguÄ‡en za"
+
+#: admin/apps/overview/analytics.php:682
+msgid ""
+"Analytics will be disabled on the overview page for any users or roles you select"
+msgstr ""
+"Analytics Ä‡e biti onemoguÄ‡en na stranici s pregledom za sve korisnike ili "
+"uloge koje odaberete"
+
+#: admin/apps/overview/analytics.php:702
+msgid "Display website page views within the date range."
+msgstr "Prikaz prikaza stranica web-mjesta unutar datumskog raspona."
+
+#: admin/apps/overview/analytics.php:711
+msgid "Display website page speed within the date range."
+msgstr "PrikaÅ¾i brzinu stranice web stranice unutar datumskog raspona."
+
+#: admin/apps/overview/analytics.php:720
+msgid "Display website users within the date range."
+msgstr "PrikaÅ¾ite korisnike web-mjesta unutar datumskog raspona."
+
+#: admin/apps/overview/analytics.php:727
+msgid "Site visits by device"
+msgstr "Posjeti web-mjestu prema ureÄ‘aju"
+
+#: admin/apps/overview/analytics.php:729
+msgid "Display site usage by device within the date range."
+msgstr "Prikaz upotrebe web-lokacije po ureÄ‘aju unutar datumskog raspona."
+
+#: admin/apps/overview/analytics.php:736 admin/apps/overview/overview.php:841
+msgid "Bounce Rate"
+msgstr "Stopa napuÅ¡tanja poÄetne stranice"
+
+#: admin/apps/overview/analytics.php:738
+msgid "Display site bounce rate within the date range."
+msgstr "PrikaÅ¾ite stopu napuÅ¡tanja stranice unutar datumskog raspona."
+
+#: admin/apps/overview/analytics.php:745
+msgid "Session Duration"
+msgstr "Trajanje sesije"
+
+#: admin/apps/overview/analytics.php:747
+msgid "Display site session duration within the date range."
+msgstr "PrikaÅ¾i trajanje sesije web-lokacije unutar datumskog raspona."
+
+#: admin/apps/overview/analytics.php:754
+msgid "Visits by Country"
+msgstr "Posjeti po zemljama"
+
+#: admin/apps/overview/analytics.php:756
+msgid "Displays country user data within the date range."
+msgstr "Prikazuje podatke korisnika zemlje unutar datumskog raspona."
+
+#: admin/apps/overview/analytics.php:763
+msgid "Traffic Sources"
+msgstr "Izvori prometa"
+
+#: admin/apps/overview/analytics.php:765
+msgid "Displays traffic source info within the date range."
+msgstr "Prikazuje podatke o izvoru prometa unutar datumskog raspona."
+
+#: admin/apps/overview/analytics.php:772
+msgid "Visits By Page"
+msgstr "Posjeti po stranici"
+
+#: admin/apps/overview/analytics.php:774
+msgid "Displays traffic for most popular site pages within the date range."
+msgstr ""
+"Prikazuje promet za najpopularnije stranice web-lokacije unutar datumskog "
+"raspona."
+
+#: admin/apps/overview/analytics.php:781
+msgid "Event Count By Event Name"
+msgstr "Broj dogaÄ‘aja po nazivu dogaÄ‘aja"
+
+#: admin/apps/overview/analytics.php:783
+msgid "Display list of events within the date range."
+msgstr "PrikaÅ¾i popis dogaÄ‘aja unutar datumskog raspona."
+
+#: admin/apps/overview/analytics.php:790
+msgid "Sessions by channel grouping"
+msgstr "Sesije po grupiranju kanala"
+
+#: admin/apps/overview/analytics.php:792
+msgid "Display sessions by channel grouping within the date range."
+msgstr "PrikaÅ¾i sesije po grupiranju kanala unutar datumskog raspona."
+
+#: admin/apps/overview/analytics.php:799
+msgid "User in the last 30 minutes"
+msgstr "Korisnik u zadnjih 30 minuta"
+
+#: admin/apps/overview/analytics.php:801
+msgid "Displays active users from the last 30 minutes."
+msgstr "Prikazuje aktivne korisnike u zadnjih 30 minuta."
+
+#: admin/apps/overview/analytics.php:808
+msgid "Engagement Rate"
+msgstr "Stopa angaÅ¾mana"
+
+#: admin/apps/overview/analytics.php:810
+msgid "Displays average angagement rate for date range"
+msgstr "Prikazuje prosjeÄnu stopu angaÅ¾mana za datumski raspon"
+
+#: admin/apps/overview/analytics.php:817 admin/apps/overview/overview.php:783
+msgid "Site Revenue"
+msgstr "Prihodi web-mjesta"
+
+#: admin/apps/overview/analytics.php:819
+msgid ""
+"Displays site revenue for date range. The sum of revenue from purchases, "
+"subscriptions, and advertising."
+msgstr ""
+"Prikazuje prihod web-lokacije za datumski raspon. Zbroj prihoda od kupnji, "
+"pretplata i oglaÅ¡avanja."
+
+#: admin/apps/overview/analytics.php:826
+msgid "New vs Returning Users"
+msgstr "Novi u odnosu na ponovni korisnici"
+
+#: admin/apps/overview/analytics.php:828
+msgid "Displays new vs returning users for the date range."
+msgstr "Prikazuje nove u odnosu na ponovne korisnike za datumski raspon."
+
+#: admin/apps/overview/analytics.php:835
+msgid "Top Cities"
+msgstr "Najbolji gradovi"
+
+#: admin/apps/overview/analytics.php:837
+msgid "Displays page views by city for the date range."
+msgstr "Prikazuje prikaze stranica po gradu za datumski raspon."
+
+#: admin/apps/overview/analytics.php:844 admin/apps/overview/overview.php:785
+msgid "Ecommerce Overview"
+msgstr "Pregled e-trgovine"
+
+#: admin/apps/overview/analytics.php:846
+msgid "Displays add to cart, checkout and purchase data for the date range."
+msgstr ""
+"Prikazuje podatke o dodavanju u koÅ¡aricu, naplati i kupnji za datumski raspon."
+
+#: admin/apps/overview/analytics.php:853 admin/apps/overview/overview.php:781
+#: admin/apps/overview/overview.php:782
+msgid "Conversion Rate"
+msgstr "Stopa pretvorbe"
+
+#: admin/apps/overview/analytics.php:855
+msgid ""
+"The percentage of active users who made their first purchase for the date range."
+msgstr ""
+"Postotak aktivnih korisnika koji su izvrÅ¡ili prvu kupnju za datumski raspon."
+
+#: admin/apps/overview/analytics.php:862
+msgid "Top Products"
+msgstr "Vrhunski proizvodi"
+
+#: admin/apps/overview/analytics.php:864
+msgid "Products with the most sales for for the date range."
+msgstr "Proizvodi s najveÄ‡om prodajom za taj datumski raspon."
+
+#: admin/apps/overview/analytics.php:871
+msgid "Conversions in the last 30 minutes"
+msgstr "Konverzije u zadnjih 30 minuta"
+
+#: admin/apps/overview/analytics.php:873
+msgid "Conversions logged in the last 30 minutes."
+msgstr "Konverzije zabiljeÅ¾ene u zadnjih 30 minuta."
+
+#: admin/apps/overview/analytics.php:880
+msgid "Page Views in the last 30 minutes"
+msgstr "Pregledi stranice u zadnjih 30 minuta"
+
+#: admin/apps/overview/analytics.php:882
+msgid "Page views in the last 30 minutes."
+msgstr "Prikazi stranice u posljednjih 30 minuta."
+
+#: admin/apps/overview/analytics.php:1013
+msgid "Unable to fetch analytics data at this moment. Please try again later"
+msgstr ""
+"Trenutno nije moguÄ‡e dohvatiti analitiÄke podatke. Molimo pokuÅ¡ajte ponovo "
+"kasnije"
+
+#: admin/apps/overview/overview.php:106 admin/apps/overview/overview.php:1150
+msgid "Overview"
+msgstr "Pregled"
+
+#: admin/apps/overview/overview.php:107
+msgid "Creates the overview page."
+msgstr "Stvara preglednu stranicu."
+
+#: admin/apps/overview/overview.php:111
+msgid "Disable Overview Page?"
+msgstr "OnemoguÄ‡iti stranicu pregleda?"
+
+#: admin/apps/overview/overview.php:112
+msgid "Overview page will be hidden when this option is activated."
+msgstr "Stranica s pregledom bit Ä‡e skrivena kada je ova opcija aktivirana."
+
+#: admin/apps/overview/overview.php:119
+msgid "Overview Page Disabled For"
+msgstr "Stranica s pregledom OnemoguÄ‡eno za"
+
+#: admin/apps/overview/overview.php:120
+msgid "Overview Page will be disabled for any users or roles you select"
+msgstr ""
+"Stranica Pregled bit Ä‡e onemoguÄ‡ena za sve korisnike ili uloge koje odaberete"
+
+#: admin/apps/overview/overview.php:128
+msgid "Who can edit the overview page?"
+msgstr "Tko moÅ¾e ureÄ‘ivati stranicu pregleda?"
+
+#: admin/apps/overview/overview.php:129
+msgid ""
+"Any role or user chosen here will be able to edit the overview page. If none are "
+"chosen it will fall back to administrators only"
+msgstr ""
+"Bilo koja ovdje odabrana uloga ili korisnik moÄ‡i Ä‡e ureÄ‘ivati stranicu "
+"pregleda. Ako nijedan nije odabran, vratit Ä‡e se samo administratorima"
+
+#: admin/apps/overview/overview.php:137
+msgid "Default report start date"
+msgstr "Zadani datum poÄetka izvjeÅ¡Ä‡a"
+
+#: admin/apps/overview/overview.php:138
+msgid ""
+"By default the overview date range will start 7 days before current date. Add a "
+"number of days between 1 and 90 to change length of date range"
+msgstr ""
+"Prema zadanim postavkama, datumski raspon pregleda poÄinje 7 dana prije "
+"trenutaÄnog datuma. Dodajte broj dana izmeÄ‘u 1 i 90 da biste promijenili "
+"duljinu datumskog raspona"
+
+#: admin/apps/overview/overview.php:146
+msgid "Default report end date offset"
+msgstr "Zadani pomak datuma zavrÅ¡etka izvjeÅ¡Ä‡a"
+
+#: admin/apps/overview/overview.php:147
+msgid ""
+"By default the overview date range will end on the current day (0). To end the "
+"report on yesterday for example, enter 1"
+msgstr ""
+"Prema zadanim postavkama, datumski raspon pregleda zavrÅ¡it Ä‡e na tekuÄ‡i dan "
+"(0). Za zavrÅ¡etak izvjeÅ¡Ä‡a za juÄer, na primjer, unesite 1"
+
+#: admin/apps/overview/overview.php:155
+msgid "Reporting Currency Symbol"
+msgstr "Simbol valute izvjeÅ¡Ä‡a"
+
+#: admin/apps/overview/overview.php:156
+msgid ""
+"If you are using google analytics commerce reports, enter the currency symbol "
+"your reports are in here"
+msgstr ""
+"Ako koristite google analytics commerce izvjeÅ¡Ä‡a, ovdje unesite simbol valute "
+"u kojoj se vaÅ¡a izvjeÅ¡Ä‡a nalaze"
+
+#: admin/apps/overview/overview.php:164
+msgid "Custom welcome message"
+msgstr "PrilagoÄ‘ena poruka dobrodoÅ¡lice"
+
+#: admin/apps/overview/overview.php:165
+msgid "Add a custom welcome message here to displayed on the overview page"
+msgstr ""
+"Ovdje dodajte prilagoÄ‘enu poruku dobrodoÅ¡lice koja Ä‡e se prikazati na "
+"stranici s pregledom"
+
+#: admin/apps/overview/overview.php:243 admin/apps/overview/overview.php:384
+#: admin/apps/overview/woocommerce.php:158
+msgid "ago"
+msgstr "prije"
+
+#: admin/apps/overview/overview.php:259 admin/apps/overview/overview.php:447
+#: admin/apps/overview/woocommerce.php:183 admin/apps/overview/woocommerce.php:265
+msgid "Posts fetched"
+msgstr "Postovi su dohvaÄ‡eni"
+
+#: admin/apps/overview/overview.php:267
+msgid "No posts posted during the date range."
+msgstr "Nema objavljenih postova tijekom datumskog raspona."
+
+#: admin/apps/overview/overview.php:282
+msgid "Unable to save dash at this time"
+msgstr "TrenutaÄno nije moguÄ‡e spremiti crticu"
+
+#: admin/apps/overview/overview.php:292
+msgid "Dashboard settings saved"
+msgstr "Postavke nadzorne ploÄe spremljene"
+
+#: admin/apps/overview/overview.php:307
+msgid "Dashboard settings reset"
+msgstr "PoniÅ¡tavanje postavki nadzorne ploÄe"
+
+#: admin/apps/overview/overview.php:320 admin/apps/overview/overview.php:328
+msgid "Unable to load shortcode at this time"
+msgstr "TrenutaÄno nije moguÄ‡e uÄitati kratki kod"
+
+#: admin/apps/overview/overview.php:335
+msgid "Shortcode loaded"
+msgstr "UÄitan je kratki kod"
+
+#: admin/apps/overview/overview.php:454
+msgid "No comments during the date range."
+msgstr "Nema komentara tijekom datumskog raspona."
+
+#: admin/apps/overview/overview.php:477
+msgid "Core version"
+msgstr "Osnovna verzija"
+
+#: admin/apps/overview/overview.php:482
+msgid "PHP version"
+msgstr "PHP verzija"
+
+#: admin/apps/overview/overview.php:487
+msgid "Active Plugins"
+msgstr "Aktivni dodaci"
+
+#: admin/apps/overview/overview.php:492
+msgid "Inactive Plugins"
+msgstr "Neaktivni dodaci"
+
+#: admin/apps/overview/overview.php:497
+msgid "Installed Themes"
+msgstr "Instalirane teme"
+
+#: admin/apps/overview/overview.php:532
+msgid "Unable to fetch quote of the day"
+msgstr "Nije moguÄ‡e dohvatiti citat dana"
+
+#: admin/apps/overview/overview.php:570
+msgid "Passed Checks"
+msgstr "PoloÅ¾ene provjere"
+
+#: admin/apps/overview/overview.php:578
+msgid "Recommended"
+msgstr "PreporuÄeno"
+
+#: admin/apps/overview/overview.php:586
+msgid "Critical"
+msgstr "KritiÄno"
+
+#: admin/apps/overview/overview.php:597
+#, php-format
+msgid "Take a look at the %d items on the"
+msgstr "Pogledajte %d stavke na"
+
+#: admin/apps/overview/overview.php:598
+msgid "Site Health screen"
+msgstr "Zaslon zdravlja web mjesta"
+
+#: admin/apps/overview/overview.php:606
+msgid "Device Visits"
+msgstr "Posjeti ureÄ‘aja"
+
+#: admin/apps/overview/overview.php:693
+msgid "Card width"
+msgstr "Å irina kartice"
+
+#: admin/apps/overview/overview.php:694
+msgid "Column width"
+msgstr "Å irina stupca"
+
+#: admin/apps/overview/overview.php:695
+msgid "Column settings"
+msgstr "Postavke stupca"
+
+#: admin/apps/overview/overview.php:696
+msgid "Column Size"
+msgstr "VeliÄina stupca"
+
+#: admin/apps/overview/overview.php:697
+msgid "Remove Card"
+msgstr "Uklonite karticu"
+
+#: admin/apps/overview/overview.php:698 admin/apps/overview/overview.php:799
+msgid "Delete Column"
+msgstr "IzbriÅ¡i stupac"
+
+#: admin/apps/overview/overview.php:699
+msgid "In the"
+msgstr "U"
+
+#: admin/apps/overview/overview.php:700
+msgid "day range"
+msgstr "dnevni raspon"
+
+#: admin/apps/overview/overview.php:701
+msgid "xxsmall (1/6)"
+msgstr "xxsmall (1/6)"
+
+#: admin/apps/overview/overview.php:702
+msgid "xsmall (1/5)"
+msgstr "xsmall (1/5)"
+
+#: admin/apps/overview/overview.php:703
+msgid "small (1/4)"
+msgstr "mali (1/4)"
+
+#: admin/apps/overview/overview.php:704
+msgid "small medium (1/3)"
+msgstr "mali srednji (1/3)"
+
+#: admin/apps/overview/overview.php:705
+msgid "medium (1/2)"
+msgstr "srednji (1/2)"
+
+#: admin/apps/overview/overview.php:706
+msgid "medium large (2/3)"
+msgstr "srednje velik (2/3)"
+
+#: admin/apps/overview/overview.php:707
+msgid "large (3/4)"
+msgstr "veliki (3/4)"
+
+#: admin/apps/overview/overview.php:708
+msgid "xlarge (1/1)"
+msgstr "xlarge (1/1)"
+
+#: admin/apps/overview/overview.php:709
+msgid "I am an empty column. Drag cards into me."
+msgstr "Ja sam prazna kolona. Povucite karte u mene."
+
+#: admin/apps/overview/overview.php:710
+msgid "Column Added"
+msgstr "Stupac je dodan"
+
+#: admin/apps/overview/overview.php:711
+msgid "Add card"
+msgstr "Dodaj karticu"
+
+#: admin/apps/overview/overview.php:712
+msgid "Section added"
+msgstr "Odjeljak dodan"
+
+#: admin/apps/overview/overview.php:713
+msgid "Search Cards"
+msgstr "PretraÅ¾ivanje kartica"
+
+#: admin/apps/overview/overview.php:714
+msgid "Pro"
+msgstr "Pro"
+
+#: admin/apps/overview/overview.php:716 admin/apps/overview/overview.php:922
+msgid "Shortcode"
+msgstr "Kratki kod"
+
+#: admin/apps/overview/overview.php:717
+msgid "Video URL"
+msgstr "URL videozapisa"
+
+#: admin/apps/overview/overview.php:718
+msgid "Embed Type"
+msgstr "Vrsta ugradnje"
+
+#: admin/apps/overview/overview.php:719
+msgid "UiPress Pro feature"
+msgstr "ZnaÄajka UiPress Pro"
+
+#: admin/apps/overview/overview.php:720
+msgid "Upgrade to one of our premium plans to unlock this feature."
+msgstr ""
+"Nadogradite na jedan od naÅ¡ih premium planova da biste otkljuÄali ovu znaÄajku."
+
+#: admin/apps/overview/overview.php:721
+msgid "HTML"
+msgstr "HTML"
+
+#: admin/apps/overview/overview.php:722
+msgid "Card Added"
+msgstr "Kartica dodana"
+
+#: admin/apps/overview/overview.php:723
+msgid "Card Background colour"
+msgstr "Boja pozadine kartice"
+
+#: admin/apps/overview/overview.php:724
+msgid "# Hex code only (#fff)"
+msgstr "# Samo heksadecimalni kod (#fff)"
+
+#: admin/apps/overview/overview.php:725
+msgid "Use light color for text"
+msgstr "Koristite svijetlu boju za tekst"
+
+#: admin/apps/overview/overview.php:726
+msgid "Chart Type"
+msgstr "Vrsta grafikona"
+
+#: admin/apps/overview/overview.php:727
+msgid "Line Chart"
+msgstr "Linijski grafikon"
+
+#: admin/apps/overview/overview.php:728
+msgid "Bar Chart"
+msgstr "Grafikon"
+
+#: admin/apps/overview/overview.php:729
+msgid "vs previous"
+msgstr "u odnosu na prethodni"
+
+#: admin/apps/overview/overview.php:730 admin/apps/overview/overview.php:829
+msgid "days"
+msgstr "dana"
+
+#: admin/apps/overview/overview.php:731
+msgid "Doughnut"
+msgstr "Krafna"
+
+#: admin/apps/overview/overview.php:732
+msgid "Polar Area"
+msgstr "Polarno podruÄje"
+
+#: admin/apps/overview/overview.php:733
+msgid "Bar"
+msgstr "Bar"
+
+#: admin/apps/overview/overview.php:734 admin/apps/overview/overview.php:741
+msgid "Horizontal Bar"
+msgstr "Horizontalna traka"
+
+#: admin/apps/overview/overview.php:735
+msgid "Country"
+msgstr "Zemlja"
+
+#: admin/apps/overview/overview.php:736
+msgid "Visits"
+msgstr "Posjeti"
+
+#: admin/apps/overview/overview.php:737
+msgid "Change"
+msgstr "Promijeniti"
+
+#: admin/apps/overview/overview.php:738
+msgid "No Background"
+msgstr "Bez pozadine"
+
+#: admin/apps/overview/overview.php:739
+msgid "Hide Map"
+msgstr "Sakrij kartu"
+
+#: admin/apps/overview/overview.php:740
+msgid "Connect your account to use this card"
+msgstr "PoveÅ¾ite svoj raÄun da biste koristili ovu karticu"
+
+#: admin/apps/overview/overview.php:742
+msgid "Hide Chart"
+msgstr "Sakrij grafikon"
+
+#: admin/apps/overview/overview.php:743
+msgid "Source"
+msgstr "Izvor"
+
+#: admin/apps/overview/overview.php:744
+msgid "Page"
+msgstr "Stranica"
+
+#: admin/apps/overview/overview.php:745
+msgid "Product"
+msgstr "Proizvod"
+
+#: admin/apps/overview/overview.php:746
+msgid "Sold"
+msgstr "Prodano"
+
+#: admin/apps/overview/overview.php:747
+msgid "Value"
+msgstr "Vrijednost"
+
+#: admin/apps/overview/overview.php:748
+msgid "WooCommerce is required to use this card"
+msgstr "Za koriÅ¡tenje ove kartice potreban je WooCommerce"
+
+#: admin/apps/overview/overview.php:749 admin/classes/uipress-app.php:1380
+msgid "Please select a valid JSON file"
+msgstr "Odaberite vaÅ¾eÄ‡u JSON datoteku"
+
+#: admin/apps/overview/overview.php:750 admin/classes/uipress-app.php:1381
+msgid "File is to big"
+msgstr "Datoteka je prevelika"
+
+#: admin/apps/overview/overview.php:751
+msgid "Layout Imported"
+msgstr "Izgled uvezen"
+
+#: admin/apps/overview/overview.php:752
+msgid "Unable to import layout"
+msgstr "Nije moguÄ‡e uvesti izgled"
+
+#: admin/apps/overview/overview.php:753
+msgid "Are you sure you want to clear the current layout? There is no undo."
+msgstr "Jeste li sigurni da Å¾elite izbrisati trenutni izgled? Nema poniÅ¡tavanja."
+
+#: admin/apps/overview/overview.php:754
+msgid "Available Cards"
+msgstr "Dostupne kartice"
+
+#: admin/apps/overview/overview.php:755
+msgid "Event Count"
+msgstr "Broj dogaÄ‘aja"
+
+#: admin/apps/overview/overview.php:756
+msgid "Event Name"
+msgstr "Naziv dogaÄ‘aja"
+
+#: admin/apps/overview/overview.php:757
+msgid "Channel"
+msgstr "Kanal"
+
+#: admin/apps/overview/overview.php:758
+msgid "Sessions"
+msgstr "Sjednice"
+
+#: admin/apps/overview/overview.php:760
+msgid "Page Views  (comparison period)"
+msgstr "Prikazi stranice (razdoblje za usporedbu)"
+
+#: admin/apps/overview/overview.php:763
+msgid "To"
+msgstr "Do"
+
+#: admin/apps/overview/overview.php:764
+msgid "From"
+msgstr "Iz"
+
+#: admin/apps/overview/overview.php:765
+msgid "Date Range"
+msgstr "Raspon datuma"
+
+#: admin/apps/overview/overview.php:766
+msgid "Custom Comparison Dates"
+msgstr "PrilagoÄ‘eni datumi usporedbe"
+
+#: admin/apps/overview/overview.php:767
+msgid "Apply"
+msgstr "Prijavite se"
+
+#: admin/apps/overview/overview.php:768
+msgid "vs"
+msgstr "vs"
+
+#: admin/apps/overview/overview.php:769
+msgid "Custom Range"
+msgstr "PrilagoÄ‘eni raspon"
+
+#: admin/apps/overview/overview.php:770 admin/classes/uipress-app.php:1397
+msgid "Today"
+msgstr "Danas"
+
+#: admin/apps/overview/overview.php:771 admin/classes/uipress-app.php:1398
+msgid "Yesterday"
+msgstr "JuÄer"
+
+#: admin/apps/overview/overview.php:772
+msgid "Last 7 days"
+msgstr "Zadnjih 7 dana"
+
+#: admin/apps/overview/overview.php:773
+msgid "Last 30 days"
+msgstr "Zadnjih 30 dana"
+
+#: admin/apps/overview/overview.php:774
+msgid "Last 60 days"
+msgstr "Zadnjih 60 dana"
+
+#: admin/apps/overview/overview.php:775
+msgid "Last 90 days"
+msgstr "Zadnjih 90 dana"
+
+#: admin/apps/overview/overview.php:776 admin/classes/uipress-app.php:1395
+msgid "This Month"
+msgstr "Ovaj mjesec"
+
+#: admin/apps/overview/overview.php:777 admin/classes/uipress-app.php:1396
+msgid "Last Month"
+msgstr "ProÅ¡li mjesec"
+
+#: admin/apps/overview/overview.php:778
+msgid "Purchases"
+msgstr "Kupnje"
+
+#: admin/apps/overview/overview.php:779
+msgid "Added to cart"
+msgstr "Dodano u koÅ¡aricu"
+
+#: admin/apps/overview/overview.php:780
+msgid "Checkout started"
+msgstr "Naplata je zapoÄela"
+
+#: admin/apps/overview/overview.php:784
+msgid "Site Revenue (comparison)"
+msgstr "Prihod web-lokacije (usporedba)"
+
+#: admin/apps/overview/overview.php:786
+msgid "Visits By Device"
+msgstr "Posjeti po ureÄ‘aju"
+
+#: admin/apps/overview/overview.php:787
+msgid "Device Category"
+msgstr "Kategorija ureÄ‘aja"
+
+#: admin/apps/overview/overview.php:788
+msgid "Active Users"
+msgstr "Aktivni korisnici"
+
+#: admin/apps/overview/overview.php:789 admin/apps/overview/overview.php:791
+msgid "Product Name"
+msgstr "Ime proizvoda"
+
+#: admin/apps/overview/overview.php:790
+msgid "Sales"
+msgstr "Prodajni"
+
+#: admin/apps/overview/overview.php:792
+msgid "Quantity Sold"
+msgstr "Prodana koliÄina"
+
+#: admin/apps/overview/overview.php:793 admin/apps/overview/overview.php:807
+msgid "Revenue"
+msgstr "Prihod"
+
+#: admin/apps/overview/overview.php:794
+msgid "Column Removed"
+msgstr "Stupac je uklonjen"
+
+#: admin/apps/overview/overview.php:795
+msgid "Section Removed"
+msgstr "Odjeljak uklonjen"
+
+#: admin/apps/overview/overview.php:796
+msgid "View Plans"
+msgstr "Pogledajte planove"
+
+#: admin/apps/overview/overview.php:797
+msgid "Unable to fetch analytics data, please try again later"
+msgstr "Nije moguÄ‡e dohvatiti analitiÄke podatke, pokuÅ¡ajte ponovo kasnije"
+
+#: admin/apps/overview/overview.php:798
+msgid "Column background colour"
+msgstr "Boja pozadine stupca"
+
+#: admin/apps/overview/overview.php:800
+msgid "Hide card title"
+msgstr "Sakrij naslov kartice"
+
+#: admin/apps/overview/overview.php:801 admin/apps/overview/overview.php:895
+msgid "Site Health"
+msgstr "Zdravlje web mjesta"
+
+#: admin/apps/overview/overview.php:802
+msgid "Conversions"
+msgstr "Pretvorbe"
+
+#: admin/apps/overview/overview.php:803
+msgid "This card only works with google analytics 4 accounts"
+msgstr "Ova kartica radi samo s raÄunima google analytics 4"
+
+#: admin/apps/overview/overview.php:804
+msgid "This card only works with universal analytics propeties."
+msgstr "Ova kartica radi samo s univerzalnim analitiÄkim svojstvima."
+
+#: admin/apps/overview/overview.php:805
+msgid "Orders"
+msgstr "NarudÅ¾be"
+
+#: admin/apps/overview/overview.php:806
+msgid "Orders (comparison period)."
+msgstr "NarudÅ¾be (razdoblje usporedbe)."
+
+#: admin/apps/overview/overview.php:808
+msgid "Revenue (comparison period)."
+msgstr "Prihod (razdoblje usporedbe)."
+
+#: admin/apps/overview/overview.php:809
+msgid "Current Period"
+msgstr "TekuÄ‡e razdoblje"
+
+#: admin/apps/overview/overview.php:810
+msgid "Comparison Period"
+msgstr "Razdoblje usporedbe"
+
+#: admin/apps/overview/overview.php:811
+msgid "Match Card Height"
+msgstr "Visina karte za utakmicu"
+
+#: admin/apps/overview/overview.php:813
+msgid "What would you like to do?"
+msgstr "Å to biste Å¾eljeli raditi?"
+
+#: admin/apps/overview/overview.php:814
+msgid "To do"
+msgstr "Napraviti"
+
+#: admin/apps/overview/overview.php:815
+msgid "Done"
+msgstr "Gotovo"
+
+#: admin/apps/overview/overview.php:816
+msgid "Size"
+msgstr "VeliÄina"
+
+#: admin/apps/overview/overview.php:817
+msgid "Background Colour"
+msgstr "Boja pozadine"
+
+#: admin/apps/overview/overview.php:818
+msgid "Custom CSS class"
+msgstr "PrilagoÄ‘ena CSS klasa"
+
+#: admin/apps/overview/overview.php:819
+msgid "Add New Card"
+msgstr "Dodaj novu karticu"
+
+#: admin/apps/overview/overview.php:820 admin/apps/overview/overview.php:1249
+#: admin/classes/settings.php:78 admin/classes/settings.php:91
+#: admin/classes/settings.php:226 admin/classes/uipress-app.php:1406
+msgid "Settings"
+msgstr "Postavke"
+
+#: admin/apps/overview/overview.php:821
+msgid "Card Settings"
+msgstr "Postavke kartice"
+
+#: admin/apps/overview/overview.php:822
+msgid "Move Column Down"
+msgstr "Pomaknite stupac prema dolje"
+
+#: admin/apps/overview/overview.php:823
+msgid "Move Column Up"
+msgstr "Premjesti stupac prema gore"
+
+#: admin/apps/overview/overview.php:824
+msgid "Add new column"
+msgstr "Dodaj novi stupac"
+
+#: admin/apps/overview/overview.php:825
+msgid "Section Settings"
+msgstr "Postavke odjeljka"
+
+#: admin/apps/overview/overview.php:826
+msgid "Toggle section visibility"
+msgstr "UkljuÄi/iskljuÄi vidljivost odjeljka"
+
+#: admin/apps/overview/overview.php:827
+msgid "Page Settings"
+msgstr "Postavke stranice"
+
+#: admin/apps/overview/overview.php:828
+msgid "In the last"
+msgstr "U posljednjih"
+
+#: admin/apps/overview/overview.php:830 admin/apps/users/uip-users-ajax.php:662
+msgid "Something has gone wrong"
+msgstr "NeÅ¡to je poÅ¡lo po zlu"
+
+#: admin/apps/overview/overview.php:831
+msgid "Connect your matomo site to use this card"
+msgstr "PoveÅ¾ite svoju matomo stranicu da biste koristili ovu karticu"
+
+#: admin/apps/overview/overview.php:832
+msgid "Connect Matomo Analytics"
+msgstr "PoveÅ¾ite Matomo Analytics"
+
+#: admin/apps/overview/overview.php:833
+msgid "Auth Token"
+msgstr "Auth Token"
+
+#: admin/apps/overview/overview.php:834
+msgid "Matomo Url"
+msgstr "Matomo Url"
+
+#: admin/apps/overview/overview.php:835
+msgid "Matomo Site ID"
+msgstr "Matomo ID stranice"
+
+#: admin/apps/overview/overview.php:837
+msgid "Click below to change matomo account"
+msgstr "Kliknite ispod za promjenu matomo raÄuna"
+
+#: admin/apps/overview/overview.php:838
+msgid "Change account"
+msgstr "Promijeni raÄun"
+
+#: admin/apps/overview/overview.php:839
+msgid "City"
+msgstr "Grad"
+
+#: admin/apps/overview/overview.php:840
+msgid "Average Page Load"
+msgstr "ProsjeÄno uÄitavanje stranice"
+
+#: admin/apps/overview/overview.php:842
+msgid "Exit Rate"
+msgstr "Izlazna stopa"
+
+#: admin/apps/overview/overview.php:843
+msgid "Average Time On Page"
+msgstr "ProsjeÄno vrijeme na stranici"
+
+#: admin/apps/overview/overview.php:844
+msgid "Referer"
+msgstr "Referent"
+
+#: admin/apps/overview/overview.php:845
+msgid "Section name"
+msgstr "Naziv odjeljka"
+
+#: admin/apps/overview/overview.php:846
+msgid "Section description"
+msgstr "Opis odjeljka"
+
+#: admin/apps/overview/overview.php:868
+msgid "Recently Published"
+msgstr "Nedavno objavljeno"
+
+#: admin/apps/overview/overview.php:870
+msgid "Display posts, pages and CPTs published within the date range."
+msgstr "PrikaÅ¾i postove, stranice i CPT-ove objavljene unutar datumskog raspona."
+
+#: admin/apps/overview/overview.php:871 admin/apps/overview/overview.php:880
+#: admin/apps/overview/overview.php:889 admin/apps/overview/overview.php:898
+#: admin/apps/overview/overview.php:907 admin/apps/overview/overview.php:916
+#: admin/apps/overview/overview.php:925 admin/apps/overview/overview.php:934
+#: admin/apps/overview/overview.php:943 admin/apps/overview/overview.php:952
+#: admin/classes/uipress-app.php:2526
+msgid "General"
+msgstr "OpÄ‡enito"
+
+#: admin/apps/overview/overview.php:877
+msgid "Recent Comments"
+msgstr "Nedavni komentari"
+
+#: admin/apps/overview/overview.php:879
+msgid ""
+"Displays total comments and recent comments published within the date range."
+msgstr ""
+"Prikazuje ukupne komentare i nedavne komentare objavljene unutar datumskog "
+"raspona."
+
+#: admin/apps/overview/overview.php:886
+msgid "System Info"
+msgstr "Informacije o sustavu"
+
+#: admin/apps/overview/overview.php:888
+msgid "Displays info our about your cms and server setup."
+msgstr "Prikazuje naÅ¡e informacije o vaÅ¡em CMS-u i postavljanju posluÅ¾itelja."
+
+#: admin/apps/overview/overview.php:897
+msgid "Displays info our about your sites health."
+msgstr "Prikazuje naÅ¡e informacije o zdravlju vaÅ¡ih web stranica."
+
+#: admin/apps/overview/overview.php:906
+msgid "Displays current time and date"
+msgstr "Prikazuje trenutno vrijeme i datum"
+
+#: admin/apps/overview/overview.php:913
+msgid "Video"
+msgstr "Video"
+
+#: admin/apps/overview/overview.php:915
+msgid "Displays a custom video"
+msgstr "Prikazuje prilagoÄ‘eni video"
+
+#: admin/apps/overview/overview.php:924
+msgid "Outputs a WordPress shortcode to the card"
+msgstr "Izlazi WordPress kratki kod na karticu"
+
+#: admin/apps/overview/overview.php:931
+msgid "Custom HTML"
+msgstr "PrilagoÄ‘eni HTML"
+
+#: admin/apps/overview/overview.php:933
+msgid "Outputs custom HTML to the card"
+msgstr "Izlazi prilagoÄ‘eni HTML na karticu"
+
+#: admin/apps/overview/overview.php:940
+msgid "Quote of the day"
+msgstr "Citat dana"
+
+#: admin/apps/overview/overview.php:942
+msgid "Shows a random quote of the day"
+msgstr "Prikazuje nasumiÄni citat dana"
+
+#: admin/apps/overview/overview.php:949
+msgid "To do list"
+msgstr "Popis zadataka"
+
+#: admin/apps/overview/overview.php:951
+msgid "A simple todo list card"
+msgstr "Jednostavna kartica s popisom zadataka"
+
+#: admin/apps/overview/overview.php:1038
+msgid "Hello"
+msgstr "Zdravo"
+
+#: admin/apps/overview/overview.php:1187
+msgid "Clear Layout"
+msgstr "Clear Layout"
+
+#: admin/apps/overview/overview.php:1191 admin/apps/overview/overview.php:1234
+msgid "New Section"
+msgstr "Novi odjeljak"
+
+#: admin/apps/overview/overview.php:1196 admin/apps/overview/overview.php:1237
+msgid "Save changes"
+msgstr "Spremi promjene"
+
+#: admin/apps/overview/overview.php:1240
+msgid "Exit edit mode"
+msgstr "IzaÄ‘ite iz naÄina ureÄ‘ivanja"
+
+#: admin/apps/overview/overview.php:1253
+msgid "Editing Mode"
+msgstr "NaÄin ureÄ‘ivanja"
+
+#: admin/apps/overview/overview.php:1265
+msgid "Disconnect Analytics"
+msgstr "Prekinite vezu s Analyticsom"
+
+#: admin/apps/overview/overview.php:1275
+msgid "Export Layout"
+msgstr "Izvoz izgleda"
+
+#: admin/apps/overview/overview.php:1284
+msgid "Import Layout"
+msgstr "Uvoz izgleda"
+
+#: admin/apps/overview/overview.php:1298 admin/classes/settings.php:258
+#: admin/classes/styles.php:457
+msgid "Unlock Export and Import features with pro"
+msgstr "OtkljuÄajte znaÄajke izvoza i uvoza s pro"
+
+#: admin/apps/overview/overview.php:1321
+msgid "Home"
+msgstr "Početna"
+
+#: admin/apps/overview/overview.php:1369
+msgid "It's a little quiet around here"
+msgstr "Ovdje je malo tiho"
+
+#: admin/apps/overview/overview.php:1371
+msgid ""
+"Looks like you haven't created a dashboard yet. Enter edit mode to get started "
+"or import a default template"
+msgstr ""
+"ÄŒini se da joÅ¡ niste izradili nadzornu ploÄu. UÄ‘ite u naÄin ureÄ‘ivanja da "
+"biste zapoÄeli ili uvezli zadani predloÅ¾ak"
+
+#: admin/apps/overview/overview.php:1374
+msgid "Import default template"
+msgstr "Uvezite zadani predloÅ¾ak"
+
+#: admin/apps/overview/overview.php:1375
+msgid "Enter edit mode"
+msgstr "UÄ‘ite u naÄin ureÄ‘ivanja"
+
+#: admin/apps/overview/overview.php:1419
+msgid "Match Column Height"
+msgstr "Uskladite visinu stupca"
+
+#: admin/apps/overview/overview.php:1427
+msgid "Hide section title"
+msgstr "Sakrij naslov odjeljka"
+
+#: admin/apps/overview/overview.php:1435
+msgid "Section Width"
+msgstr "Å irina odjeljka"
+
+#: admin/apps/overview/overview.php:1452
+msgid "Remove Section"
+msgstr "Ukloni odjeljak"
+
+#: admin/apps/overview/woocommerce.php:46 admin/apps/overview/woocommerce.php:125
+#: admin/apps/overview/woocommerce.php:203
+msgid "Woocommerce is required for this widget"
+msgstr "Woocommerce je potreban za ovaj widget"
+
+#: admin/apps/overview/woocommerce.php:74
+msgid "Total Revenue"
+msgstr "Ukupni prihodi"
+
+#: admin/apps/overview/woocommerce.php:76
+msgid "Display total sales revenue in your store within the date range."
+msgstr ""
+"PrikaÅ¾ite ukupan prihod od prodaje u vaÅ¡oj trgovini unutar datumskog raspona."
+
+#: admin/apps/overview/woocommerce.php:77 admin/apps/overview/woocommerce.php:86
+#: admin/apps/overview/woocommerce.php:95 admin/apps/overview/woocommerce.php:104
+#: admin/apps/overview/woocommerce.php:113
+msgid "Commerce"
+msgstr "Trgovina"
+
+#: admin/apps/overview/woocommerce.php:83
+msgid "Total Orders"
+msgstr "Ukupne narudÅ¾be"
+
+#: admin/apps/overview/woocommerce.php:85
+msgid "Display total orders in your store within the date range."
+msgstr "PrikaÅ¾ite ukupne narudÅ¾be u vaÅ¡oj trgovini unutar datumskog raspona."
+
+#: admin/apps/overview/woocommerce.php:92
+msgid "Average Order Value"
+msgstr "ProsjeÄna vrijednost narudÅ¾be"
+
+#: admin/apps/overview/woocommerce.php:94
+msgid "Display average order value in your store within the date range."
+msgstr ""
+"PrikaÅ¾ite prosjeÄnu vrijednost narudÅ¾be u vaÅ¡oj trgovini unutar datumskog "
+"raspona."
+
+#: admin/apps/overview/woocommerce.php:101
+msgid "Recent Orders"
+msgstr "Nedavne narudÅ¾be"
+
+#: admin/apps/overview/woocommerce.php:103
+msgid "Display recent orders from your store within the date range."
+msgstr "PrikaÅ¾ite nedavne narudÅ¾be iz vaÅ¡e trgovine unutar datumskog raspona."
+
+#: admin/apps/overview/woocommerce.php:110
+msgid "Popular Products"
+msgstr "Popularni proizvodi"
+
+#: admin/apps/overview/woocommerce.php:112
+msgid "Display top selling products from your store within the date range."
+msgstr ""
+"PrikaÅ¾ite najprodavanije proizvode iz svoje trgovine unutar datumskog raspona."
+
+#: admin/apps/overview/woocommerce.php:191
+msgid "No orders during the date range."
+msgstr "Nema narudÅ¾bi tijekom datumskog raspona."
+
+#: admin/apps/overview/woocommerce.php:272
+msgid "No products sold during the date range."
+msgstr "Nema prodanih proizvoda tijekom datumskog raspona."
+
+#: admin/apps/users/uip-history.php:132
+msgid "Once every 1 minutes"
+msgstr "Jednom svake 1 minute"
+
+#: admin/apps/users/uip-history.php:145
+msgctxt "post type general name"
+msgid "History"
+msgstr "Povijest"
+
+#: admin/apps/users/uip-history.php:146
+msgctxt "post type singular name"
+msgid "history"
+msgstr "povijesti"
+
+#: admin/apps/users/uip-history.php:147
+msgctxt "admin menu"
+msgid "History"
+msgstr "Povijest"
+
+#: admin/apps/users/uip-history.php:148
+msgctxt "add new on admin bar"
+msgid "History"
+msgstr "Povijest"
+
+#: admin/apps/users/uip-history.php:149
+msgctxt "history"
+msgid "Add New"
+msgstr "Dodaj novi"
+
+#: admin/apps/users/uip-history.php:150
+msgid "Add New History"
+msgstr "Dodaj novu povijest"
+
+#: admin/apps/users/uip-history.php:151
+msgid "New History"
+msgstr "Nova povijest"
+
+#: admin/apps/users/uip-history.php:152
+msgid "Edit History"
+msgstr "Uredi povijest"
+
+#: admin/apps/users/uip-history.php:153
+msgid "View History"
+msgstr "Pregledajte povijest"
+
+#: admin/apps/users/uip-history.php:154
+msgid "All History"
+msgstr "Sva povijest"
+
+#: admin/apps/users/uip-history.php:155
+msgid "Search History"
+msgstr "Povijest pretraÅ¾ivanja"
+
+#: admin/apps/users/uip-history.php:156
+msgid "No History found."
+msgstr "Povijest nije pronaÄ‘ena."
+
+#: admin/apps/users/uip-history.php:157
+msgid "No History found in Trash."
+msgstr "U Otpadu nije pronaÄ‘ena povijest."
+
+#: admin/apps/users/uip-user-groups.php:41
+msgctxt "post type general name"
+msgid "Group"
+msgstr "Skupina"
+
+#: admin/apps/users/uip-user-groups.php:42
+msgctxt "post type singular name"
+msgid "Group"
+msgstr "Skupina"
+
+#: admin/apps/users/uip-user-groups.php:43
+msgctxt "admin menu"
+msgid "Groups"
+msgstr "Grupe"
+
+#: admin/apps/users/uip-user-groups.php:44
+msgctxt "add new on admin bar"
+msgid "Group"
+msgstr "Skupina"
+
+#: admin/apps/users/uip-user-groups.php:45
+msgctxt "Group"
+msgid "Add New"
+msgstr "Dodaj novi"
+
+#: admin/apps/users/uip-user-groups.php:46 admin/apps/users/uip-user-groups.php:57
+msgid "Add New Group"
+msgstr "Dodaj novu grupu"
+
+#: admin/apps/users/uip-user-groups.php:47
+msgid "New Group"
+msgstr "Nova grupa"
+
+#: admin/apps/users/uip-user-groups.php:48
+msgid "Edit Group"
+msgstr "Uredi grupu"
+
+#: admin/apps/users/uip-user-groups.php:49
+msgid "View Group"
+msgstr "PrikaÅ¾i grupu"
+
+#: admin/apps/users/uip-user-groups.php:50
+msgid "All Groups"
+msgstr "Sve grupe"
+
+#: admin/apps/users/uip-user-groups.php:51
+msgid "Search Groups"
+msgstr "TraÅ¾i grupe"
+
+#: admin/apps/users/uip-user-groups.php:52
+msgid "No Groups found."
+msgstr "Grupe nisu pronaÄ‘ene."
+
+#: admin/apps/users/uip-user-groups.php:53
+msgid "No Groups found in Trash."
+msgstr "U Otpadu nije pronaÄ‘ena nijedna grupa."
+
+#: admin/apps/users/uip-user-groups.php:80
+msgid "No group to delete"
+msgstr "Nema grupe za brisanje"
+
+#: admin/apps/users/uip-user-groups.php:90
+msgid "Unable to delete the group"
+msgstr "Nije moguÄ‡e izbrisati grupu"
+
+#: admin/apps/users/uip-user-groups.php:147
+msgid "Group deleted"
+msgstr "Grupa je izbrisana"
+
+#: admin/apps/users/uip-user-groups.php:166
+msgid "Unable to move folder group itself"
+msgstr "Nije moguÄ‡e premjestiti samu grupu mapa"
+
+#: admin/apps/users/uip-user-groups.php:180
+msgid "Unable to move group"
+msgstr "Nije moguÄ‡e premjestiti grupu"
+
+#: admin/apps/users/uip-user-groups.php:208
+msgid "Group moved"
+msgstr "Grupa se preselila"
+
+#: admin/apps/users/uip-user-groups.php:227
+msgid "No item to move"
+msgstr "Nema predmeta za premjeÅ¡tanje"
+
+#: admin/apps/users/uip-user-groups.php:241
+msgid "Item moved"
+msgstr "Stavka je premjeÅ¡tena"
+
+#: admin/apps/users/uip-user-groups.php:259
+msgid "No users to move"
+msgstr "Nema korisnika za premjeÅ¡tanje"
+
+#: admin/apps/users/uip-user-groups.php:277
+msgid "User moved"
+msgstr "Korisnik je premjeÅ¡ten"
+
+#: admin/apps/users/uip-user-groups.php:318
+msgid "Group updated"
+msgstr "Grupa je aÅ¾urirana"
+
+#: admin/apps/users/uip-user-groups.php:339 admin/classes/folders.php:557
+msgid "Title is required"
+msgstr "Naslov je obavezan"
+
+#: admin/apps/users/uip-user-groups.php:345 admin/classes/folders.php:563
+msgid "Colour is required"
+msgstr "Boja je obavezna"
+
+#: admin/apps/users/uip-user-groups.php:360
+msgid "Unable to create group"
+msgstr "Nije moguÄ‡e stvoriti grupu"
+
+#: admin/apps/users/uip-user-groups.php:372
+msgid "Group created"
+msgstr "Grupa stvorena"
+
+#: admin/apps/users/uip-users-ajax.php:415
+msgid "Unknown"
+msgstr "Nepoznato"
+
+#: admin/apps/users/uip-users-ajax.php:511 admin/apps/users/uip-users-ajax.php:577
+msgid "You don't have sufficent priviledges to edit users"
+msgstr "Nemate dovoljne ovlasti za ureÄ‘ivanje korisnika"
+
+#: admin/apps/users/uip-users-ajax.php:517 admin/apps/users/uip-users-ajax.php:1023
+msgid "Email is not valid"
+msgstr "E-poÅ¡ta nije vaÅ¾eÄ‡a"
+
+#: admin/apps/users/uip-users-ajax.php:528 admin/apps/users/uip-users-ajax.php:1016
+msgid "Email already exists"
+msgstr "Email veÄ‡ postoji"
+
+#: admin/apps/users/uip-users-ajax.php:557 admin/apps/users/uip-users-ajax.php:1069
+msgid "User saved"
+msgstr "Korisnik spremljen"
+
+#: admin/apps/users/uip-users-ajax.php:583
+msgid "No users sent to update"
+msgstr "Nijedan korisnik nije poslao na aÅ¾uriranje"
+
+#: admin/apps/users/uip-users-ajax.php:589
+msgid "No roles sent to update"
+msgstr "Nema poslanih uloga za aÅ¾uriranje"
+
+#: admin/apps/users/uip-users-ajax.php:610
+msgid "User roles updated"
+msgstr "KorisniÄke uloge su aÅ¾urirane"
+
+#: admin/apps/users/uip-users-ajax.php:630 admin/apps/users/uip-users-ajax.php:716
+#: admin/apps/users/uip-users-ajax.php:777 admin/apps/users/uip-users-ajax.php:818
+msgid "You don't have sufficent priviledges to manage roles"
+msgstr "Nemate dovoljne privilegije za upravljanje ulogama"
+
+#: admin/apps/users/uip-users-ajax.php:636
+msgid "Original role name required"
+msgstr "Potreban je izvorni naziv uloge"
+
+#: admin/apps/users/uip-users-ajax.php:642 admin/apps/users/uip-users-ajax.php:722
+#: admin/apps/users/uip-users-ajax.php:783 admin/apps/users/uip-users-ajax.php:836
+#: admin/apps/users/uip-users-ajax.php:879 admin/apps/users/uip-users-ajax.php:885
+#: admin/apps/users/uip-users-ajax.php:944 admin/apps/users/uip-users-ajax.php:950
+msgid "Role name is required"
+msgstr "Naziv uloge je obavezan"
+
+#: admin/apps/users/uip-users-ajax.php:667
+msgid "Role saved"
+msgstr "Uloga je spremljena"
+
+#: admin/apps/users/uip-users-ajax.php:686
+msgid "You don't have sufficent priviledges to do this"
+msgstr "Nemate dovoljne privilegije da to uÄinite"
+
+#: admin/apps/users/uip-users-ajax.php:697
+msgid "User logged out everywhere"
+msgstr "Korisnik se svugdje odjavio"
+
+#: admin/apps/users/uip-users-ajax.php:728
+msgid "Role label cannot contain spaces"
+msgstr "Oznaka uloge ne moÅ¾e sadrÅ¾avati razmake"
+
+#: admin/apps/users/uip-users-ajax.php:734
+msgid "Role label is required"
+msgstr "Oznaka uloge je obavezna"
+
+#: admin/apps/users/uip-users-ajax.php:753
+msgid "Unable to add role. Make sure role name is unique"
+msgstr "Nije moguÄ‡e dodati ulogu. Provjerite je li naziv uloge jedinstven"
+
+#: admin/apps/users/uip-users-ajax.php:758
+msgid "Role created"
+msgstr "Uloga stvorena"
+
+#: admin/apps/users/uip-users-ajax.php:792 admin/apps/users/uip-users-ajax.php:843
+msgid "You can't delete a role that is currently assigned to yourself"
+msgstr "Ne moÅ¾ete izbrisati ulogu koja je trenutno dodijeljena vama"
+
+#: admin/apps/users/uip-users-ajax.php:799
+msgid "Role deleted"
+msgstr "Uloga je izbrisana"
+
+#: admin/apps/users/uip-users-ajax.php:824
+msgid "No roles to delete"
+msgstr "Nema uloga za brisanje"
+
+#: admin/apps/users/uip-users-ajax.php:852
+msgid "Roles deleted"
+msgstr "Uloge su izbrisane"
+
+#: admin/apps/users/uip-users-ajax.php:873
+msgid "You don't have sufficent priviledges to add this capability"
+msgstr "Nemate dovoljne privilegije za dodavanje ove moguÄ‡nosti"
+
+#: admin/apps/users/uip-users-ajax.php:891 admin/apps/users/uip-users-ajax.php:956
+msgid "Role name cannot contain spaces"
+msgstr "Naziv uloge ne moÅ¾e sadrÅ¾avati razmake"
+
+#: admin/apps/users/uip-users-ajax.php:897
+msgid "Capability name cannot contain spaces"
+msgstr "Naziv sposobnosti ne moÅ¾e sadrÅ¾avati razmake"
+
+#: admin/apps/users/uip-users-ajax.php:912
+msgid "Unable to add capability. Make sure role name is unique"
+msgstr "Nije moguÄ‡e dodati moguÄ‡nost. Provjerite je li naziv uloge jedinstven"
+
+#: admin/apps/users/uip-users-ajax.php:917
+msgid "Capability added"
+msgstr "MoguÄ‡nost dodana"
+
+#: admin/apps/users/uip-users-ajax.php:938
+msgid "You don't have sufficent priviledges to delete this capability"
+msgstr "Nemate dovoljne privilegije za brisanje ove moguÄ‡nosti"
+
+#: admin/apps/users/uip-users-ajax.php:971
+msgid "Unable to delete capability. Make sure role name is unique"
+msgstr "Nije moguÄ‡e izbrisati moguÄ‡nost. Provjerite je li naziv uloge jedinstven"
+
+#: admin/apps/users/uip-users-ajax.php:976
+msgid "Capability deleted"
+msgstr "Sposobnost je izbrisana"
+
+#: admin/apps/users/uip-users-ajax.php:996
+msgid "You don't have sufficent priviledges to create users"
+msgstr "Nemate dovoljne privilegije za stvaranje korisnika"
+
+#: admin/apps/users/uip-users-ajax.php:1003
+msgid "Username already exists"
+msgstr "KorisniÄko ime veÄ‡ postoji"
+
+#: admin/apps/users/uip-users-ajax.php:1009
+msgid "Username is not valid"
+msgstr "KorisniÄko ime nije vaÅ¾eÄ‡e"
+
+#: admin/apps/users/uip-users-ajax.php:1029
+msgid "Password is required"
+msgstr "Potrebna je lozinka"
+
+#: admin/apps/users/uip-users-ajax.php:1088
+#: admin/apps/users/uip-users-ajax.php:1127
+msgid "You don't have sufficent priviledges to edit this user"
+msgstr "Nemate dovoljno ovlasti za ureÄ‘ivanje ovog korisnika"
+
+#: admin/apps/users/uip-users-ajax.php:1097
+msgid "Password reset link sent"
+msgstr "Veza za poniÅ¡tavanje lozinke je poslana"
+
+#: admin/apps/users/uip-users-ajax.php:1101
+msgid "Unable to send password reset email at the moment"
+msgstr "Trenutno nije moguÄ‡e poslati e-poÅ¡tu za poniÅ¡tavanje lozinke"
+
+#: admin/apps/users/uip-users-ajax.php:1121
+msgid "No users sent to reset passwords!"
+msgstr "Nema poslanih korisnika da resetiraju lozinke!"
+
+#: admin/apps/users/uip-users-ajax.php:1141
+msgid "Unable to send password reset email"
+msgstr "Nije moguÄ‡e poslati e-poÅ¡tu za poniÅ¡tavanje lozinke"
+
+#: admin/apps/users/uip-users-ajax.php:1142
+#: admin/apps/users/uip-users-ajax.php:1315
+#: admin/apps/users/uip-users-ajax.php:1325
+#, php-format
+msgid "User ID: %s"
+msgstr "ID korisnika: %s"
+
+#: admin/apps/users/uip-users-ajax.php:1148
+msgid "Password reset links succesfully sent"
+msgstr "Veze za poniÅ¡tavanje lozinke uspjeÅ¡no su poslane"
+
+#: admin/apps/users/uip-users-ajax.php:1173
+msgid "Subject is required"
+msgstr "Predmet je obavezan"
+
+#: admin/apps/users/uip-users-ajax.php:1179
+msgid "Reply to email is required"
+msgstr "Odgovor na e-mail je obavezan"
+
+#: admin/apps/users/uip-users-ajax.php:1185
+msgid "Message is required"
+msgstr "Poruka je obavezna"
+
+#: admin/apps/users/uip-users-ajax.php:1200
+msgid "No email to send message to."
+msgstr "Nema e-poÅ¡te za slanje poruke."
+
+#: admin/apps/users/uip-users-ajax.php:1232
+msgid "Unable to send mail at this time"
+msgstr "Trenutno nije moguÄ‡e poslati poÅ¡tu"
+
+#: admin/apps/users/uip-users-ajax.php:1237
+msgid "Message sent"
+msgstr "Poruka je poslana"
+
+#: admin/apps/users/uip-users-ajax.php:1261
+msgid "You can't delete yourself!"
+msgstr "Ne moÅ¾ete se izbrisati!"
+
+#: admin/apps/users/uip-users-ajax.php:1270
+msgid "User successfully deleted"
+msgstr "Korisnik je uspjeÅ¡no obrisan"
+
+#: admin/apps/users/uip-users-ajax.php:1274
+#: admin/apps/users/uip-users-ajax.php:1279
+#: admin/apps/users/uip-users-ajax.php:1305
+msgid "You don't have sufficent priviledges to delete this user"
+msgstr "Nemate dovoljne ovlasti za brisanje ovog korisnika"
+
+#: admin/apps/users/uip-users-ajax.php:1299
+msgid "No users sent to delete!"
+msgstr "Nema korisnika poslanih na brisanje!"
+
+#: admin/apps/users/uip-users-ajax.php:1314
+msgid "You can't delete yourself"
+msgstr "Ne moÅ¾ete se izbrisati"
+
+#: admin/apps/users/uip-users-ajax.php:1324
+msgid "Unable to delete this user"
+msgstr "Nije moguÄ‡e izbrisati ovog korisnika"
+
+#: admin/apps/users/uip-users-ajax.php:1331
+msgid "Users successfully deleted"
+msgstr "Korisnici su uspjeÅ¡no izbrisani"
+
+#: admin/apps/users/uip-users.php:53 admin/apps/users/uip-users.php:266
+#: admin/apps/users/uip-users.php:377 admin/apps/users/uip-users.php:1291
+msgid "Users"
+msgstr "Korisnici"
+
+#: admin/apps/users/uip-users.php:54
+msgid "Creates user management page"
+msgstr "Stvara stranicu za upravljanje korisnicima"
+
+#: admin/apps/users/uip-users.php:58
+msgid "Disable Users Page?"
+msgstr "OnemoguÄ‡iti korisniÄku stranicu?"
+
+#: admin/apps/users/uip-users.php:59
+msgid "If disabled, the user management page will not be available to any users."
+msgstr ""
+"Ako je onemoguÄ‡eno, stranica za upravljanje korisnicima neÄ‡e biti dostupna "
+"nijednom korisniku."
+
+#: admin/apps/users/uip-users.php:66
+msgid "User management page Disabled for"
+msgstr "Stranica za upravljanje korisnicima OnemoguÄ‡eno za"
+
+#: admin/apps/users/uip-users.php:67
+msgid ""
+"When the user management page module is disabled, the user management page will "
+"not be accesible for the users / roles"
+msgstr ""
+"Kada je modul stranice za upravljanje korisnicima onemoguÄ‡en, stranica za "
+"upravljanje korisnicima neÄ‡e biti dostupna korisnicima/ulogama"
+
+#: admin/apps/users/uip-users.php:75
+msgid "Enable user activity log?"
+msgstr "OmoguÄ‡iti dnevnik aktivnosti korisnika?"
+
+#: admin/apps/users/uip-users.php:76
+msgid ""
+"If enabled, uipress will log actions taken by all users, including page views, "
+"comments, post creation etc."
+msgstr ""
+"Ako je omoguÄ‡en, uipress Ä‡e biljeÅ¾iti radnje koje poduzimaju svi korisnici, "
+"ukljuÄujuÄ‡i preglede stranica, komentare, kreiranje objave itd."
+
+#: admin/apps/users/uip-users.php:84
+msgid "Disable page view logging"
+msgstr "OnemoguÄ‡i biljeÅ¾enje prikaza stranice"
+
+#: admin/apps/users/uip-users.php:87
+#, php-format
+msgid ""
+"By Default, %s will track page views for logged in users as part of the activity "
+"log. While sometimes useful, this will have the biggest impact on the log size "
+"in the database. Disabling this feature will keep the log smaller."
+msgstr ""
+"Prema zadanim postavkama, %s Ä‡e pratiti prikaze stranica prijavljenih korisnika "
+"kao dio zapisnika aktivnosti. Iako je ponekad korisno, to Ä‡e imati najveÄ‡i "
+"utjecaj na veliÄinu dnevnika u bazi podataka. OnemoguÄ‡avanjem ove znaÄajke "
+"zapisnik Ä‡e ostati manji."
+
+#: admin/apps/users/uip-users.php:99
+msgid "Enable recent page view logging"
+msgstr "OmoguÄ‡i biljeÅ¾enje nedavnih prikaza stranice"
+
+#: admin/apps/users/uip-users.php:100
+#, php-format
+msgid ""
+"Seperate to the main history log, %s will keep 5 recent page views in the user "
+"meta. This can have a small impact on the page load speed."
+msgstr ""
+"Odvojeno od glavnog zapisnika povijesti, %s Ä‡e zadrÅ¾ati 5 nedavnih prikaza "
+"stranice u korisniÄkoj meta. To moÅ¾e imati mali utjecaj na brzinu uÄitavanja "
+"stranice."
+
+#: admin/apps/users/uip-users.php:108
+msgid "How long to keep history?"
+msgstr "Koliko dugo Äuvati povijest?"
+
+#: admin/apps/users/uip-users.php:109
+msgid ""
+"By default, activity items will be deleted after 60 days, enter the amount of "
+"days to keep items to change this"
+msgstr ""
+"Prema zadanim postavkama, stavke aktivnosti Ä‡e se izbrisati nakon 60 dana, "
+"unesite broj dana za Äuvanje stavki da biste to promijenili"
+
+#: admin/apps/users/uip-users.php:118
+msgid "Delay history entries?"
+msgstr "Odgoditi unose povijesti?"
+
+#: admin/apps/users/uip-users.php:120
+msgid ""
+"Use scheduled tasks to insert the history actions to avoid any extra page load "
+"speed. By default entries are added as they happen, with this enabled there will "
+"be delay of about 10 seconds before actions appear."
+msgstr ""
+"Koristite zakazane zadatke za umetanje radnji povijesti kako biste izbjegli "
+"dodatnu brzinu uÄitavanja stranice. Prema zadanim postavkama unosi se dodaju "
+"kako se dogode, s ovim omoguÄ‡enim bit Ä‡e odgode od oko 10 sekundi prije nego "
+"Å¡to se radnje pojave."
+
+#: admin/apps/users/uip-users.php:131
+msgid "Anonymize user IP addresses?"
+msgstr "Anonimizirati korisniÄke IP adrese?"
+
+#: admin/apps/users/uip-users.php:132
+msgid ""
+"Each history item logs the users IP address, enable this to anonymize the "
+"address."
+msgstr ""
+"Svaka stavka povijesti biljeÅ¾i IP adresu korisnika, omoguÄ‡ite to kako biste "
+"adresu anonimizirali."
+
+#: admin/apps/users/uip-users.php:217 admin/apps/users/uip-users.php:218
+msgid "User Management"
+msgstr "Upravljanje korisnicima"
+
+#: admin/apps/users/uip-users.php:270 admin/apps/users/uip-users.php:328
+#: admin/apps/users/uip-users.php:1244
+msgid "Roles"
+msgstr "Uloge"
+
+#: admin/apps/users/uip-users.php:274
+msgid "Activity"
+msgstr "Aktivnost"
+
+#: admin/apps/users/uip-users.php:290
+msgid "results"
+msgstr "rezultate"
+
+#: admin/apps/users/uip-users.php:291 admin/apps/users/uip-users.php:316
+msgid "Previous"
+msgstr "Prethodni"
+
+#: admin/apps/users/uip-users.php:292 admin/apps/users/uip-users.php:315
+msgid "Next"
+msgstr "SljedeÄ‡i"
+
+#: admin/apps/users/uip-users.php:293
+msgid "Search users"
+msgstr "PretraÅ¾ite korisnike"
+
+#: admin/apps/users/uip-users.php:294
+msgid "Filter by role"
+msgstr "Filtrirajte po ulozi"
+
+#: admin/apps/users/uip-users.php:295
+msgid "Search roles"
+msgstr "TraÅ¾i uloge"
+
+#: admin/apps/users/uip-users.php:296
+msgid "Table options"
+msgstr "Opcije tablice"
+
+#: admin/apps/users/uip-users.php:297
+msgid "Order"
+msgstr "NarudÅ¾ba"
+
+#: admin/apps/users/uip-users.php:298
+msgid "Ascending"
+msgstr "Uzlazni"
+
+#: admin/apps/users/uip-users.php:299
+msgid "Descending"
+msgstr "Silazni"
+
+#: admin/apps/users/uip-users.php:300
+msgid "Sort By"
+msgstr "Poredaj po"
+
+#: admin/apps/users/uip-users.php:301
+msgid "Per page"
+msgstr "Po stranici"
+
+#: admin/apps/users/uip-users.php:302
+msgid "Fields"
+msgstr "Polja"
+
+#: admin/apps/users/uip-users.php:303
+msgid "Date created"
+msgstr "Datum kreiranja"
+
+#: admin/apps/users/uip-users.php:304
+msgid "On"
+msgstr "Na"
+
+#: admin/apps/users/uip-users.php:305
+msgid "After"
+msgstr "Nakon"
+
+#: admin/apps/users/uip-users.php:306
+msgid "Before"
+msgstr "Prije"
+
+#: admin/apps/users/uip-users.php:307 admin/apps/users/uip-users.php:308
+msgid "Date filters"
+msgstr "Filtri datuma"
+
+#: admin/apps/users/uip-users.php:310
+msgid "Account created"
+msgstr "RaÄun kreiran"
+
+#: admin/apps/users/uip-users.php:312 admin/apps/users/uip-users.php:326
+#: admin/apps/users/uip-users.php:1219
+msgid "Email"
+msgstr "E-mail"
+
+#: admin/apps/users/uip-users.php:313
+msgid "Recent page views"
+msgstr "Nedavni prikazi stranice"
+
+#: admin/apps/users/uip-users.php:314
+msgid "Recent activity"
+msgstr "Nedavna aktivnost"
+
+#: admin/apps/users/uip-users.php:317
+msgid "Last login"
+msgstr "Zadnja prijava"
+
+#: admin/apps/users/uip-users.php:318
+msgid "Login location"
+msgstr "Mjesto za prijavu"
+
+#: admin/apps/users/uip-users.php:319
+msgid "No recent activity"
+msgstr "Nema nedavnih aktivnosti"
+
+#: admin/apps/users/uip-users.php:320
+msgid "Total posts"
+msgstr "Ukupno postova"
+
+#: admin/apps/users/uip-users.php:321
+msgid "Total comments"
+msgstr "Ukupno komentara"
+
+#: admin/apps/users/uip-users.php:322
+msgid "User Options"
+msgstr "KorisniÄke opcije"
+
+#: admin/apps/users/uip-users.php:323 admin/apps/users/uip-users.php:332
+msgid "Edit user"
+msgstr "Uredi korisnika"
+
+#: admin/apps/users/uip-users.php:324
+msgid "First name"
+msgstr "Ime"
+
+#: admin/apps/users/uip-users.php:325
+msgid "Last name"
+msgstr "Prezime"
+
+#: admin/apps/users/uip-users.php:327
+msgid "Assign roles"
+msgstr "Dodijelite uloge"
+
+#: admin/apps/users/uip-users.php:329
+msgid "User notes"
+msgstr "BiljeÅ¡ke korisnika"
+
+#: admin/apps/users/uip-users.php:330
+msgid "Cancel"
+msgstr "Otkazati"
+
+#: admin/apps/users/uip-users.php:331
+msgid "Update user"
+msgstr "AÅ¾urirajte korisnika"
+
+#: admin/apps/users/uip-users.php:333
+msgid "Send password reset"
+msgstr "PoÅ¡aljite poniÅ¡tavanje lozinke"
+
+#: admin/apps/users/uip-users.php:334 admin/apps/users/uip-users.php:342
+msgid "Send message"
+msgstr "PoÅ¡alji poruku"
+
+#: admin/apps/users/uip-users.php:335
+msgid "Delete user"
+msgstr "IzbriÅ¡i korisnika"
+
+#: admin/apps/users/uip-users.php:336
+msgid "Are you sure you want to delete this user?"
+msgstr "Jeste li sigurni da Å¾elite izbrisati ovog korisnika?"
+
+#: admin/apps/users/uip-users.php:337
+msgid "Are you sure you want to the selected users?"
+msgstr "Jeste li sigurni da Å¾elite odabrane korisnike?"
+
+#: admin/apps/users/uip-users.php:338
+msgid "Are you sure you want to send password reset links to the selected users?"
+msgstr ""
+"Jeste li sigurni da Å¾elite poslati veze za poniÅ¡tavanje lozinke odabranim "
+"korisnicima?"
+
+#: admin/apps/users/uip-users.php:339
+msgid "Recipient"
+msgstr "Primatelj"
+
+#: admin/apps/users/uip-users.php:340
+msgid "Subject"
+msgstr "Predmet"
+
+#: admin/apps/users/uip-users.php:341
+msgid "Message"
+msgstr "Poruka"
+
+#: admin/apps/users/uip-users.php:343
+msgid "Reply to email"
+msgstr "Odgovorite na e-mail"
+
+#: admin/apps/users/uip-users.php:344
+msgid "New user"
+msgstr "Novi korisnik"
+
+#: admin/apps/users/uip-users.php:345
+msgid "Save user"
+msgstr "Spremi korisnika"
+
+#: admin/apps/users/uip-users.php:346
+msgid "Password"
+msgstr "Zaporka"
+
+#: admin/apps/users/uip-users.php:347 admin/apps/users/uip-users.php:1207
+msgid "Username"
+msgstr "KorisniÄko ime"
+
+#: admin/apps/users/uip-users.php:348 admin/apps/users/uip-users.php:1279
+msgid "Role name"
+msgstr "Naziv uloge"
+
+#: admin/apps/users/uip-users.php:349
+msgid "Edit role"
+msgstr "Uredi ulogu"
+
+#: admin/apps/users/uip-users.php:350
+msgid "Save role"
+msgstr "Spremi ulogu"
+
+#: admin/apps/users/uip-users.php:351
+msgid "Capabilities"
+msgstr "MoguÄ‡nosti"
+
+#: admin/apps/users/uip-users.php:353
+msgid ""
+"You are currently editing the administrator role. This is usually the most "
+"important role on the site so please make sure not to remove nessecary "
+"capabilities."
+msgstr ""
+"Trenutno ureÄ‘ujete ulogu administratora. Ovo je obiÄno najvaÅ¾nija uloga na web-"
+"mjestu, stoga pazite da ne uklonite nuÅ¾ne moguÄ‡nosti."
+
+#: admin/apps/users/uip-users.php:356
+msgid "Delete role"
+msgstr "IzbriÅ¡i ulogu"
+
+#: admin/apps/users/uip-users.php:357
+msgid "Are you sure you want to delete this role?"
+msgstr "Jeste li sigurni da Å¾elite izbrisati ovu ulogu?"
+
+#: admin/apps/users/uip-users.php:358
+msgid "Are you sure you want to delete these roles?"
+msgstr "Jeste li sigurni da Å¾elite izbrisati ove uloge?"
+
+#: admin/apps/users/uip-users.php:359
+msgid "Role options"
+msgstr "Opcije uloga"
+
+#: admin/apps/users/uip-users.php:360
+msgid "Clone"
+msgstr "Klon"
+
+#: admin/apps/users/uip-users.php:361
+msgid "New role"
+msgstr "Nova uloga"
+
+#: admin/apps/users/uip-users.php:362
+msgid "Role label"
+msgstr "Oznaka uloge"
+
+#: admin/apps/users/uip-users.php:363
+msgid "Single word, no spaces. Underscores and dashes allowed"
+msgstr "Jedna rijeÄ, bez razmaka. DopuÅ¡tene podvlake i crtice"
+
+#: admin/apps/users/uip-users.php:364
+msgid "copy"
+msgstr "kopirati"
+
+#: admin/apps/users/uip-users.php:365
+msgid "search roles"
+msgstr "traÅ¾i uloge"
+
+#: admin/apps/users/uip-users.php:366
+msgid "Search history"
+msgstr "Povijest pretraÅ¾ivanja"
+
+#: admin/apps/users/uip-users.php:367
+msgid "All actions"
+msgstr "Sve radnje"
+
+#: admin/apps/users/uip-users.php:368
+msgid "Add custom capability (Single word, no spaces)"
+msgstr "Dodajte prilagoÄ‘enu moguÄ‡nost (jedna rijeÄ, bez razmaka)"
+
+#: admin/apps/users/uip-users.php:369
+msgid "Add capability"
+msgstr "Dodajte sposobnost"
+
+#: admin/apps/users/uip-users.php:370
+msgid "roles selected"
+msgstr "odabrane uloge"
+
+#: admin/apps/users/uip-users.php:371
+msgid "Delete selected"
+msgstr "ObriÅ¡i odabrano"
+
+#: admin/apps/users/uip-users.php:372
+msgid "Deselect"
+msgstr "PoniÅ¡tite odabir"
+
+#: admin/apps/users/uip-users.php:373
+msgid "Delete users"
+msgstr "IzbriÅ¡i korisnike"
+
+#: admin/apps/users/uip-users.php:374
+msgid "Clear selection"
+msgstr "OÄisti odabir"
+
+#: admin/apps/users/uip-users.php:375
+msgid "recipients"
+msgstr "primatelji"
+
+#: admin/apps/users/uip-users.php:376 admin/classes/uipress-app.php:1409
+msgid "users"
+msgstr "korisnika"
+
+#: admin/apps/users/uip-users.php:378
+msgid "Replace existing roles"
+msgstr "Zamijenite postojeÄ‡e uloge"
+
+#: admin/apps/users/uip-users.php:379
+msgid "Update roles"
+msgstr "AÅ¾urirajte uloge"
+
+#: admin/apps/users/uip-users.php:380
+msgid "users selected"
+msgstr "odabrani korisnici"
+
+#: admin/apps/users/uip-users.php:381
+msgid "Choose image"
+msgstr "Odaberite sliku"
+
+#: admin/apps/users/uip-users.php:382
+msgid "Profile image"
+msgstr "Slika profila"
+
+#: admin/apps/users/uip-users.php:383 admin/apps/users/uip-users.php:387
+#: admin/apps/users/uip-users.php:1250
+msgid "Groups"
+msgstr "Grupe"
+
+#: admin/apps/users/uip-users.php:384
+msgid "All users"
+msgstr "Svi korisnici"
+
+#: admin/apps/users/uip-users.php:385
+msgid "No group"
+msgstr "Nema grupe"
+
+#: admin/apps/users/uip-users.php:386
+msgid "No groups created yet."
+msgstr "JoÅ¡ nije stvorena nijedna grupa."
+
+#: admin/apps/users/uip-users.php:388
+msgid "New group"
+msgstr "Nova grupa"
+
+#: admin/apps/users/uip-users.php:390
+msgid "Color"
+msgstr "Boja"
+
+#: admin/apps/users/uip-users.php:391
+msgid "Create group"
+msgstr "Napraviti grupu"
+
+#: admin/apps/users/uip-users.php:392
+msgid "Group name"
+msgstr "Grupno ime"
+
+#: admin/apps/users/uip-users.php:393
+msgid "Edit group"
+msgstr "Uredi grupu"
+
+#: admin/apps/users/uip-users.php:394
+msgid "Update group"
+msgstr "AÅ¾uriraj grupu"
+
+#: admin/apps/users/uip-users.php:395
+msgid "Remove from group"
+msgstr "Ukloni iz grupe"
+
+#: admin/apps/users/uip-users.php:396
+msgid "User groups"
+msgstr "Grupe korisnika"
+
+#: admin/apps/users/uip-users.php:397
+msgid "Assign groups"
+msgstr "Dodijelite grupe"
+
+#: admin/apps/users/uip-users.php:398
+msgid "Search groups"
+msgstr "PretraÅ¾ujte grupe"
+
+#: admin/apps/users/uip-users.php:399
+msgid "Pro feature"
+msgstr "Pro znaÄajka"
+
+#: admin/apps/users/uip-users.php:400
+msgid "Upgrade to UiPress Pro to unlock the user management and activity logs"
+msgstr ""
+"Nadogradite na UiPress Pro da biste otkljuÄali upravljanje korisnicima i "
+"zapisnike aktivnosti"
+
+#: admin/apps/users/uip-users.php:401
+msgid "View Uipress Pro plans"
+msgstr "Pogledajte Uipress Pro planove"
+
+#: admin/apps/users/uip-users.php:402
+msgid "Group icon"
+msgstr "Ikona grupe"
+
+#: admin/apps/users/uip-users.php:403
+msgid "Logout everywhere else"
+msgstr "Odjavite se svugdje drugdje"
+
+#: admin/apps/users/uip-users.php:404
+msgid "Open profile"
+msgstr "Otvori profil"
+
+#: admin/apps/users/uip-users.php:405
+msgid ""
+"Are you sure you want to delete this capability? This will remove the capability "
+"sitewide. Please note not all capabilities can be deleted."
+msgstr ""
+"Jeste li sigurni da Å¾elite izbrisati ovu moguÄ‡nost? To Ä‡e ukloniti moguÄ‡nost "
+"na cijeloj web lokaciji. Imajte na umu da se sve moguÄ‡nosti ne mogu izbrisati."
+
+#: admin/apps/users/uip-users.php:517
+msgid "Read"
+msgstr "ÄŒitati"
+
+#: admin/apps/users/uip-users.php:529
+msgid "Publish"
+msgstr "Objaviti"
+
+#: admin/apps/users/uip-users.php:535 admin/classes/uipress-app.php:1335
+msgid "Create"
+msgstr "Stvoriti"
+
+#: admin/apps/users/uip-users.php:553
+msgid "Manage"
+msgstr "Upravljati"
+
+#: admin/apps/users/uip-users.php:565 admin/classes/settings.php:242
+#: admin/classes/styles.php:442
+msgid "Import"
+msgstr "Uvoz"
+
+#: admin/apps/users/uip-users.php:571
+msgid "Custom"
+msgstr "PrilagoÄ‘en"
+
+#: admin/apps/users/uip-users.php:737
+msgid "User no longer exists"
+msgstr "Korisnik viÅ¡e ne postoji"
+
+#: admin/apps/users/uip-users.php:742 admin/apps/users/uip-users.php:1106
+#, php-format
+msgid "%s ago"
+msgstr "prije %s"
+
+#: admin/apps/users/uip-users.php:753 admin/apps/users/uip-users.php:1370
+msgid "Page view"
+msgstr "Prikaz stranice"
+
+#: admin/apps/users/uip-users.php:755
+msgid "Viewed page"
+msgstr "Pregledana stranica"
+
+#: admin/apps/users/uip-users.php:764 admin/apps/users/uip-users.php:1374
+msgid "Post created"
+msgstr "Objava stvorena"
+
+#: admin/apps/users/uip-users.php:766
+msgid "Created post"
+msgstr "Stvorena objava"
+
+#: admin/apps/users/uip-users.php:769 admin/apps/users/uip-users.php:790
+#: admin/apps/users/uip-users.php:838
+msgid "View page"
+msgstr "Pogledaj stranicu"
+
+#: admin/apps/users/uip-users.php:773 admin/apps/users/uip-users.php:794
+#: admin/apps/users/uip-users.php:811 admin/apps/users/uip-users.php:842
+msgid "Edit page"
+msgstr "Uredi stranicu"
+
+#: admin/apps/users/uip-users.php:785
+msgid "Post modified"
+msgstr "Post izmijenjen"
+
+#: admin/apps/users/uip-users.php:787
+msgid "Modified post"
+msgstr "Izmijenjena objava"
+
+#: admin/apps/users/uip-users.php:806
+msgid "Post moved to trash"
+msgstr "Objava je premjeÅ¡tena u smeÄ‡e"
+
+#: admin/apps/users/uip-users.php:808
+msgid "Moved post to trash"
+msgstr "Objava je premjeÅ¡tena u smeÄ‡e"
+
+#: admin/apps/users/uip-users.php:820 admin/apps/users/uip-users.php:1386
+msgid "Post deleted"
+msgstr "Objava je izbrisana"
+
+#: admin/apps/users/uip-users.php:822
+msgid "Deleted post"
+msgstr "Izbrisana objava"
+
+#: admin/apps/users/uip-users.php:831 admin/apps/users/uip-users.php:1390
+msgid "Post status change"
+msgstr "Promjena statusa objave"
+
+#: admin/apps/users/uip-users.php:834
+#, php-format
+msgid "Post status changed from %s to %s"
+msgstr "Status objave je promijenjen iz %s u %s"
+
+#: admin/apps/users/uip-users.php:855
+msgid "Posted a comment"
+msgstr "Objavio komentar"
+
+#: admin/apps/users/uip-users.php:857
+msgid "Posted a comment on post"
+msgstr "Objavio komentar na objavu"
+
+#: admin/apps/users/uip-users.php:868 admin/apps/users/uip-users.php:898
+msgid "View comment"
+msgstr "Pogledaj komentar"
+
+#: admin/apps/users/uip-users.php:872 admin/apps/users/uip-users.php:902
+msgid "Edit comment"
+msgstr "Uredi komentar"
+
+#: admin/apps/users/uip-users.php:884
+msgid "Trashed a comment"
+msgstr "OdbaÄen komentar"
+
+#: admin/apps/users/uip-users.php:886
+msgid "Moved a comment to the trash"
+msgstr "Komentar je premjeÅ¡ten u smeÄ‡e"
+
+#: admin/apps/users/uip-users.php:912
+msgid "Deleted a comment"
+msgstr "Izbrisao komentar"
+
+#: admin/apps/users/uip-users.php:914
+msgid "Permanently deleted a comment"
+msgstr "Trajno obrisan komentar"
+
+#: admin/apps/users/uip-users.php:920 admin/apps/users/uip-users.php:1403
+msgid "Plugin activated"
+msgstr "Dodatak je aktiviran"
+
+#: admin/apps/users/uip-users.php:922
+#, php-format
+msgid "A plugin called %s was activated"
+msgstr "Dodatak pod nazivom %s je aktiviran"
+
+#: admin/apps/users/uip-users.php:928 admin/apps/users/uip-users.php:1407
+msgid "Plugin deactivated"
+msgstr "Dodatak je deaktiviran"
+
+#: admin/apps/users/uip-users.php:930
+#, php-format
+msgid "A plugin called %s was deactivated"
+msgstr "Dodatak pod nazivom %s je deaktiviran"
+
+#: admin/apps/users/uip-users.php:936
+msgid "User logged in"
+msgstr "Korisnik je prijavljen"
+
+#: admin/apps/users/uip-users.php:938
+#, php-format
+msgid "Logged in with ip address %s. Country: %s"
+msgstr "Prijavljen s ip adresom %s. DrÅ¾ava: %s"
+
+#: admin/apps/users/uip-users.php:944
+msgid "User logged out"
+msgstr "Korisnik se odjavio"
+
+#: admin/apps/users/uip-users.php:946
+#, php-format
+msgid "Logged out with ip address %s. Country: %s"
+msgstr "Odjavljen s IP adresom %s. DrÅ¾ava: %s"
+
+#: admin/apps/users/uip-users.php:982 admin/apps/users/uip-users.php:988
+#: admin/apps/users/uip-users.php:1002
+msgid "Site option changed"
+msgstr "Opcija stranice je promijenjena"
+
+#: admin/apps/users/uip-users.php:984
+#, php-format
+msgid "Site option (%s) was changed from %s to %s"
+msgstr "Opcija web-mjesta (%s) promijenjena je iz %s u %s"
+
+#: admin/apps/users/uip-users.php:990
+#, php-format
+msgid "Site option was changed. %s"
+msgstr "Opcija stranice je promijenjena. %s"
+
+#: admin/apps/users/uip-users.php:1004
+#, php-format
+msgid "Site option (%s) was added with a value of (%s)"
+msgstr "Dodana je opcija web-mjesta (%s) s vrijednoÅ¡Ä‡u (%s)"
+
+#: admin/apps/users/uip-users.php:1010
+msgid "Uploaded attachment"
+msgstr "UÄitani privitak"
+
+#: admin/apps/users/uip-users.php:1012
+#, php-format
+msgid "Attachment called (%s) was uploaded to (%s). Attachment ID: %s"
+msgstr "Privitak pod nazivom (%s) je prenesen na (%s). ID privitka: %s"
+
+#: admin/apps/users/uip-users.php:1021
+msgid "View attachment"
+msgstr "Pogledajte prilog"
+
+#: admin/apps/users/uip-users.php:1029
+msgid "Deleted attachment"
+msgstr "Privitak je izbrisan"
+
+#: admin/apps/users/uip-users.php:1031
+#, php-format
+msgid "Attachment called (%s) was deleted. Attachment ID: %s"
+msgstr "Privitak pod nazivom (%s) je izbrisan. ID privitka: %s"
+
+#: admin/apps/users/uip-users.php:1037 admin/apps/users/uip-users.php:1262
+#: admin/apps/users/uip-users.php:1435
+msgid "User created"
+msgstr "Korisnik kreiran"
+
+#: admin/apps/users/uip-users.php:1039
+#, php-format
+msgid "New user created with username (%s) and email (%s)"
+msgstr "Stvoren novi korisnik s korisniÄkim imenom (%s) i e-poÅ¡tom (%s)"
+
+#: admin/apps/users/uip-users.php:1045 admin/apps/users/uip-users.php:1439
+msgid "User deleted"
+msgstr "Korisnik je obrisan"
+
+#: admin/apps/users/uip-users.php:1047
+#, php-format
+msgid "A user with username (%s) and email (%s) was deleted"
+msgstr "Korisnik s korisniÄkim imenom (%s) i e-poÅ¡tom (%s) je izbrisan"
+
+#: admin/apps/users/uip-users.php:1082 admin/apps/users/uip-users.php:1443
+msgid "User updated"
+msgstr "Korisnik je aÅ¾uriran"
+
+#: admin/apps/users/uip-users.php:1084
+#, php-format
+msgid "A user with username (%s) and email (%s) was updated from (%s) to (%s)"
+msgstr ""
+"Korisnik s korisniÄkim imenom (%s) i e-poÅ¡tom (%s) aÅ¾uriran je iz (%s) u (%s)"
+
+#: admin/apps/users/uip-users.php:1226
+msgid "First Name"
+msgstr "Ime"
+
+#: admin/apps/users/uip-users.php:1232
+msgid "Last Name"
+msgstr "Prezime"
+
+#: admin/apps/users/uip-users.php:1238
+msgid "Last Login"
+msgstr "Zadnja prijava"
+
+#: admin/apps/users/uip-users.php:1256
+msgid "User ID"
+msgstr "ID korisnika"
+
+#: admin/apps/users/uip-users.php:1298
+msgid "Permissions granted"
+msgstr "DopuÅ¡tene su dozvole"
+
+#: admin/apps/users/uip-users.php:1315
+msgid "ID"
+msgstr "iskaznica"
+
+#: admin/apps/users/uip-users.php:1327
+msgid "IP Address"
+msgstr "IP adresa"
+
+#: admin/apps/users/uip-users.php:1340
+msgid "Time"
+msgstr "Vrijeme"
+
+#: admin/apps/users/uip-users.php:1347
+msgid "Action"
+msgstr "Akcijski"
+
+#: admin/apps/users/uip-users.php:1378
+msgid "Post updated"
+msgstr "Objava je aÅ¾urirana"
+
+#: admin/apps/users/uip-users.php:1382
+msgid "Post trashed"
+msgstr "Post je odbaÄen"
+
+#: admin/apps/users/uip-users.php:1394
+msgid "Trashed comment"
+msgstr "Komentar u otpadu"
+
+#: admin/apps/users/uip-users.php:1398
+msgid "Deelete comment"
+msgstr "IzbriÅ¡i komentar"
+
+#: admin/apps/users/uip-users.php:1411
+msgid "User login"
+msgstr "Prijava korisnika"
+
+#: admin/apps/users/uip-users.php:1415
+msgid "User logout"
+msgstr "Odjava korisnika"
+
+#: admin/apps/users/uip-users.php:1419
+msgid "Option change"
+msgstr "Promjena opcije"
+
+#: admin/apps/users/uip-users.php:1423
+msgid "Site option added"
+msgstr "Dodana je opcija web-mjesta"
+
+#: admin/apps/users/uip-users.php:1427
+msgid "Attachmnet uploaded"
+msgstr "Attachmnet je prenesen"
+
+#: admin/apps/users/uip-users.php:1431
+msgid "Attachmnet deleted"
+msgstr "MreÅ¾a priloga je izbrisana"
+
+#: admin/classes/debug.php:133 admin/classes/debug.php:139
+#: admin/classes/debug.php:161
+msgid "Unable to register UiPress at this time"
+msgstr "Trenutno nije moguÄ‡e registrirati UiPress"
+
+#: admin/classes/debug.php:152
+msgid "UiPress succesfully activated"
+msgstr "UiPress je uspjeÅ¡no aktiviran"
+
+#: admin/classes/folders.php:112 admin/classes/uipress-app.php:453
+#: admin/classes/uipress-app.php:1367
+msgid "Folders"
+msgstr "Mape"
+
+#: admin/classes/folders.php:113
+msgid "Creates media folder system."
+msgstr "Stvara sustav medijskih mapa."
+
+#: admin/classes/folders.php:117
+msgid "Disable Folders?"
+msgstr "OnemoguÄ‡iti mape?"
+
+#: admin/classes/folders.php:118
+msgid "No media folders will be displayed when this option is activated."
+msgstr "Nijedna medijska mapa neÄ‡e biti prikazana kada je ova opcija aktivirana."
+
+#: admin/classes/folders.php:125
+msgid "Folders Disabled For"
+msgstr "Mape onemoguÄ‡ene za"
+
+#: admin/classes/folders.php:126
+#, php-format
+msgid "%s folders will be disabled for any users or roles you select"
+msgstr "%s mape bit Ä‡e onemoguÄ‡ene za sve korisnike ili uloge koje odaberete"
+
+#: admin/classes/folders.php:134
+msgid "Enable folders for post types"
+msgstr "OmoguÄ‡i mape za vrste objava"
+
+#: admin/classes/folders.php:135
+#, php-format
+msgid "%s folders will be enabled post, page and custom post types you choose"
+msgstr ""
+"%s mape Ä‡e biti omoguÄ‡ene vrste postova, stranica i prilagoÄ‘enih objava koje "
+"odaberete"
+
+#: admin/classes/folders.php:171
+msgctxt "media modal menu actions"
+msgid "Actions"
+msgstr "Radnje"
+
+#: admin/classes/folders.php:173
+msgctxt "media modal menu"
+msgid "Menu"
+msgstr "Izbornik"
+
+#: admin/classes/folders.php:311
+msgid "No folder to delete"
+msgstr "Nema mape za brisanje"
+
+#: admin/classes/folders.php:321
+msgid "Unable to delete the folder"
+msgstr "Nije moguÄ‡e izbrisati mapu"
+
+#: admin/classes/folders.php:372
+msgid "Folder deleted"
+msgstr "Mapa je izbrisana"
+
+#: admin/classes/folders.php:391
+msgid "Unable to move folder into itself"
+msgstr "Nije moguÄ‡e premjestiti mapu u samu sebe"
+
+#: admin/classes/folders.php:405
+msgid "Unable to move folder"
+msgstr "Nije moguÄ‡e premjestiti mapu"
+
+#: admin/classes/folders.php:433
+msgid "Folder moved"
+msgstr "Mapa je premjeÅ¡tena"
+
+#: admin/classes/folders.php:536
+msgid "Folder updated"
+msgstr "Mapa je aÅ¾urirana"
+
+#: admin/classes/folders.php:578
+msgid "Unable to create folder"
+msgstr "Nije moguÄ‡e stvoriti mapu"
+
+#: admin/classes/folders.php:589
+msgid "Folder created"
+msgstr "Mapa je stvorena"
+
+#: admin/classes/settings.php:144
+msgid "Unable to save user settings"
+msgstr "Nije moguÄ‡e spremiti korisniÄke postavke"
+
+#: admin/classes/settings.php:150 admin/classes/uipress-app.php:1358
+msgid "Settings saved"
+msgstr "Postavke spremljene"
+
+#: admin/classes/settings.php:164
+msgid "Settings reset"
+msgstr "PoniÅ¡tavanje postavki"
+
+#: admin/classes/settings.php:209 admin/classes/styles.php:432
+msgid "Version"
+msgstr "Verzija"
+
+#: admin/classes/settings.php:230
+msgid "Save settings"
+msgstr "Spremi postavke"
+
+#: admin/classes/settings.php:413
+msgid "No licence key provided"
+msgstr "Nije naveden licencni kljuÄ"
+
+#: admin/classes/settings.php:445
+msgid "Licence removed"
+msgstr "Licenca je uklonjena"
+
+#: admin/classes/styles.php:138 admin/classes/styles.php:151
+#: admin/classes/styles.php:430
+msgid "Styles"
+msgstr "Stilovi"
+
+#: admin/classes/styles.php:213
+msgid "Unable to fetch themes at this moment. Please try again later"
+msgstr "TrenutaÄno nije moguÄ‡e dohvatiti teme. Molimo pokuÅ¡ajte ponovo kasnije"
+
+#: admin/classes/styles.php:247
+msgid "Unable to like theme at this moment. Please try again later"
+msgstr "Trenutno se tema ne moÅ¾e svidjeti. Molimo pokuÅ¡ajte ponovo kasnije"
+
+#: admin/classes/styles.php:266
+msgid "Unable to save styles"
+msgstr "Nije moguÄ‡e spremiti stilove"
+
+#: admin/classes/styles.php:292
+msgid "Styles saved"
+msgstr "Stilovi su spremljeni"
+
+#: admin/classes/styles.php:411
+msgid ""
+"Uipress styles isn't optimised for mobile devices. Switch to a larger screen to "
+"modify UiPress Styles"
+msgstr ""
+"Uipress stilovi nisu optimizirani za mobilne ureÄ‘aje. PrijeÄ‘ite na veÄ‡i "
+"zaslon da biste izmijenili UiPress stilove"
+
+#: admin/classes/styles.php:469
+msgid "Clear All"
+msgstr "OÄistiti sve"
+
+#: admin/classes/styles.php:533
+msgid "Global"
+msgstr "Globalno"
+
+#: admin/classes/styles.php:536
+msgid "Body Background"
+msgstr "Pozadina tijela"
+
+#: admin/classes/styles.php:547
+msgid "Default Background"
+msgstr "Zadana pozadina"
+
+#: admin/classes/styles.php:558
+msgid "Muted Background"
+msgstr "PriguÅ¡ena pozadina"
+
+#: admin/classes/styles.php:569
+msgid "Muted Background Accent"
+msgstr "PriguÅ¡eni pozadinski naglasak"
+
+#: admin/classes/styles.php:580
+msgid "Primary Color"
+msgstr "Primarna boja"
+
+#: admin/classes/styles.php:591
+msgid "Primary Color Wash"
+msgstr "Pranje primarne boje"
+
+#: admin/classes/styles.php:602
+msgid "Primary Color Hover"
+msgstr "Primarna boja lebdeÄ‡i"
+
+#: admin/classes/styles.php:613
+msgid "Secondary Color"
+msgstr "Sekundarna boja"
+
+#: admin/classes/styles.php:624
+msgid "Secondary Color Hover"
+msgstr "Lebdenje sekundarne boje"
+
+#: admin/classes/styles.php:635
+msgid "Font"
+msgstr "Font"
+
+#: admin/classes/styles.php:646
+msgid "Border Width"
+msgstr "Å irina obruba"
+
+#: admin/classes/styles.php:657
+msgid "Border Radius"
+msgstr "GraniÄni radijus"
+
+#: admin/classes/styles.php:668
+msgid "Border Colour"
+msgstr "Boja obruba"
+
+#: admin/classes/styles.php:679
+msgid "Notification Background"
+msgstr "Pozadina obavijesti"
+
+#: admin/classes/styles.php:696
+msgid "Base font size"
+msgstr "Osnovna veliÄina fonta"
+
+#: admin/classes/styles.php:707 admin/classes/styles.php:1008
+#: admin/classes/styles.php:1148
+msgid "Text Color"
+msgstr "Boja teksta"
+
+#: admin/classes/styles.php:718
+msgid "Text Emphasis Color"
+msgstr "Boja naglaÅ¡avanja teksta"
+
+#: admin/classes/styles.php:729
+msgid "Text Muted Color"
+msgstr "PriguÅ¡ena boja teksta"
+
+#: admin/classes/styles.php:745
+msgid "Buttons"
+msgstr "Gumbi"
+
+#: admin/classes/styles.php:748
+msgid "Button Border Radius"
+msgstr "Polumjer obruba gumba"
+
+#: admin/classes/styles.php:760
+msgid "Button Border Width"
+msgstr "Å irina obruba gumba"
+
+#: admin/classes/styles.php:772
+msgid "Default Button Border Colour"
+msgstr "Zadana boja obruba gumba"
+
+#: admin/classes/styles.php:784
+msgid "Default Button Background Colour"
+msgstr "Zadana boja pozadine gumba"
+
+#: admin/classes/styles.php:796
+msgid "Default Button Hover Background Colour"
+msgstr "Boja pozadine zadanog gumba"
+
+#: admin/classes/styles.php:808
+msgid "Default Button Text Colour"
+msgstr "Zadana boja teksta gumba"
+
+#: admin/classes/styles.php:821
+msgid "Primary Button Border Colour"
+msgstr "Boja obruba primarne tipke"
+
+#: admin/classes/styles.php:833
+msgid "Primary Button Background Colour"
+msgstr "Boja pozadine primarne tipke"
+
+#: admin/classes/styles.php:845
+msgid "Primary Button Hover Background Colour"
+msgstr "Boja pozadine pri lebdenju primarnog gumba"
+
+#: admin/classes/styles.php:857
+msgid "Primary Button Text Colour"
+msgstr "Boja teksta primarnog gumba"
+
+#: admin/classes/styles.php:870
+msgid "Danger Button Border Colour"
+msgstr "Boja obruba gumba za opasnost"
+
+#: admin/classes/styles.php:882
+msgid "Danger Button Background Colour"
+msgstr "Boja pozadine gumba za opasnost"
+
+#: admin/classes/styles.php:894
+msgid "Danger Button Hover Background Colour"
+msgstr "Boja pozadine gumba za opasnost"
+
+#: admin/classes/styles.php:906
+msgid "Danger Button Text Colour"
+msgstr "Boja teksta gumba za opasnost"
+
+#: admin/classes/styles.php:919
+msgid "Page Action Button Border Colour"
+msgstr "Boja obruba gumba radnje stranice"
+
+#: admin/classes/styles.php:931
+msgid "Page Action Button Background Colour"
+msgstr "Boja pozadine gumba radnje stranice"
+
+#: admin/classes/styles.php:943
+msgid "Page Action Button Hover Background Colour"
+msgstr "Gumb radnje stranice. Boja pozadine"
+
+#: admin/classes/styles.php:955
+msgid "Page Action Button Text Colour"
+msgstr "Boja teksta gumba radnje stranice"
+
+#: admin/classes/styles.php:973 admin/classes/uipress-app.php:2669
+msgid "Menu"
+msgstr "Izbornik"
+
+#: admin/classes/styles.php:975
+msgid "Background Color"
+msgstr "Boja pozadine"
+
+#: admin/classes/styles.php:986 admin/classes/styles.php:1170
+msgid "Secondary background Color"
+msgstr "Boja sekundarne pozadine"
+
+#: admin/classes/styles.php:997
+msgid "Button Hover background Color"
+msgstr "Boja pozadine prelaska gumba"
+
+#: admin/classes/styles.php:1019
+msgid "Active Text Color"
+msgstr "Boja aktivnog teksta"
+
+#: admin/classes/styles.php:1030
+msgid "Active Top Level Item background colour"
+msgstr "Boja pozadine aktivne stavke najviÅ¡e razine"
+
+#: admin/classes/styles.php:1041
+msgid "Search Input background colour"
+msgstr "TraÅ¾i Boja pozadine unosa"
+
+#: admin/classes/styles.php:1052
+msgid "Search Input text colour"
+msgstr "TraÅ¾i Boja teksta unosa"
+
+#: admin/classes/styles.php:1063
+msgid "Submenu Text Color"
+msgstr "Podizbornik Boja teksta"
+
+#: admin/classes/styles.php:1074
+msgid "Submenu Active Text Color"
+msgstr "Podizbornik Boja aktivnog teksta"
+
+#: admin/classes/styles.php:1085
+msgid "Submenu Hover Text Color"
+msgstr "Podizbornik Boja teksta pri pokazivaÄu"
+
+#: admin/classes/styles.php:1096
+msgid "Width"
+msgstr "Å irina"
+
+#: admin/classes/styles.php:1108
+msgid "Padding"
+msgstr "Podstava"
+
+#: admin/classes/styles.php:1120
+msgid "Logo Height"
+msgstr "Visina logotipa"
+
+#: admin/classes/styles.php:1134 admin/classes/uipress-app.php:2773
+msgid "Toolbar"
+msgstr "Alatna traka"
+
+#: admin/classes/styles.php:1137
+msgid "Toolbar Background Color"
+msgstr "Boja pozadine alatne trake"
+
+#: admin/classes/styles.php:1159
+msgid "Link Hover Text Color"
+msgstr "Boja teksta pri prelasku na vezu"
+
+#: admin/classes/styles.php:1183
+msgid "Cards"
+msgstr "Kartice"
+
+#: admin/classes/styles.php:1186 admin/classes/styles.php:1270
+msgid "Background color"
+msgstr "Boja pozadine"
+
+#: admin/classes/styles.php:1198
+msgid "Border color"
+msgstr "Boja obruba"
+
+#: admin/classes/styles.php:1210
+msgid "Border radius"
+msgstr "GraniÄni radijus"
+
+#: admin/classes/styles.php:1222
+msgid "Shadow spread"
+msgstr "Å irenje sjene"
+
+#: admin/classes/styles.php:1234
+msgid "Shadow blur"
+msgstr "ZamuÄ‡enje sjene"
+
+#: admin/classes/styles.php:1246
+msgid "Shadow color"
+msgstr "Boja sjene"
+
+#: admin/classes/styles.php:1267 admin/classes/uipress-app.php:2944
+msgid "Login"
+msgstr "Prijaviti se"
+
+#: admin/classes/uipress-app.php:268
+msgctxt "post type general name"
+msgid "Folder"
+msgstr "Mapa"
+
+#: admin/classes/uipress-app.php:269
+msgctxt "post type singular name"
+msgid "folder"
+msgstr "mapu"
+
+#: admin/classes/uipress-app.php:270
+msgctxt "admin menu"
+msgid "Folders"
+msgstr "Mape"
+
+#: admin/classes/uipress-app.php:271
+msgctxt "add new on admin bar"
+msgid "Folder"
+msgstr "Mapa"
+
+#: admin/classes/uipress-app.php:272
+msgctxt "folder"
+msgid "Add New"
+msgstr "Dodaj novi"
+
+#: admin/classes/uipress-app.php:273 admin/classes/uipress-app.php:284
+msgid "Add New Folder"
+msgstr "Dodaj novu mapu"
+
+#: admin/classes/uipress-app.php:274 admin/classes/uipress-app.php:1368
+msgid "New Folder"
+msgstr "Nova mapa"
+
+#: admin/classes/uipress-app.php:275 admin/classes/uipress-app.php:1372
+msgid "Edit Folder"
+msgstr "Uredi mapu"
+
+#: admin/classes/uipress-app.php:276
+msgid "View Folder"
+msgstr "Pregledajte mapu"
+
+#: admin/classes/uipress-app.php:277
+msgid "All Folders"
+msgstr "Sve mape"
+
+#: admin/classes/uipress-app.php:278
+msgid "Search Folders"
+msgstr "PretraÅ¾ite mape"
+
+#: admin/classes/uipress-app.php:279
+msgid "No Folders found."
+msgstr "Nije pronaÄ‘ena nijedna mapa."
+
+#: admin/classes/uipress-app.php:280
+msgid "No Folders found in Trash."
+msgstr "U Otpadu nije pronaÄ‘ena nijedna mapa."
+
+#: admin/classes/uipress-app.php:1167
+msgid "active"
+msgstr "aktivan"
+
+#: admin/classes/uipress-app.php:1171
+msgid "inactive"
+msgstr "neaktivan"
+
+#: admin/classes/uipress-app.php:1320
+msgid "Menu Preferences"
+msgstr "Postavke izbornika"
+
+#: admin/classes/uipress-app.php:1321
+msgid "Hide search bar"
+msgstr "Sakrij traku za pretraÅ¾ivanje"
+
+#: admin/classes/uipress-app.php:1322
+msgid "Hide Icons"
+msgstr "Sakrij ikone"
+
+#: admin/classes/uipress-app.php:1323
+msgid "Show submenu on hover"
+msgstr "PrikaÅ¾i podizbornik pri lebdenju"
+
+#: admin/classes/uipress-app.php:1324
+msgid "Search Menu"
+msgstr "Izbornik za pretraÅ¾ivanje"
+
+#: admin/classes/uipress-app.php:1326
+msgid "Search"
+msgstr "TraÅ¾i"
+
+#: admin/classes/uipress-app.php:1329
+msgid "Show more"
+msgstr "PrikaÅ¾i viÅ¡e"
+
+#: admin/classes/uipress-app.php:1330
+msgid "other matches"
+msgstr "ostale utakmice"
+
+#: admin/classes/uipress-app.php:1331 admin/classes/uipress-app.php:1359
+msgid "Nothing found"
+msgstr "NiÅ¡ta nije pronaÄ‘eno"
+
+#: admin/classes/uipress-app.php:1332 admin/classes/uipress-app.php:1337
+msgid "View Site"
+msgstr "Pogledaj stranicu"
+
+#: admin/classes/uipress-app.php:1333
+msgid "Dashboard"
+msgstr "Nadzorna ploÄa"
+
+#: admin/classes/uipress-app.php:1334
+msgid "Search Site"
+msgstr "PretraÅ¾ite stranicu"
+
+#: admin/classes/uipress-app.php:1336
+msgid "Create New"
+msgstr "Napravite novo"
+
+#: admin/classes/uipress-app.php:1338
+msgid "Updates"
+msgstr "Nadopune"
+
+#: admin/classes/uipress-app.php:1339
+msgid "Preferences"
+msgstr "Preference"
+
+#: admin/classes/uipress-app.php:1340
+msgid "Dark mode"
+msgstr "Tamni naÄin rada"
+
+#: admin/classes/uipress-app.php:1341
+msgid "Show screen options toggle"
+msgstr "Prikaz opcija zaslona"
+
+#: admin/classes/uipress-app.php:1342
+msgid "Screen options"
+msgstr "Opcije zaslona"
+
+#: admin/classes/uipress-app.php:1343
+msgid "Hide admin bar links (left)"
+msgstr "Sakrij veze na adminbarskoj traci (lijevo)"
+
+#: admin/classes/uipress-app.php:1344
+msgid "Logout"
+msgstr "Odjavite se"
+
+#: admin/classes/uipress-app.php:1345
+msgid "Notifications"
+msgstr "Obavijesti"
+
+#: admin/classes/uipress-app.php:1346
+msgid "Hide notification"
+msgstr "Sakrij obavijest"
+
+#: admin/classes/uipress-app.php:1347
+msgid "hidden notifications"
+msgstr "skrivene obavijesti"
+
+#: admin/classes/uipress-app.php:1348
+msgid "show all"
+msgstr "pokaÅ¾i sve"
+
+#: admin/classes/uipress-app.php:1349
+msgid "Notifiction Hidden"
+msgstr "Obavijest je skrivena"
+
+#: admin/classes/uipress-app.php:1350
+msgid "Toggle Menu"
+msgstr "Prebaci izbornik"
+
+#: admin/classes/uipress-app.php:1351
+msgid "Choose users or roles"
+msgstr "Odaberite korisnike ili uloge"
+
+#: admin/classes/uipress-app.php:1352
+msgid "Search users and roles"
+msgstr "PretraÅ¾ite korisnike i uloge"
+
+#: admin/classes/uipress-app.php:1353
+msgid "Choose Image"
+msgstr "Odaberite Slika"
+
+#: admin/classes/uipress-app.php:1354
+msgid "Choose Post Types"
+msgstr "Odaberite Vrste postova"
+
+#: admin/classes/uipress-app.php:1355 admin/classes/uipress-app.php:1356
+msgid "Searach Post Types"
+msgstr "Search vrste postova"
+
+#: admin/classes/uipress-app.php:1360
+msgid "Default"
+msgstr "Zadano"
+
+#: admin/classes/uipress-app.php:1361
+msgid "Add File"
+msgstr "Dodaj datoteku"
+
+#: admin/classes/uipress-app.php:1362
+msgid "URL to file"
+msgstr "URL do datoteke"
+
+#: admin/classes/uipress-app.php:1363
+msgid "Remove"
+msgstr "Ukloniti"
+
+#: admin/classes/uipress-app.php:1364
+msgid "All media"
+msgstr "Svi mediji"
+
+#: admin/classes/uipress-app.php:1366
+msgid "No folder"
+msgstr "Nema mape"
+
+#: admin/classes/uipress-app.php:1369
+msgid "Folder Name"
+msgstr "Ime datoteke"
+
+#: admin/classes/uipress-app.php:1370
+msgid "Colour"
+msgstr "Boja"
+
+#: admin/classes/uipress-app.php:1374
+msgid "1 File"
+msgstr "1 datoteka"
+
+#: admin/classes/uipress-app.php:1375
+msgid "files"
+msgstr "datoteke"
+
+#: admin/classes/uipress-app.php:1376
+msgid "You haven't created a folder yet"
+msgstr "JoÅ¡ niste stvorili mapu"
+
+#: admin/classes/uipress-app.php:1377
+msgid "Remove from folder"
+msgstr "Ukloni iz mape"
+
+#: admin/classes/uipress-app.php:1378
+msgid ""
+"Upgrade to pro to unlock the notification center. View, edit and organise all "
+"your plugin and theme notifications in one place"
+msgstr ""
+"Nadogradite na pro za otkljuÄavanje centra za obavijesti. Pregledajte, uredite i "
+"organizirajte sve obavijesti o dodacima i temama na jednom mjestu"
+
+#: admin/classes/uipress-app.php:1379
+msgid ""
+"Upgrade to pro to gain full control of search results and included post types"
+msgstr ""
+"Nadogradite na pro da biste dobili potpunu kontrolu nad rezultatima "
+"pretraÅ¾ivanja i ukljuÄenim vrstama objava"
+
+#: admin/classes/uipress-app.php:1382
+msgid "Styles Imported"
+msgstr "Uvezeni stilovi"
+
+#: admin/classes/uipress-app.php:1383
+msgid "Settings Imported"
+msgstr "Postavke su uvezene"
+
+#: admin/classes/uipress-app.php:1384
+msgid "Remove Licence"
+msgstr "Uklonite licencu"
+
+#: admin/classes/uipress-app.php:1385
+#, php-format
+msgid "%s Pro is active"
+msgstr "%s Pro je aktivan"
+
+#: admin/classes/uipress-app.php:1386
+#, php-format
+msgid "%s Pro"
+msgstr "%s Pro"
+
+#: admin/classes/uipress-app.php:1387
+msgid "Activate"
+msgstr "Aktivirati"
+
+#: admin/classes/uipress-app.php:1388
+msgid "Add a pro licence to unlock pro features."
+msgstr "Dodajte profesionalnu licencu za otkljuÄavanje profesionalnih znaÄajki."
+
+#: admin/classes/uipress-app.php:1389
+msgid "Choose Icon"
+msgstr "Odaberite ikonu"
+
+#: admin/classes/uipress-app.php:1390
+msgid "Are you sure you want to delete this?"
+msgstr "Jeste li sigurni da Å¾elite ovo izbrisati?"
+
+#: admin/classes/uipress-app.php:1391
+msgid "Import started"
+msgstr "Uvoz je zapoÄeo"
+
+#: admin/classes/uipress-app.php:1392
+msgid "Are you sure you want to reset the settings?"
+msgstr "Jeste li sigurni da Å¾elite resetirati postavke?"
+
+#: admin/classes/uipress-app.php:1393
+msgid "Last 7 Days"
+msgstr "Zadnjih 7 dana"
+
+#: admin/classes/uipress-app.php:1394
+msgid "Last 30 Days"
+msgstr "Zadnjih 30 dana"
+
+#: admin/classes/uipress-app.php:1399
+msgid "selected"
+msgstr "odabran"
+
+#: admin/classes/uipress-app.php:1400
+msgid "Theme Library"
+msgstr "Tematska knjiÅ¾nica"
+
+#: admin/classes/uipress-app.php:1401
+msgid "Library"
+msgstr "KnjiÅ¾nica"
+
+#: admin/classes/uipress-app.php:1402
+msgid "Import Theme"
+msgstr "Uvezi temu"
+
+#: admin/classes/uipress-app.php:1403
+msgid "Pro template"
+msgstr "Pro predloÅ¾ak"
+
+#: admin/classes/uipress-app.php:1404
+msgid "Theme Imported"
+msgstr "Tema je uvezena"
+
+#: admin/classes/uipress-app.php:1405
+msgid "Made by"
+msgstr "Izradio"
+
+#: admin/classes/uipress-app.php:1407
+msgid "Failed to fetch folder content"
+msgstr "DohvaÄ‡anje sadrÅ¾aja mape nije uspjelo"
+
+#: admin/classes/uipress-app.php:1408
+msgid "user"
+msgstr "korisnik"
+
+#: admin/classes/uipress-app.php:1850
+msgid "Unkown Post Type"
+msgstr "Nepoznata vrsta posta"
+
+#: admin/classes/uipress-app.php:1853
+msgid "Unkown"
+msgstr "Nepoznato"
+
+#: admin/classes/uipress-app.php:1991
+msgid "Core"
+msgstr "Jezgra"
+
+#: admin/classes/uipress-app.php:1997
+msgid "Themes"
+msgstr "Teme"
+
+#: admin/classes/uipress-app.php:2003
+msgid "Plugins"
+msgstr "Dodaci"
+
+#: admin/classes/uipress-app.php:2527
+msgid "General options"
+msgstr "OpÄ‡enite opcije"
+
+#: admin/classes/uipress-app.php:2532
+msgid "Network Override"
+msgstr "MreÅ¾no nadjaÄavanje"
+
+#: admin/classes/uipress-app.php:2533
+msgid "If enabled, all settings applied here will be pushed to subsites."
+msgstr ""
+"Ako je omoguÄ‡eno, sve postavke primijenjene ovdje bit Ä‡e prebaÄene na "
+"podmjesta."
+
+#: admin/classes/uipress-app.php:2542
+msgid "Set Dark Mode as Default"
+msgstr "Postavite tamni naÄin rada kao zadani"
+
+#: admin/classes/uipress-app.php:2543
+msgid ""
+"If enabled, dark mode will default to true for users that haven't set a "
+"preference."
+msgstr ""
+"Ako je omoguÄ‡en, tamni naÄin Ä‡e prema zadanim postavkama biti istinit za "
+"korisnike koji nisu postavili postavke."
+
+#: admin/classes/uipress-app.php:2551
+msgid "Set Dark Mode according to prefers color scheme"
+msgstr "Postavite tamni naÄin rada prema Å¾eljenoj shemi boja"
+
+#: admin/classes/uipress-app.php:2552
+msgid "UiPress will detetct the OS color scheme and update accordingly"
+msgstr "UiPress Ä‡e otkriti shemu boja OS-a i aÅ¾urirati u skladu s tim"
+
+#: admin/classes/uipress-app.php:2560
+msgid "Disable dark mode"
+msgstr "OnemoguÄ‡ite tamni naÄin rada"
+
+#: admin/classes/uipress-app.php:2561
+msgid "If enabled, dark mode switch will not be available."
+msgstr "Ako je omoguÄ‡eno, prekidaÄ tamnog naÄina rada neÄ‡e biti dostupan."
+
+#: admin/classes/uipress-app.php:2569
+msgid "Set overview page as homepage"
+msgstr "Postavite stranicu pregleda kao poÄetnu stranicu"
+
+#: admin/classes/uipress-app.php:2570
+msgid ""
+"If enabled, the overview page will be the homepage when logging in and when "
+"accessing the admin area."
+msgstr ""
+"Ako je omoguÄ‡eno, stranica s pregledom bit Ä‡e poÄetna stranica kada se "
+"prijavite i kada pristupate administrativnom podruÄju."
+
+#: admin/classes/uipress-app.php:2578
+msgid "Set custom page as homepage"
+msgstr "Postavite prilagoÄ‘enu stranicu kao poÄetnu stranicu"
+
+#: admin/classes/uipress-app.php:2580
+msgid ""
+"If enabled, the page you choose will be the homepage when logging in and when "
+"accessing the admin area. For admin pages use a relative URL (path after /wp-"
+"admin/), for other pages use an absolute URL"
+msgstr ""
+"Ako je omoguÄ‡eno, stranica koju odaberete bit Ä‡e poÄetna stranica prilikom "
+"prijave i kada pristupate administrativnom podruÄju. Za administratorske "
+"stranice koristite relativni URL (put nakon /wp-admin/), za druge stranice "
+"koristite apsolutni URL"
+
+#: admin/classes/uipress-app.php:2590
+#, php-format
+msgid "Rename %s"
+msgstr "Preimenujte %s"
+
+#: admin/classes/uipress-app.php:2591
+#, php-format
+msgid "White label %s by changing the name displayed."
+msgstr "Bijela oznaka %s promjenom prikazanog naziva."
+
+#: admin/classes/uipress-app.php:2599
+#, php-format
+msgid "Rename %s plugin author"
+msgstr "Preimenujte autora dodatka %s"
+
+#: admin/classes/uipress-app.php:2600
+#, php-format
+msgid "White label %s by changing the author in the plugin table."
+msgstr "Bijela oznaka %s promjenom autora u tablici dodataka."
+
+#: admin/classes/uipress-app.php:2608
+#, php-format
+msgid "Change %s plugin URL"
+msgstr "Promijenite URL dodatka %s"
+
+#: admin/classes/uipress-app.php:2609
+#, php-format
+msgid "White label %s by changing the plugin URL in the plugin table."
+msgstr "Bijela oznaka %s promjenom URL-a dodatka u tablici dodataka."
+
+#: admin/classes/uipress-app.php:2617
+msgid "App Icon"
+msgstr "Ikona aplikacije"
+
+#: admin/classes/uipress-app.php:2618
+#, php-format
+msgid "Replace %s plugin icon with your own"
+msgstr "Zamijenite ikonu dodatka %s svojom"
+
+#: admin/classes/uipress-app.php:2626
+msgid "Admin Favicon"
+msgstr "Admin Favicon"
+
+#: admin/classes/uipress-app.php:2627
+msgid "Add an image to be used as the site favicon for admin pages."
+msgstr ""
+"Dodajte sliku koja Ä‡e se koristiti kao favicon stranice za administratorske "
+"stranice."
+
+#: admin/classes/uipress-app.php:2635
+#, php-format
+msgid "Hide %s from plugin table"
+msgstr "Sakrij %s iz tablice dodataka"
+
+#: admin/classes/uipress-app.php:2636
+#, php-format
+msgid "If enabled, %s will be hidden from the plugin table"
+msgstr "Ako je omoguÄ‡eno, %s Ä‡e biti skriveno iz tablice dodataka"
+
+#: admin/classes/uipress-app.php:2644
+msgid "Hide Footer"
+msgstr "Sakrij podnoÅ¾je"
+
+#: admin/classes/uipress-app.php:2645
+msgid "Hide the footer text that shows at the bottom of every admin page"
+msgstr ""
+"Sakrijte tekst podnoÅ¾ja koji se prikazuje na dnu svake administratorske stranice"
+
+#: admin/classes/uipress-app.php:2653
+msgid "Footer Text"
+msgstr "Tekst u podnoÅ¾ju"
+
+#: admin/classes/uipress-app.php:2654
+msgid "Text entered here will be present at the bottom of admin pages"
+msgstr "Ovdje uneseni tekst bit Ä‡e prisutan na dnu administratorskih stranica"
+
+#: admin/classes/uipress-app.php:2670 admin/classes/uipress-app.php:2675
+msgid "Creates new admin menu."
+msgstr "Stvara novi administratorski izbornik."
+
+#: admin/classes/uipress-app.php:2674
+msgid "Disable Admin Menu Module"
+msgstr "OnemoguÄ‡ite Admin Menu Module"
+
+#: admin/classes/uipress-app.php:2682
+msgid "Menu Disabled for"
+msgstr "Izbornik onemoguÄ‡en za"
+
+#: admin/classes/uipress-app.php:2683
+#, php-format
+msgid "%s menu will be disabled for any users or roles you select"
+msgstr "Izbornik %s bit Ä‡e onemoguÄ‡en za sve korisnike ili uloge koje odaberete"
+
+#: admin/classes/uipress-app.php:2691
+msgid "Logo Light Mode"
+msgstr "Logo Light Mode"
+
+#: admin/classes/uipress-app.php:2692
+msgid "Sets the logo for the admin bar in light mode."
+msgstr "Postavlja logotip za admin traku u svijetlom naÄinu rada."
+
+#: admin/classes/uipress-app.php:2699
+msgid "Logo Dark Mode"
+msgstr "Logo Tamni naÄin rada"
+
+#: admin/classes/uipress-app.php:2700
+msgid "Optional dark mode logo for admin bar."
+msgstr "Opcijski logotip tamnog naÄina za adminbar."
+
+#: admin/classes/uipress-app.php:2707
+#, php-format
+msgid "Load %s Menu on front end"
+msgstr "UÄitajte %s izbornik na prednji kraj"
+
+#: admin/classes/uipress-app.php:2708
+#, php-format
+msgid ""
+"If enabled, %s menu will load on the front end. Please note, this will not work "
+"on all themes and styling will vary"
+msgstr ""
+"Ako je omoguÄ‡eno, %s izbornik Ä‡e se uÄitati na prednjem kraju. Imajte na umu "
+"da ovo neÄ‡e raditi na svim temama i stil Ä‡e se razlikovati"
+
+#: admin/classes/uipress-app.php:2716
+#, php-format
+msgid "Only Load %s Menu on front end for"
+msgstr "UÄitaj %s izbornik samo na prednjem dijelu za"
+
+#: admin/classes/uipress-app.php:2717
+msgid "Only load front end menu for selected roles and usernames"
+msgstr "UÄitajte samo prednji izbornik za odabrane uloge i korisniÄka imena"
+
+#: admin/classes/uipress-app.php:2725
+msgid "Collapsed Menu Logo Light Mode"
+msgstr "SaÅ¾eti naÄin rada s logotipom izbornika"
+
+#: admin/classes/uipress-app.php:2726
+msgid "Optional logo for when the menu is collapsed."
+msgstr "Izborni logotip za kada je izbornik saÅ¾et."
+
+#: admin/classes/uipress-app.php:2733
+msgid "Collapsed Menu Logo Dark Mode"
+msgstr "SaÅ¾eti logotip izbornika Tamni naÄin rada"
+
+#: admin/classes/uipress-app.php:2734
+msgid "Optional dark nmode logo for when the menu is collapsed."
+msgstr "Opcijski tamni logotip nmode za kada je izbornik saÅ¾et."
+
+#: admin/classes/uipress-app.php:2741
+msgid "Show site title in menu"
+msgstr "PrikaÅ¾i naslov stranice u izborniku"
+
+#: admin/classes/uipress-app.php:2742
+msgid "If enabled, the site title will be displayed in the menu next to the logo"
+msgstr ""
+"Ako je omoguÄ‡eno, naslov stranice bit Ä‡e prikazan u izborniku pored logotipa"
+
+#: admin/classes/uipress-app.php:2749 admin/classes/uipress-app.php:2811
+msgid "Disable Search"
+msgstr "OnemoguÄ‡i pretraÅ¾ivanje"
+
+#: admin/classes/uipress-app.php:2750
+msgid "Disables admin menu search."
+msgstr "OnemoguÄ‡uje pretraÅ¾ivanje izbornika administratora."
+
+#: admin/classes/uipress-app.php:2757
+msgid "Set collapsed menu as default"
+msgstr "Postavi saÅ¾eti izbornik kao zadani"
+
+#: admin/classes/uipress-app.php:2758
+msgid ""
+"If enabled, the menu will default to the shrunk menu for users that haven't set "
+"a preference.."
+msgstr ""
+"Ako je omoguÄ‡eno, izbornik Ä‡e prema zadanim postavkama biti skupljeni izbornik "
+"za korisnike koji nisu postavili postavke."
+
+#: admin/classes/uipress-app.php:2774
+msgid "Creates new admin toolbar."
+msgstr "Stvara novu alatnu traku administratora."
+
+#: admin/classes/uipress-app.php:2778
+msgid "Disable ToolBar Module?"
+msgstr "OnemoguÄ‡iti modul alatne trake?"
+
+#: admin/classes/uipress-app.php:2779
+msgid ""
+"Creates new admin bar, adds user off canvas menu, builds global search and "
+"notification center."
+msgstr ""
+"IzraÄ‘uje novu admin traku, dodaje korisnika izvan platna izbornika, gradi "
+"globalno pretraÅ¾ivanje i centar za obavijesti."
+
+#: admin/classes/uipress-app.php:2786
+msgid "Admin Bar Disabled For"
+msgstr "Admin traka onemoguÄ‡ena za"
+
+#: admin/classes/uipress-app.php:2787
+#, php-format
+msgid "%s toolbar module will be disabled for any users or roles you select"
+msgstr ""
+"%s modul alatne trake bit Ä‡e onemoguÄ‡en za sve korisnike ili uloge koje "
+"odaberete"
+
+#: admin/classes/uipress-app.php:2795
+msgid "Hide admin bar links (left side)"
+msgstr "Sakrij veze na admin traci (lijeva strana)"
+
+#: admin/classes/uipress-app.php:2796
+msgid ""
+"Disables legacy links on left side of admin bar for all users. Also hides the "
+"user preference."
+msgstr ""
+"OnemoguÄ‡uje naslijeÄ‘ene veze na lijevoj strani administratorske trake za sve "
+"korisnike. TakoÄ‘er skriva korisniÄke postavke."
+
+#: admin/classes/uipress-app.php:2803
+msgid "Enable floating flyout toolbar"
+msgstr "OmoguÄ‡i plutajuÄ‡u alatnu traku"
+
+#: admin/classes/uipress-app.php:2804
+msgid "Changes the toolbar to a floating flyout toolbar"
+msgstr "Mijenja alatnu traku u plutajuÄ‡u alatnu traku"
+
+#: admin/classes/uipress-app.php:2812
+msgid "Disables search icon and global search function from admin bar."
+msgstr ""
+"OnemoguÄ‡uje ikonu pretraÅ¾ivanja i globalnu funkciju pretraÅ¾ivanja na admin "
+"traci."
+
+#: admin/classes/uipress-app.php:2819
+msgid "Disable Create Button"
+msgstr "OnemoguÄ‡i gumb za stvaranje"
+
+#: admin/classes/uipress-app.php:2820
+msgid "Disables the 'create' button in the admin bar."
+msgstr "OnemoguÄ‡uje gumb 'napravi' na admin traci."
+
+#: admin/classes/uipress-app.php:2827
+msgid "Open View Website in new tab"
+msgstr "Otvorite View Website u novoj kartici"
+
+#: admin/classes/uipress-app.php:2828
+msgid ""
+"When enabled, clicking on view website or the home button will open in a new "
+"browser tab"
+msgstr ""
+"Kada je omoguÄ‡eno, klikom na prikaz web-mjesta ili gumb za poÄetnu stranicu "
+"otvorit Ä‡e se u novoj kartici preglednika"
+
+#: admin/classes/uipress-app.php:2835
+msgid "Disable View Website Button"
+msgstr "OnemoguÄ‡i gumb Pregled web-mjesta"
+
+#: admin/classes/uipress-app.php:2836
+msgid "Disables the view website link button in the admin bar."
+msgstr "OnemoguÄ‡uje gumb veze za pregled web-mjesta na admin traci."
+
+#: admin/classes/uipress-app.php:2843
+#, php-format
+msgid "Load %s admin bar on front end"
+msgstr "UÄitajte %s administratorsku traku na prednji kraj"
+
+#: admin/classes/uipress-app.php:2844
+#, php-format
+msgid ""
+"If enabled, %s toolbar will load on the front end. Please note, this will not "
+"work on all themes and styling will vary"
+msgstr ""
+"Ako je omoguÄ‡eno, alatna traka %s Ä‡e se uÄitati na prednjem kraju. Imajte na "
+"umu da ovo neÄ‡e raditi na svim temama i stil Ä‡e se razlikovati"
+
+#: admin/classes/uipress-app.php:2852
+msgid "Hide admin bar on front end"
+msgstr "Sakrij admin traku na prednjem kraju"
+
+#: admin/classes/uipress-app.php:2853
+msgid "If enabled, front end admin bar will not load."
+msgstr "Ako je omoguÄ‡eno, prednja admin traka neÄ‡e se uÄitati."
+
+#: admin/classes/uipress-app.php:2861
+msgid "Disable Notification Center"
+msgstr "OnemoguÄ‡ite centar za obavijesti"
+
+#: admin/classes/uipress-app.php:2862
+msgid "If disabled, notifcations will show in the normal way"
+msgstr "Ako je onemoguÄ‡eno, obavijesti Ä‡e se prikazivati na normalan naÄin"
+
+#: admin/classes/uipress-app.php:2870
+msgid "Post Types available in Search"
+msgstr "Vrste postova dostupne u PretraÅ¾ivanju"
+
+#: admin/classes/uipress-app.php:2871
+msgid "The global search will only search the selected post types."
+msgstr "Globalna pretraga Ä‡e pretraÅ¾ivati samo odabrane vrste postova."
+
+#: admin/classes/uipress-app.php:2879
+msgid "Post Types available in create button (new)"
+msgstr "Vrste objava dostupne u gumbu za kreiranje (novo)"
+
+#: admin/classes/uipress-app.php:2880
+msgid "Only the selected post types will show up in the create dropdown."
+msgstr ""
+"Na padajuÄ‡em izborniku za izradu prikazat Ä‡e se samo odabrane vrste postova."
+
+#: admin/classes/uipress-app.php:2888
+msgid "Only show notifications to"
+msgstr "PrikaÅ¾i samo obavijesti za"
+
+#: admin/classes/uipress-app.php:2889
+#, php-format
+msgid "%s will hide all notifications from all users except those selected below"
+msgstr ""
+"%s Ä‡e sakriti sve obavijesti od svih korisnika osim onih odabranih u nastavku"
+
+#: admin/classes/uipress-app.php:2897
+msgid "Only show updates to"
+msgstr "PrikaÅ¾i samo aÅ¾uriranja za"
+
+#: admin/classes/uipress-app.php:2898
+#, php-format
+msgid "%s will hide all updates from all users except those selected below"
+msgstr ""
+"%s Ä‡e sakriti sva aÅ¾uriranja od svih korisnika osim onih odabranih u nastavku"
+
+#: admin/classes/uipress-app.php:2914
+msgid "Theme"
+msgstr "Tema"
+
+#: admin/classes/uipress-app.php:2915 admin/classes/uipress-app.php:2945
+#: admin/classes/uipress-app.php:3000
+msgid "Styles page content."
+msgstr "SadrÅ¾aj stranice sa stilovima."
+
+#: admin/classes/uipress-app.php:2919
+msgid "Disable Admin Theme Module"
+msgstr "OnemoguÄ‡ite administratorski tematski modul"
+
+#: admin/classes/uipress-app.php:2920
+msgid "When the theme is disabled, pages will be styles in the original way."
+msgstr "Kada je tema onemoguÄ‡ena, stranice Ä‡e biti stilovi na izvorni naÄin."
+
+#: admin/classes/uipress-app.php:2927
+msgid "Theme Disabled for"
+msgstr "Tema je onemoguÄ‡ena za"
+
+#: admin/classes/uipress-app.php:2928
+msgid ""
+"When the theme is disabled, pages will be styles in the original way for "
+"selected users or roles."
+msgstr ""
+"Kada je tema onemoguÄ‡ena, stranice Ä‡e biti stilovi na izvorni naÄin za "
+"odabrane korisnike ili uloge."
+
+#: admin/classes/uipress-app.php:2949
+msgid "Disable Login Module"
+msgstr "OnemoguÄ‡ite modul za prijavu"
+
+#: admin/classes/uipress-app.php:2950
+msgid ""
+"When the login module is disabled, the login page will be displayed in the "
+"original way."
+msgstr ""
+"Kada je modul za prijavu onemoguÄ‡en, stranica za prijavu Ä‡e biti prikazana na "
+"izvorni naÄin."
+
+#: admin/classes/uipress-app.php:2958
+msgid "Dark Mode"
+msgstr "Tamni naÄin rada"
+
+#: admin/classes/uipress-app.php:2959
+msgid "Puts the login page in dark mode for all users."
+msgstr "Stranicu za prijavu stavlja u tamni naÄin rada za sve korisnike."
+
+#: admin/classes/uipress-app.php:2966
+msgid "Disable Language Selector"
+msgstr "OnemoguÄ‡i biraÄ jezika"
+
+#: admin/classes/uipress-app.php:2967
+msgid "Removes the language selector added to the login page"
+msgstr "Uklanja biraÄ jezika dodan na stranicu za prijavu"
+
+#: admin/classes/uipress-app.php:2974
+msgid "Login Logo"
+msgstr "Logotip za prijavu"
+
+#: admin/classes/uipress-app.php:2975
+msgid "Sets the logo for the login page"
+msgstr "Postavlja logotip za stranicu za prijavu"
+
+#: admin/classes/uipress-app.php:2982
+msgid "Login Background"
+msgstr "Pozadina prijave"
+
+#: admin/classes/uipress-app.php:2983
+msgid "Sets an optional background image on the login page."
+msgstr "Postavlja neobaveznu pozadinsku sliku na stranici za prijavu."
+
+#: admin/classes/uipress-app.php:2999
+msgid "Advanced"
+msgstr "Napredna"
+
+#: admin/classes/uipress-app.php:3004
+msgid "Advanced Disabled For"
+msgstr "Napredno OnemoguÄ‡eno za"
+
+#: admin/classes/uipress-app.php:3005
+msgid "Code added here will not load for any users or roles you select"
+msgstr "Ovdje dodan kÃ´d neÄ‡e se uÄitati za korisnike ili uloge koje odaberete"
+
+#: admin/classes/uipress-app.php:3013
+msgid "Enqueue scripts"
+msgstr "Stavite u red skripte"
+
+#: admin/classes/uipress-app.php:3014
+msgid "Add scripts to the head of every admin page and login page"
+msgstr ""
+"Dodajte skripte u glavu svake administratorske stranice i stranice za prijavu"
+
+#: admin/classes/uipress-app.php:3022
+msgid "Enqueue styles"
+msgstr "Stilovi u redu Äekanja"
+
+#: admin/classes/uipress-app.php:3023
+msgid "Add stylesheets to the head of every admin page and login page"
+msgstr ""
+"Dodajte stilove u glavu svake administratorske stranice i stranice za prijavu"
+
+#: admin/classes/uipress-app.php:3031
+msgid "Admin CSS"
+msgstr "Admin CSS"
+
+#: admin/classes/uipress-app.php:3032
+msgid "CSS added here will be loaded on every admin page as well as the login page"
+msgstr ""
+"Ovdje dodan CSS uÄitat Ä‡e se na svaku administratorsku stranicu kao i na "
+"stranicu za prijavu"
+
+#: admin/classes/uipress-app.php:3041
+msgid "Admin JavaScript"
+msgstr "Administratorski JavaScript"
+
+#: admin/classes/uipress-app.php:3042
+msgid ""
+"JavaScript added here will be loaded on every admin page as well as the login "
+"page"
+msgstr ""
+"JavaScript dodan ovdje uÄitat Ä‡e se na svaku administratorsku stranicu kao i na "
+"stranicu za prijavu"
+
+#: admin/classes/uipress-app.php:3051
+msgid "HTML for document head"
+msgstr "HTML za glavu dokumenta"
+
+#: admin/classes/uipress-app.php:3052
+msgid "Add HTML here to be added to every admin page and login page head section"
+msgstr ""
+"Ovdje dodajte HTML koji Ä‡e biti dodan na svaku stranicu administratora i "
+"zaglavlje stranice za prijavu"
+
+#: admin/classes/uipress-app.php:3061
+msgid "Safe Mode Key"
+msgstr "Tipka sigurnog naÄina rada"
+
+#: admin/classes/uipress-app.php:3063
+msgid ""
+"Add a private key to allow you to disable uipress on specific pages with query "
+"paramaters. For example, add '?no_uip=your_key' to a URL and it wil stop uipress "
+"from loading on that page."
+msgstr ""
+"Dodajte privatni kljuÄ koji Ä‡e vam omoguÄ‡iti da onemoguÄ‡ite uipress na "
+"odreÄ‘enim stranicama s parametrima upita. Na primjer, dodajte '?"
+"no_uip=your_key' u URL i to Ä‡e zaustaviti uÄitavanje uipressa na toj stranici."
+
+#: admin/classes/update.php:66
+msgid "Welcome to UiPress version "
+msgstr "DobrodoÅ¡li u UiPress verziju"
+
+#: admin/classes/update.php:69 admin/classes/update.php:101
+msgid ""
+"Would you like to automatically import settings from your older version of "
+"uipress?"
+msgstr "Å½elite li automatski uvesti postavke iz svoje starije verzije uipressa?"
+
+#: admin/classes/update.php:71
+msgid "Don't show again"
+msgstr "Ne prikazuj viÅ¡e"
+
+#: admin/classes/update.php:72 admin/classes/update.php:103
+msgid "Import settings"
+msgstr "Postavke uvoza"
+
+#: admin/classes/update.php:115
+msgid "Check for updates"
+msgstr "Provjerite ima li aÅ¾uriranja"
+
+#: admin/classes/update.php:141
+msgid "Unable to contact update server"
+msgstr "Nije moguÄ‡e kontaktirati posluÅ¾itelj za aÅ¾uriranje"
+
+#: admin/classes/update.php:156
+msgid "Update available"
+msgstr "AÅ¾uriranje dostupno"
+
+#: admin/classes/update.php:162
+msgid "No Updates available"
+msgstr "Nema dostupnih aÅ¾uriranja"
+
+#: admin/classes/update.php:180
+msgid "Message dismissed"
+msgstr "Poruka je odbaÄena"
+
+#: admin/classes/update.php:204
+msgid "No settings to import"
+msgstr "Nema postavki za uvoz"
+
+#: admin/classes/update.php:350
+msgid "Settings imported"
+msgstr "Postavke su uvezene"
+
+#. Plugin Name of the plugin/theme
+msgid "UiPress"
+msgstr "UiPress"
+
+#. Plugin URI of the plugin/theme
+#. Author URI of the plugin/theme
+msgid "https://uipress.co"
+msgstr "https://uipress.co"
+
+#. Description of the plugin/theme
+msgid ""
+"Powerful WordPress admin extension with a streamlined dashboard, Google "
+"Analytics & WooCommerce Integration, intuitive media library, dark mode and much "
+"more."
+msgstr ""
+"SnaÅ¾no adminsko proÅ¡irenje za WordPress s moderniziranom nadzornom ploÄom, "
+"integracijom Google Analytics i WooCommerce, intuitivnom bibliotekom medija, "
+"tamnim naÄinom rada i joÅ¡ mnogo toga."
+
+#. Author of the plugin/theme
+msgid "Admin 2020"
+msgstr "Admin 2020"

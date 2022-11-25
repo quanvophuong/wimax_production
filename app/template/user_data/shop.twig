@@ -109,6 +109,18 @@ file that was distributed with this source code.
         #select #wrap {
             width: calc(100% - 300px);
         }
+
+        .secret-group label em{
+            width: 100px;
+        }
+
+        .secret-group label p{
+            width: 50%;
+        }
+
+        .secret-group label span{
+            width: 140px;
+        }
     </style>
 {% endblock %}
 
@@ -169,6 +181,7 @@ file that was distributed with this source code.
 
             }
 
+            
             var txt = month + '月' + day + '日発送予定';
             $('#current_month').text(txt);
 
@@ -212,7 +225,8 @@ file that was distributed with this source code.
                 calcAmount()
             });
 
-            $('#moveCart').click(function (){
+            $('.shopCartBtn').click(function (){
+                var $thisBtn = $(this);
                 var $form = $('#productForm');
                 var product_id = $('input[name=tab_item]:checked').val();
                 var classcategory_id1 = parseInt($('input[name=option]:checked').val());
@@ -307,7 +321,7 @@ file that was distributed with this source code.
                     dataType: 'json',
                     beforeSend: function(xhr, settings) {
                         // Buttonを無効にする
-                        $('#moveCart').prop('disabled', true);
+                        $thisBtn.prop('disabled', true);
                     }
                 }).done(function(data) {
                     window.location.href = '{{ url('cart') }}'
@@ -387,33 +401,43 @@ file that was distributed with this source code.
                                 <h4>ホームプラン</h4>
                                 <ul>
                                     <li>製品名：Speed Wi-Fi HOME 5G L11</li>
-                                    <li>重量：約446g</li>
-                                    <li>サイズ：約W101×H179×D99mm</li>
-                                    <li>Wi-Fi規格：IEEE802.11a/b/g/n/ac/ax（2.4GHz/5GHz）</li>
+                                    <li>重量：約599g</li>
+                                    <li>サイズ：約W70×H182×D124mm</li>
+                                    <li>WiFi規格：IEEE802.11a/b/g/n/ac/ax(2.4GHz/5GHz)</li>
                                     <li>最大通信速度：下り速度 最大2.7Gbps、上り速度 最大183Mbps</li>
-                                    <li>最大接続台数：40台（2.4GHz:20台/5GHz:20台）</li>
+                                    <li>最大接続台数：有線LAN：2台・無線LAN：30台</li>
                                     <li>充電ポート：専用AC</li>
                                     <li>付属品：専用ACアダプター</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
-                    <div class="formContentBlock">
+                    <div class="formContentBlock secret-group">
                         <h3>安心補償オプションを選択</h3>
                         <div class="formContentBlock__text">端末の故障・破損・水濡れ・紛失・盗難・バッテリーの劣化など、様々な原因のトラブルに適用される万が一の時も「あんしん」できる端末補償サービスです。</div>
                         <input type="radio" id="free" name="option" value="550" checked>
                         <label for="free">
                             <em>フリー補償</em>
+                            <p>
+                                すべてのトラブルに適用し<br />全額補償
+                            </p>
                             <span>＋550円(税込)／月</span>
                         </label>
                         <input type="radio" id="light" name="option" value="275">
                         <label for="light">
                             <em>ライト補償</em>
+                            <p>
+                                破損/故障/水漏れは全額補償<br />補償外：紛失・盗難・バッテリーの劣化が発生した場合、端末代金として11,000円(税込)のご負担
+                            </p>
                             <span>＋275円(税込)／月</span>
                         </label>
                         <input type="radio" id="noneOption" name="option" value="0">
                         <label for="noneOption">
                             <em>補償なし</em>
+                            <p>
+                                水没・落下・盗難・紛失が発生した場合、端末代金として22,000円(税込)のご負担
+                            </p>
+                            <span></span>
                         </label>
                         <ul>
                             <li>※安心補償オプションは、ご契約時のみご加入いただけます。</li>
@@ -482,6 +506,9 @@ file that was distributed with this source code.
                     <input type="hidden" id="ship" name="ship" value="1">
                     <input type="hidden" name="_token" value="TCCpaSt87KKIpNQU5E6B-M2MsJp-htDYYXlAnq7VRZM">
                 </form>
+                <div class="shopCartBtnWrap">
+                    <button type="button" class="shopCartBtn">カートに追加する</button>
+                </div>
             </section>
         </main>
     </div>

@@ -110,6 +110,7 @@ class RecurringService{
         return $rec_order;
     }
     public function invoicePaid($object){
+
         $customer = $object->customer;
         $data = $object->lines->data;
 
@@ -147,7 +148,7 @@ class RecurringService{
         }
         $this->em->flush();
         $this->em->commit(); 
-        
+
         $rec_item_class_ids = [];
         foreach($subscriptions as $sub_id => $rec_order){
             $rec_items = $rec_order->getOrderItems();
@@ -339,6 +340,7 @@ class RecurringService{
             $rec_order->setRecStatus(StripeRecOrder::REC_STATUS_SCHEDULED_CANCELED);
             $this->em->persist($rec_order);
             $this->em->flush();
+            $this->sendMail($rec_order, 'subscription.canceled');
         }
     }
     public function createOrUpdateRecOrder($paid_status, $item, $stripe_customer_id, $last_payment_date = null){

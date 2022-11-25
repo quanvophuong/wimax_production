@@ -1,5 +1,75 @@
 {% extends 'default_frame.twig' %}
 
+{% block stylesheet %}
+<script>
+// GTM ADD DATALAYER
+// GET ITEM DATA
+let order_ecommerce_items = [];
+var order_event = "purchase";
+{% for orderItem in Order.OrderItems %}
+    {% if orderItem.productClass is not null and orderItem.productClass.classCategory1 %}
+        item_data = {
+            item_name: "{{ orderItem.productClass.classCategory1.className.name }}：{{ orderItem.productClass.classCategory1 }}",
+            item_id: "{{ orderItem.productClass.classCategory1.id }}",
+            price: '{{ orderItem.getPriceIncTax }}',
+            quantity: "{{orderItem.quantity}}"
+        };
+        order_ecommerce_items.push(item_data);
+    {% endif %}
+    {% if orderItem.productClass is not null and orderItem.productClass.classCategory2 %}
+        item_data = {
+            item_name: "{{ orderItem.productClass.classCategory2.className.name }}：{{ orderItem.productClass.classCategory2 }}",
+            item_id: "{{orderItem.productClass.classCategory2.id}}",
+            price: '0',
+            quantity: "{{orderItem.quantity}}"
+        };
+        order_ecommerce_items.push(item_data);
+    {% endif %}
+{% endfor %}
+var order_ecommerce_data = {
+    transaction_id: "{{ Order.id }}",
+    value: "{{ Order.subtotal }}",
+    currency: "JPY",
+    items: order_ecommerce_items
+};
+console.log(order_ecommerce_data);
+window.dataLayer = window.dataLayer || [];
+dataLayer.push({ ecommerce: null });
+dataLayer.push({
+        event: order_event,
+        ecommerce: order_ecommerce_data
+});
+
+// FUNCTIONS
+function getValueStatic( data, key ) {
+    if( data && key ) {
+        if( data[key] ) {
+            return data[key];
+        }
+        for (const data_key in data) {
+            return data[data_key];
+        }
+    }
+    return 0;
+}
+function priceToNumber( price ) {
+    if( price.length <= 0 ) return 0;
+    return price.replace(',', '');
+}
+function setDataClassByAllData( class_all_data, class2_zero_id ) {
+    if( class_all_data.length <= 0 || class2_zero_id.length <= 0 ) return {};
+    let data_res = {};
+    for (const key in class_all_data) {
+        if( key.indexOf('__') < 0 ) {
+            let data_item = (class_all_data[key]['#'+class2_zero_id]) ? class_all_data[key]['#'+class2_zero_id] : class_all_data[key]['#'];
+            data_res[key] = data_item.price02;
+        }
+    }
+    return data_res;
+} 
+</script>
+{% endblock %}
+
 {% block main %}
     <style>
         .ec-layoutRole .ec-layoutRole__contents{
@@ -104,6 +174,7 @@
     });
     }(function(){}));
 </script>
+
 <!--a8-->
 <span id="a8sales"></span>
     <script src="//statics.a8.net/a8sales/a8sales.js"></script>

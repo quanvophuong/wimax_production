@@ -206,7 +206,7 @@ class ConfigService{
                 [
                     'name'      =>  ConfigService::REC_CANCELED,
                     'file_name' =>  'StripeRec\Resource\template\mail\rec_order_canceled.twig',
-                    'mail_subject'  =>  'Stripe 定期支払いキャンセル済み' // 'Stripe Subscription Cancel'
+                    'mail_subject'  =>  'Stripeサブスク停止メール ' // 'Stripe Subscription Cancel'
                 ]
             ];
         $em = $this->container->get('doctrine.orm.entity_manager');

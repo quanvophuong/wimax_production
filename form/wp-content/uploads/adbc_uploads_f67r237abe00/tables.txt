@@ -1,0 +1,77 @@
+blc_filters:broken-link-checker:p:1:
+blc_instances:updraftplus:p:1:
+blc_links:broken-link-checker:p:1:
+blc_synch:broken-link-checker:p:1:
+commentmeta:w:w:1:
+comments:w:w:1:
+links:w:w:1:
+loginizer_logs:loginizer:p:1:
+options:w:w:1:
+popularpostsdata:wordpress-popular-posts:p:1:
+popularpostssummary:wordpress-popular-posts:p:1:
+postmeta:w:w:1:
+posts:w:w:1:
+pz_linkcard:pz-linkcard:p:1:
+redirection_404:updraftplus:p:1:
+redirection_groups:redirection:p:1:
+redirection_items:redirection:p:1:
+redirection_logs:updraftplus:p:1:
+simple_history:simple-history:p:1:
+simple_history_contexts:simple-history:p:1:
+term_relationships:w:w:1:
+term_taxonomy:w:w:1:
+termmeta:w:w:1:
+terms:w:w:1:
+usermeta:w:w:1:
+users:w:w:1:
+wfblockediplog:wordfence:p:1:
+wfblocks7:wordfence:p:1:
+wfconfig:wordpress-seo:p:1:
+wfcrawlers:wordfence:p:1:
+wffilechanges:wordfence:p:1:
+wffilemods:wordfence:p:1:
+wfhits:wordfence:p:1:
+wfhoover:wordfence:p:1:
+wfissues:wordfence:p:1:
+wfknownfilelist:wordfence:p:1:
+wflivetraffichuman:wordfence:p:1:
+wflocs:wordfence:p:1:
+wflogins:wordfence:p:1:
+wfls_2fa_secrets:wordfence:p:1:
+wfls_settings:wordfence:p:1:
+wfnotifications:wordfence:p:1:
+wfpendingissues:wordfence:p:1:
+wfreversecache:wordfence:p:1:
+wfsnipcache:wordfence:p:1:
+wfstatus:wordfence:p:1:
+wftrafficrates:wordfence:p:1:
+yarpp_related_cache:yet-another-related-posts-plugin:p:1:
+yoast_seo_links:wordpress-seo:p:1:
+yoast_seo_meta:wordpress-seo:p:1:
+yoast_migrations:wordpress-seo:p
+yoast_indexable:wordpress-seo:p
+db7_forms:contact-form-cfdb7:p
+ppress_forms: (66.67%):w
+ppress_formsmeta: (50%):w
+ppress_meta_data: (43.75%):w
+yoast_indexable_hierarchy:wordpress-seo (60%):p
+yoast_primary_term:wordpress-seo (75%):p
+rank_math_internal_links:w:w
+rank_math_redirections:w:w
+actionscheduler_actions: (69.57%):w
+actionscheduler_claims: (72.73%):w
+actionscheduler_groups: (72.73%):w
+actionscheduler_logs: (95%):w
+icl_translation_downloads:wp-nested-pages (60%):p
+mclean_refs: (36.36%):w
+mclean_scan: (36.36%):w
+pmxe_exports: (91.67%):w
+pmxe_posts: (75%):w
+pmxe_templates: (78.57%):w
+rank_math_analytics_ga: (90.91%):w
+rank_math_analytics_gsc: (86.96%):w
+rank_math_analytics_inspections: (74.19%):w
+rank_math_analytics_keyword_manager: (57.14%):w
+rank_math_analytics_objects: (74.07%):w
+rank_math_internal_meta: (82.61%):w
+rank_math_redirections_cache: (78.57%):w

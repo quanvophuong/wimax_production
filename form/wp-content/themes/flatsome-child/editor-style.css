@@ -1,0 +1,109 @@
+* {
+  font-family: 'Yu Gothic Medium', '游ゴシック Medium', 'YuGothic', '游ゴシック体', 'Hiragino Kaku Gothic Pro', 'ヒラギノ角ゴ Pro W3', 'MS PGothic', sans-serif;
+  font-size: 1rem;
+}
+
+html {
+    max-width: 850px;
+    background-color: #333;
+    margin: 30px auto;
+}
+body#primary {
+    border-radius: 7px;
+    box-shadow: 0 5px 15px rgb(0 0 0 / 8%);
+    padding: 30px!important;
+	font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"!important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 2em 0;
+}
+
+h2 {
+     position: relative;
+     color: white;
+     padding:0.5em 0.5em 0.4em 1.4em;
+     background-color: #e60012;
+     border-radius: 2px;
+}
+
+h2::after {
+     position: absolute;
+     top: 50%;
+     left:0;
+     transform:translateY(-50%);
+     content: '';
+     width: 18px;
+     height:4px;
+     background-color:white;
+}
+
+h3 {
+     position: relative;
+     border-bottom: 5px solid #ccc;
+     font-size: 1.3em;
+}
+
+h3::after {
+     position: absolute;
+     content: " ";
+     border-bottom: solid 5px #e60012;
+     bottom: -5px;
+     width:10%;
+     display: block;
+     left: 0;
+}
+
+h4 {
+     position: relative;
+     padding-left: 1.5em;
+}
+
+h4::after {
+     position: absolute;
+     top: 50%;
+     left:0;
+     transform:translateY(-50%);
+     content: '';
+     width: 20px;
+     height:4px;
+     background-color: #e60012;
+}
+
+h5 {
+     position: relative;
+     padding-left: 1em;
+     padding-bottom: .2em;
+}
+ 
+h5::after {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    content: '';
+    width: 11px;
+    height: 11px;
+    border: solid 3px #e60012;
+    border-radius: 100%;
+}
+
+td, th {
+    font-size: 0.9rem;
+}
+
+p {
+    padding: 0.5em;
+}
+table .table-best {
+    background-color: #51bdf7!important;
+    text-align: center;
+}
+table .table-good {
+    background-color: #fdf1b2!important;
+    text-align: center;
+}
+table .table-poor {
+    background-color: #f39393!important;
+    text-align: center;
+}
