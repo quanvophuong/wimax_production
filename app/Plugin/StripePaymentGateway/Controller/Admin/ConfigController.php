@@ -106,19 +106,19 @@ class ConfigController extends AbstractController
                     'licensed' => 0,
                 ];
             }
-            if($lic_res === "test"){
-                $pub_key = $StripeConfig->getPublishableKey();
-                $sec_key = $StripeConfig->getSecretKey();
-                if (substr($pub_key, 0, 7) != 'pk_test' || substr($sec_key, 0, 7) != 'sk_test') {
-                    $this->addError('stripe_payment_gateway.admin.license.stripe.testkey', 'admin');
-                    return  [
-                        'form' => $form->createView(),
-                        'form_license' => $form_license->createView(),
-                        'licensed' => 1,
-                        'product_licensed' => 1,
-                    ];
-                }
-            }
+            // if($lic_res === "test"){
+            //     $pub_key = $StripeConfig->getPublishableKey();
+            //     $sec_key = $StripeConfig->getSecretKey();
+            //     if (substr($pub_key, 0, 7) != 'pk_test' || substr($sec_key, 0, 7) != 'sk_test') {
+            //         $this->addError('stripe_payment_gateway.admin.license.stripe.testkey', 'admin');
+            //         return  [
+            //             'form' => $form->createView(),
+            //             'form_license' => $form_license->createView(),
+            //             'licensed' => 1,
+            //             'product_licensed' => 1,
+            //         ];
+            //     }
+            // }
             
             $this->entityManager->persist($StripeConfig);
             $this->entityManager->flush($StripeConfig);

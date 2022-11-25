@@ -176,6 +176,7 @@ class ShoppingController extends AbstractShoppingController
         // 受注の存在チェック.
         $preOrderId = $this->cartService->getPreOrderId();
         $Order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
+        
         if (!$Order) {
             log_info('[リダイレクト] 購入処理中の受注が存在しません.');
 
@@ -260,7 +261,6 @@ class ShoppingController extends AbstractShoppingController
 
         $form = $this->createForm(OrderType::class, $Order);
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             log_info('[注文確認] 集計処理を開始します.', [$Order->getId()]);
             $response = $this->executePurchaseFlow($Order);

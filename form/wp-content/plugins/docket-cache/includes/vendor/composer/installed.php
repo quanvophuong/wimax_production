@@ -1,0 +1,41 @@
+<?php return array(
+    'root' => array(
+        'name' => 'nawawi/docket-cache',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => '23082fe9d10007bed258a977b1d5f0173d5729c3',
+        'type' => 'wordpress-plugin',
+        'install_path' => __DIR__ . '/../../../',
+        'aliases' => array(),
+        'dev' => true,
+    ),
+    'versions' => array(
+        'nawawi/docket-cache' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '23082fe9d10007bed258a977b1d5f0173d5729c3',
+            'type' => 'wordpress-plugin',
+            'install_path' => __DIR__ . '/../../../',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'symfony/polyfill-php80' => array(
+            'pretty_version' => 'v1.26.0',
+            'version' => '1.26.0.0',
+            'reference' => 'cfa0ae98841b9e461207c13ab093d76b0fa7bace',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/polyfill-php80',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'symfony/var-exporter' => array(
+            'pretty_version' => 'v5.4.10',
+            'version' => '5.4.10.0',
+            'reference' => '8fc03ee75eeece3d9be1ef47d26d79bea1afb340',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/var-exporter',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+    ),
+);

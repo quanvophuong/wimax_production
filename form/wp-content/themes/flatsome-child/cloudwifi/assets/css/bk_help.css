@@ -1,0 +1,72 @@
+.ufaq-faq-category-title {
+    background: #3fa4fc;
+    padding-left: 10px;
+}
+.ufaq-faq-div:last-child {
+    margin-bottom: 40px;
+}
+.ewd-ufaq-question-form {
+    width: 80%;
+    margin: 0 auto;
+    max-width: 500px;
+}
+label#ufaq-ajax-search-lbl {
+    font-size: 20px;
+}
+div#ewd-ufaq-jquery-ajax-search {
+    background: #3fa4fc;
+    padding: 10px 10px 15px;
+}
+.ewd-faq-review-input label {
+    font-weight: 500;
+}
+input#ufaq-ajax-text-input {
+    margin: 0!important;
+}
+
+html {
+    background-color: #fff
+}
+#saide_L,
+    header.entry-header,
+    div#chamo-window,
+    header#header,
+    footer#footer {
+    display: none;
+}
+#foooter {
+    padding-top: 32px;
+    margin-top: 80px;
+    text-align: center;
+}
+#foooter ul li {
+    display: inline-block;
+    margin: 0 8px 8px;
+}
+#foooter ul li:first-child {
+    margin-left: 0;
+}
+.foooter_logo_area {
+    margin-top: 45px;
+}
+.foooter_logo_area .logo {
+    font-size: 30px;
+    font-size: 3rem;
+    margin: 0;
+}
+.foooter_logo_area .copyright {
+  margin-top: 35px;
+    font-size: 16px;
+    font-size: 1.6rem;
+}
+#foooter ul li a {
+    font-size: 15px;
+    color: #555;
+}
+p.copyright, p.copyright a {
+    color: #555;
+    font-size: 15px!important;
+}
+.row.page-wrapper {
+    padding-top: 0;
+}

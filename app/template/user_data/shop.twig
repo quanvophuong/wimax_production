@@ -109,6 +109,18 @@ file that was distributed with this source code.
         #select #wrap {
             width: calc(100% - 300px);
         }
+
+        .secret-group label em{
+            width: 100px;
+        }
+
+        .secret-group label p{
+            width: 50%;
+        }
+
+        .secret-group label span{
+            width: 140px;
+        }
     </style>
 {% endblock %}
 
@@ -169,6 +181,7 @@ file that was distributed with this source code.
 
             }
 
+            
             var txt = month + '月' + day + '日発送予定';
             $('#current_month').text(txt);
 
@@ -212,7 +225,8 @@ file that was distributed with this source code.
                 calcAmount()
             });
 
-            $('#moveCart').click(function (){
+            $('.shopCartBtn').click(function (){
+                var $thisBtn = $(this);
                 var $form = $('#productForm');
                 var product_id = $('input[name=tab_item]:checked').val();
                 var classcategory_id1 = parseInt($('input[name=option]:checked').val());
@@ -307,7 +321,7 @@ file that was distributed with this source code.
                     dataType: 'json',
                     beforeSend: function(xhr, settings) {
                         // Buttonを無効にする
-                        $('#moveCart').prop('disabled', true);
+                        $thisBtn.prop('disabled', true);
                     }
                 }).done(function(data) {
                     window.location.href = '{{ url('cart') }}'
@@ -353,10 +367,10 @@ file that was distributed with this source code.
                 <h2>端末を選択する</h2>
                 <form action="">
                     <div class="tabs">
-                            <input id="all" type="radio" name="tab_item" value="3" checked>
-                            <label class="tab_item" for="all">モバイルルーター</label>
-                            <input id="design" type="radio" name="tab_item" value="4">
-                            <label class="tab_item" for="design">ホームルーター</label>
+                        <input id="all" type="radio" name="tab_item" value="3" checked>
+                        <label class="tab_item" for="all">モバイルルーター</label>
+                        <input id="design" type="radio" name="tab_item" value="4">
+                        <label class="tab_item" for="design">ホームルーター</label>
                         <div class="tab_content" id="all_content">
                             <div class="boxL">
                                 <img src="/html/user_data/assets/img/common/mobile_img.png" alt="mobile">
@@ -398,59 +412,32 @@ file that was distributed with this source code.
                             </div>
                         </div>
                     </div>
-                    <style>
-                        .fss{
-                            display: flex;
-                            flex-wrap: wrap;
-                        }
-                        label em:first-child {
-                            min-width: 150px !important;
-                            display: inline-block !important;
-                        }
-                        #wrap main .formContent form .formContentBlock label span {
-                            white-space: nowrap;
-                            display: inline-block;
-                            margin-left: 40px;
-                        }
-                        @media (max-width:768px){
-                            label em:first-child {
-                                min-width: 100% !important;
-                            }
-                            #wrap main .formContent form .formContentBlock label {
-                                flex-wrap: wrap;
-                            }
-                            #wrap main .formContent form .formContentBlock label span {
-                                margin-left: 0px !important;
-                            }
-                        }
-                    </style>
-                    <div class="formContentBlock">
+                    <div class="formContentBlock secret-group">
                         <h3>安心補償オプションを選択</h3>
                         <div class="formContentBlock__text">端末の故障・破損・水濡れ・紛失・盗難・バッテリーの劣化など、様々な原因のトラブルに適用される万が一の時も「あんしん」できる端末補償サービスです。</div>
                         <input type="radio" id="free" name="option" value="550" checked>
                         <label for="free">
-                            <div class="fss">
-                                <em>フリー補償</em>
-                                <em>{{' すべてのトラブルに適用し
-全額補償 '|raw|nl2br }}</em>
-                            </div>
+                            <em>フリー補償</em>
+                            <p>
+                                すべてのトラブルに適用し<br />全額補償
+                            </p>
                             <span>＋550円(税込)／月</span>
                         </label>
                         <input type="radio" id="light" name="option" value="275">
                         <label for="light">
-                            <div class="fss">
                             <em>ライト補償</em>
-                            <em>{{' 破損/故障/水漏れは全額補償
-補償外：紛失・盗難・バッテリーの劣化が発生した場合、端末代金として11,000円(税込)のご負担 '|raw|nl2br }}</em>
-                            </div>
+                            <p>
+                                破損/故障/水漏れは全額補償<br />補償外：紛失・盗難・バッテリーの劣化が発生した場合、端末代金として11,000円(税込)のご負担
+                            </p>
                             <span>＋275円(税込)／月</span>
                         </label>
                         <input type="radio" id="noneOption" name="option" value="0">
                         <label for="noneOption">
-                            <div class="fss">
                             <em>補償なし</em>
-                            <em>{{' 水没・落下・盗難・紛失が発生した場合、端末代金として22,000円(税込)のご負担 '|raw|nl2br }}</em>
-                            </div>
+                            <p>
+                                水没・落下・盗難・紛失が発生した場合、端末代金として22,000円(税込)のご負担
+                            </p>
+                            <span></span>
                         </label>
                         <ul>
                             <li>※安心補償オプションは、ご契約時のみご加入いただけます。</li>
@@ -519,6 +506,9 @@ file that was distributed with this source code.
                     <input type="hidden" id="ship" name="ship" value="1">
                     <input type="hidden" name="_token" value="TCCpaSt87KKIpNQU5E6B-M2MsJp-htDYYXlAnq7VRZM">
                 </form>
+                <div class="shopCartBtnWrap">
+                    <button type="button" class="shopCartBtn">カートに追加する</button>
+                </div>
             </section>
         </main>
     </div>

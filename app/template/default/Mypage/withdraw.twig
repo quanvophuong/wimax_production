@@ -84,12 +84,18 @@ file that was distributed with this source code.
                         {{ form_widget(form._token) }}
                         {% if hasOrder %}
                             <div class="btn-wrap">
+                                <a class="btn" href="https://free-max.com/form/op-kaiyaku/" target="_blank" rel="noopener">安心補償取消へ</a>
+                                <a class="btn" href="https://free-max.com/form/kaiyaku/" target="_blank" rel="noopener">プラン解約へ</a>
+                            </div>
+                            <!--
+                            <div class="btn-wrap">
                                 <button type="button" class="btn btn-modal" name="mode" data-target="cancelGuarantee" {% if isSecretWithdraw and isCancelAction==false or not isUsingSecret %} disabled {% endif %}
                                         value="confirm">{% if isSecretWithdraw %}安心補償取消へ{% else %}安心保障解約へ{% endif %}</button>
                                 <button type="button" class="btn btn-modal" name="mode" data-target="cancelPlan" {% if isPlanWithdraw and isCancelAction==false or not isUsingPlan %} disabled {% endif %}
                                         value="confirm">{% if isPlanWithdraw %}プラン解約取消へ{% else %}プラン解約へ{% endif %}</button>
 
                             </div>
+                            -->
                         {% else %}
                             <div class="btn-wrap">
                                 <button type="button" class="btn btn-modal" name="mode" data-target="cancelGuarantee" disabled

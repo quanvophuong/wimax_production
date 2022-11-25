@@ -62,7 +62,6 @@ class RecurringHookController extends AbstractController{
      * @Route("/plugin/StripeRec/webhook", name="plugin_stripe_rec_webhook")
      */
     public function webhook(Request $request){
-
         $signature = $this->config_service->getSignature();
         if($signature){
             try{
@@ -71,8 +70,9 @@ class RecurringHookController extends AbstractController{
                 $event = Webhook::constructEvent(
                     $request->getContent(), 
                     $request->headers->get('stripe-signature'),
-                    $signature, 800
+                    $signature
                 );
+                // die();
                 
                 $type = $event['type'];
                 $object = $event['data']['object'];
@@ -89,7 +89,8 @@ class RecurringHookController extends AbstractController{
             $object = $data['data']['object'];
         }
         log_info("==============[webhook object] $type ======");
-        
+
+        //dump($type);die();
         switch ($type) {
             case 'invoice.payment_succeeded':
               // log_info('🔔 ' . $type . ' Webhook received! ' . $object);            
@@ -98,10 +99,11 @@ class RecurringHookController extends AbstractController{
               // }
               break;
             case 'invoice.paid':
-              log_info('🔔 ' . $type . ' Webhook received! ' . $object);            
-              if ($this->paidDebounce($object)) {
+              //log_info('🔔 ' . $type . ' Webhook received! ' . $object);            
+
+              //if ($this->paidDebounce($object)) {
                 $this->rec_service->invoicePaid($object);
-              }
+              //}
               break;
             case 'invoice.payment_failed':
               // If the payment fails or the customer does not have a valid payment method,
@@ -161,6 +163,7 @@ class RecurringHookController extends AbstractController{
     private function paidDebounce($object) 
     {
       $file = $this->invoice_stamp_dir . "/" . $object->id;
+
       log_info(self::LOG_IF . $file);
       $now = new \DateTime();
       $now = $now->getTimestamp();
