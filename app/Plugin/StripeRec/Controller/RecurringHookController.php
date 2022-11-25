@@ -116,12 +116,12 @@ class RecurringHookController extends AbstractController{
                 $this->rec_service->invoiceUpcoming($object);
                 break;
             case 'invoice.finalized':
-              // If you want to manually send out invoices to your customers
-              // or store them locally to reference to avoid hitting Stripe rate limits.
-                // log_info('🔔 ' . $type . ' Webhook received! ' . $object);
-                // if ($this->paidDebounce($object)) {
-                //   $this->rec_service->invoicePaid($object);
-                // }
+              //If you want to manually send out invoices to your customers
+              //or store them locally to reference to avoid hitting Stripe rate limits.
+                log_info('🔔 ' . $type . ' Webhook received! ' . $object);
+                if ($this->paidDebounce($object)) {
+                  $this->rec_service->invoicePaid($object);
+                }
               break;
             case 'customer.subscription.deleted':
               // handle subscription cancelled automatically based

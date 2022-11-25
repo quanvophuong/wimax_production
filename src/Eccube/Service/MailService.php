@@ -123,7 +123,7 @@ class MailService
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$Customer->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
+            //->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
 
@@ -182,7 +182,7 @@ class MailService
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$Customer->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
+            //->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
 
@@ -240,7 +240,7 @@ class MailService
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$email])
-            ->setBcc($this->BaseInfo->getEmail01())
+            //->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
 
@@ -357,7 +357,7 @@ class MailService
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$Order->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
+            //->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
 
@@ -431,7 +431,7 @@ class MailService
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail03() => $this->BaseInfo->getShopName()])
             ->setTo([$Customer->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
+            //->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
 
@@ -490,7 +490,7 @@ class MailService
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$formData['mail_subject'])
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$Order->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
+            //->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04())
             ->setBody($formData['tpl_data']);
@@ -499,7 +499,7 @@ class MailService
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$formData['mail_subject'])
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo(['order@free-max.com'])
-            ->setBcc($this->BaseInfo->getEmail01())
+            //->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04())
             ->setBody($formData['tpl_data']);
@@ -605,7 +605,7 @@ class MailService
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo([$Customer->getEmail()])
-            ->setBcc($this->BaseInfo->getEmail01())
+            //->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
 
@@ -666,14 +666,14 @@ class MailService
             ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
             ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
             ->setTo($Order->getEmail())
-            ->setBcc($this->BaseInfo->getEmail01())
+            //->setBcc($this->BaseInfo->getEmail01())
             ->setReplyTo($this->BaseInfo->getEmail03())
             ->setReturnPath($this->BaseInfo->getEmail04());
         $message_freemax = (new \Swift_Message())
                 ->setSubject('['.$this->BaseInfo->getShopName().'] '.$MailTemplate->getMailSubject())
                 ->setFrom([$this->BaseInfo->getEmail01() => $this->BaseInfo->getShopName()])
                 ->setTo('order@free-max.com')
-                ->setBcc($this->BaseInfo->getEmail01())
+                //->setBcc($this->BaseInfo->getEmail01())
                 ->setReplyTo($this->BaseInfo->getEmail03())
                 ->setReturnPath($this->BaseInfo->getEmail04());
 

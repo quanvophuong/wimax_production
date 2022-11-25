@@ -10,6 +10,7 @@
 
 namespace Plugin\StripeRec\Service;
 
+use Plugin\StripePaymentGateway\StripeClient;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Plugin\StripeRec\Entity\StripeRecOrder;
 use Plugin\StripeRec\Entity\StripeRecOrderItem;
@@ -309,9 +310,11 @@ class RecurringService{
     }    
     public function subscriptionCreated($object){
         $sub_id = $object->id;
+        $invoice_id = $object->latest_invoice;
         $stripe_customer_id = $object->customer;  
         log_info("subscription_id : " . $sub_id);
         log_info("stripe_customer_id: " . $stripe_customer_id);
+        log_info("invoice_id : " . $invoice_id);
         $rec_order = $this->rec_order_repo->findOneBy(['subscription_id' => $sub_id, "stripe_customer_id" => $stripe_customer_id]);
         if(empty($rec_order) && $object->schedule){
             log_info("rec_order is empty by subscription_id and stripe_customer_id");
@@ -323,6 +326,10 @@ class RecurringService{
                 $rec_order->setSubscriptionId($sub_id);
             }
         }else{
+            // pay invoice immediately
+            $stripeClient = new StripeClient('sk_test_51L5lvUGS5e9lvq3nInCaah6fApJZgTsgdzpRWd2HdkPZl9y00oQ1UVL1HciljDzmLW3Mc1VbFpJkqf0V5ogV1atL00XSMYAY5d');
+            $stripeClient->payInvoice($invoice_id);
+            log_info("pay invoice success");
             return;
         }
         if(strpos($rec_order->getRecStatus(), StripeRecOrder::REC_STATUS_SCHEDULED) !== false){
@@ -331,6 +338,7 @@ class RecurringService{
             $this->em->persist($rec_order);
             $this->em->flush();
             $this->em->commit();
+
         }
     }
     public function subscriptionScheduleCanceled($object){        

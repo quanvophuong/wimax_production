@@ -437,7 +437,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             'customer'      =>  $customer_id,
             'start_date'    =>  $purchase_point,
             'end_behavior' =>  'release',
-            'phases'        =>  $phases
+            'phases'        =>  $phases,
         ], $initial_price, $order_items[0]->getProduct()->getStripeProdId(), $interval,strtolower($this->Order->getCurrencyCode()));
 
         if($coupon_enable){
@@ -488,8 +488,8 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $stripeOrder->setRecStatus(StripeRecOrder::REC_STATUS_ACTIVE);
             $stripeOrder->setStartDate(new \DateTime());
         }else{
+            //dump($schedule_params);die('test');
             $subscription_schedule = SubscriptionSchedule::create($schedule_params);
-            
             log_info(self::LOG_IF . "--- subscription schedule created.");
             log_info($subscription_schedule);
             $subscription_id = $subscription_schedule->subscription;
@@ -1104,6 +1104,9 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
 
         }
         $next_payday = new \DateTime($next_payday->format('Y-m-d 09:30:00'));
+        $now = new \DateTime();
+        $load_time = new \DateInterval('PT10S');
+        $now->add($load_time);
         //dump($next_payday);die();
         $phase_first_prod = [
             'items' => [
@@ -1121,6 +1124,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             ],
             'end_date' => $next_payday->getTimestamp(),
             'proration_behavior' => 'none',
+            //'trial_end' => $now->getTimestamp(),
         ];
         array_unshift($phases, $phase_first_prod);
         $phases[1]['billing_cycle_anchor'] = "phase_start";

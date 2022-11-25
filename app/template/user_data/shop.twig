@@ -353,10 +353,10 @@ file that was distributed with this source code.
                 <h2>端末を選択する</h2>
                 <form action="">
                     <div class="tabs">
-                        <input id="all" type="radio" name="tab_item" value="3" checked>
-                        <label class="tab_item" for="all">モバイルルーター</label>
-                        <input id="design" type="radio" name="tab_item" value="4">
-                        <label class="tab_item" for="design">ホームルーター</label>
+                            <input id="all" type="radio" name="tab_item" value="3" checked>
+                            <label class="tab_item" for="all">モバイルルーター</label>
+                            <input id="design" type="radio" name="tab_item" value="4">
+                            <label class="tab_item" for="design">ホームルーター</label>
                         <div class="tab_content" id="all_content">
                             <div class="boxL">
                                 <img src="/html/user_data/assets/img/common/mobile_img.png" alt="mobile">
@@ -387,33 +387,70 @@ file that was distributed with this source code.
                                 <h4>ホームプラン</h4>
                                 <ul>
                                     <li>製品名：Speed Wi-Fi HOME 5G L11</li>
-                                    <li>重量：約446g</li>
-                                    <li>サイズ：約W101×H179×D99mm</li>
-                                    <li>Wi-Fi規格：IEEE802.11a/b/g/n/ac/ax（2.4GHz/5GHz）</li>
+                                    <li>重量：約599g</li>
+                                    <li>サイズ：約W70×H182×D124mm</li>
+                                    <li>WiFi規格：IEEE802.11a/b/g/n/ac/ax(2.4GHz/5GHz)</li>
                                     <li>最大通信速度：下り速度 最大2.7Gbps、上り速度 最大183Mbps</li>
-                                    <li>最大接続台数：40台（2.4GHz:20台/5GHz:20台）</li>
+                                    <li>最大接続台数：有線LAN：2台・無線LAN：30台</li>
                                     <li>充電ポート：専用AC</li>
                                     <li>付属品：専用ACアダプター</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
+                    <style>
+                        .fss{
+                            display: flex;
+                            flex-wrap: wrap;
+                        }
+                        label em:first-child {
+                            min-width: 150px !important;
+                            display: inline-block !important;
+                        }
+                        #wrap main .formContent form .formContentBlock label span {
+                            white-space: nowrap;
+                            display: inline-block;
+                            margin-left: 40px;
+                        }
+                        @media (max-width:768px){
+                            label em:first-child {
+                                min-width: 100% !important;
+                            }
+                            #wrap main .formContent form .formContentBlock label {
+                                flex-wrap: wrap;
+                            }
+                            #wrap main .formContent form .formContentBlock label span {
+                                margin-left: 0px !important;
+                            }
+                        }
+                    </style>
                     <div class="formContentBlock">
                         <h3>安心補償オプションを選択</h3>
                         <div class="formContentBlock__text">端末の故障・破損・水濡れ・紛失・盗難・バッテリーの劣化など、様々な原因のトラブルに適用される万が一の時も「あんしん」できる端末補償サービスです。</div>
                         <input type="radio" id="free" name="option" value="550" checked>
                         <label for="free">
-                            <em>フリー補償</em>
+                            <div class="fss">
+                                <em>フリー補償</em>
+                                <em>{{' すべてのトラブルに適用し
+全額補償 '|raw|nl2br }}</em>
+                            </div>
                             <span>＋550円(税込)／月</span>
                         </label>
                         <input type="radio" id="light" name="option" value="275">
                         <label for="light">
+                            <div class="fss">
                             <em>ライト補償</em>
+                            <em>{{' 破損/故障/水漏れは全額補償
+補償外：紛失・盗難・バッテリーの劣化が発生した場合、端末代金として11,000円(税込)のご負担 '|raw|nl2br }}</em>
+                            </div>
                             <span>＋275円(税込)／月</span>
                         </label>
                         <input type="radio" id="noneOption" name="option" value="0">
                         <label for="noneOption">
+                            <div class="fss">
                             <em>補償なし</em>
+                            <em>{{' 水没・落下・盗難・紛失が発生した場合、端末代金として22,000円(税込)のご負担 '|raw|nl2br }}</em>
+                            </div>
                         </label>
                         <ul>
                             <li>※安心補償オプションは、ご契約時のみご加入いただけます。</li>

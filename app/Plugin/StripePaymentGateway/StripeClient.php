@@ -20,6 +20,7 @@ use Eccube\Event\EventArgs;
 use Eccube\Event\TemplateEvent;
 use Exception;
 use Stripe\Charge;
+use Stripe\Invoice;
 use Stripe\Stripe;
 use Stripe\Refund;
 use Stripe\Customer as StripeLibCustomer;
@@ -371,6 +372,16 @@ class StripeClient
             }
         }catch(\Exception $e){
             return $e->getJsonBody();
+        }
+    }
+
+    public function payInvoice($invoice_id)
+    {
+        try {
+            $invoice = Invoice::retrieve($invoice_id,[]);
+            return $invoice->pay();
+        }catch (Exception $e){
+            return $e->getMessage();
         }
     }
 }

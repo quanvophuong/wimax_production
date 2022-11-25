@@ -81,9 +81,9 @@ file that was distributed with this source code.
       <section class="container-lg">
         <div class="cell example example4" id="example-4">
           <form action="{{ url('plugin_striperec_checkout') }}" method="POST" id="checkout_form">
-            <div id="example4-paymentRequest">
+{#            <div id="example4-paymentRequest">#}
               <!--Stripe paymentRequestButton Element inserted here-->
-            </div>
+{#            </div>#}
             {% if stripePaymentMethodObj is defined and stripePaymentMethodObj != false and is_granted('ROLE_USER') == true %}
             <div class="stripe_payment_gateway_existing_box" style="margin-bottom:60px; display:block;">
               <p class="stripe_payment_gateway_text">保存済みカード</p>
