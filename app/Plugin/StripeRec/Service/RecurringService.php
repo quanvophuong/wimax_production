@@ -37,7 +37,7 @@ class RecurringService{
 
 
     const LOG_IF = "Recurring Service---";
-    
+
     public function __construct(
         ContainerInterface $container
         ){
@@ -309,7 +309,7 @@ class RecurringService{
             $this->em->flush();
         }
     }    
-    public function subscriptionCreated($object){
+    public function subscriptionCreated($object,$secret_key){
         $sub_id = $object->id;
         $invoice_id = $object->latest_invoice;
         $stripe_customer_id = $object->customer;  
@@ -328,7 +328,7 @@ class RecurringService{
             }
         }else{
             // pay invoice immediately
-            $stripeClient = new StripeClient('sk_test_51L5lvUGS5e9lvq3nInCaah6fApJZgTsgdzpRWd2HdkPZl9y00oQ1UVL1HciljDzmLW3Mc1VbFpJkqf0V5ogV1atL00XSMYAY5d');
+            $stripeClient = new StripeClient($secret_key);
             $stripeClient->payInvoice($invoice_id);
             log_info("pay invoice success");
             return;

@@ -13,6 +13,7 @@ if( \file_exists(dirname(__FILE__).'/../../StripePaymentGateway/vendor/stripe/st
     include_once(dirname(__FILE__).'/../../StripePaymentGateway/vendor/stripe/stripe-php/init.php');
 }
 
+use Plugin\StripePaymentGateway\Entity\StripeConfig;
 use Stripe\Webhook;
 use Eccube\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -147,7 +148,11 @@ class RecurringHookController extends AbstractController{
             //     break;
             case 'customer.subscription.created':
                 log_info('🔔 ' . $type . ' Webhook received! ' . $object);
-                $this->rec_service->subscriptionCreated($object);
+
+                $stripeRepo = $this->entityManager->getRepository(StripeConfig::class);
+                $stripeConfig = $stripeRepo->findOneBy([],['id' => 'desc']);
+
+                $this->rec_service->subscriptionCreated($object,$stripeConfig->getSecretKey());
             break;
             case 'subscription_schedule.canceled':
                 log_info('🔔 ' . $type . ' Webhook received! ' . $object);
