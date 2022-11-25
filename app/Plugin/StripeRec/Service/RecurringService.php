@@ -328,7 +328,7 @@ class RecurringService{
             }
         }else{
             // pay invoice immediately
-            $stripeClient = new StripeClient('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');
+            $stripeClient = new StripeClient('sk_test_51L5lvUGS5e9lvq3nInCaah6fApJZgTsgdzpRWd2HdkPZl9y00oQ1UVL1HciljDzmLW3Mc1VbFpJkqf0V5ogV1atL00XSMYAY5d');
             $stripeClient->payInvoice($invoice_id);
             log_info("pay invoice success");
             return;
