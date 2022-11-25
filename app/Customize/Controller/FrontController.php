@@ -251,4 +251,14 @@ class FrontController extends AbstractController
         // if ()
         return $this->json(['done' => true]);
     }
+
+    /**
+     * EC-CUBE標準の「カートに追加」を上書き
+     *
+     * @Route("/maintenance", name="maintenance", methods={"GET"})
+     */
+    public function maintenance(Request $request)
+    {
+        return $this->render('maintenance.twig');
+    }
 }
