@@ -37,9 +37,9 @@ class RecurringService{
 
 
     const LOG_IF = "Recurring Service---";
-    
+
     public function __construct(
-        ContainerInterface $container        
+        ContainerInterface $container
         ){
         $this->container = $container;
         $this->em = $this->container->get('doctrine.orm.entity_manager'); 
@@ -309,7 +309,7 @@ class RecurringService{
             $this->em->flush();
         }
     }    
-    public function subscriptionCreated($object){
+    public function subscriptionCreated($object,$secret_key){
         $sub_id = $object->id;
         $invoice_id = $object->latest_invoice;
         $stripe_customer_id = $object->customer;  
@@ -328,7 +328,7 @@ class RecurringService{
             }
         }else{
             // pay invoice immediately
-            $stripeClient = new StripeClient('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');
+            $stripeClient = new StripeClient($secret_key);
             $stripeClient->payInvoice($invoice_id);
             log_info("pay invoice success");
             return;
