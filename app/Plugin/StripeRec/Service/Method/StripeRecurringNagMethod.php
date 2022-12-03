@@ -341,7 +341,6 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             }
             $lastProductInterval=$pc->getInterval();
         }
-        
         //BOC add shipping fee
         $stripeShippingProductId=$this->getShippingProductId();
         if(!empty($stripeShippingProductId)) {
@@ -488,7 +487,6 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $stripeOrder->setRecStatus(StripeRecOrder::REC_STATUS_ACTIVE);
             $stripeOrder->setStartDate(new \DateTime());
         }else{
-            //dump($schedule_params);die('test');
             $subscription_schedule = SubscriptionSchedule::create($schedule_params);
             log_info(self::LOG_IF . "--- subscription schedule created.");
             log_info($subscription_schedule);
@@ -985,6 +983,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         }
         $next_payday = new \DateTime();
         $next_payday->setTimestamp($start_time->getTimestamp());
+
         if($interval == "week" || $interval == "year" ){
             if(!$option_1){
                 return $schedule_params;
@@ -1020,7 +1019,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             // for monthly recurring
             $day = $start_time->format("j");
             $days_of_month = $start_time->format("t");
-            
+
             if($option_1 && !$option_2){
                 if($day > 1){
                     $diff = new \DateInterval('P'. ($days_of_month - $day + 1) . 'D');   
@@ -1041,9 +1040,9 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                     $payment_date = $days_of_month;
                 }
 
-                if($day == $payment_date){
-                    return $schedule_params;
-                }
+                // if($day == $payment_date){
+                //     return $schedule_params;
+                // }
 
                 if($day < $payment_date){
                     $diff = new \DateInterval('P' . ($payment_date - $day) . 'D');
@@ -1103,7 +1102,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             }
 
         }
-        $next_payday = new \DateTime($next_payday->format('Y-m-d 09:30:00'));
+        $next_payday = new \DateTime($next_payday->format('Y-m-d 08:30:00'));
         $now = new \DateTime();
         $load_time = new \DateInterval('PT10S');
         $now->add($load_time);
@@ -1129,6 +1128,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         array_unshift($phases, $phase_first_prod);
         $phases[1]['billing_cycle_anchor'] = "phase_start";
         $schedule_params['phases'] = $phases;
+        //dump($schedule_params);die();
         return $schedule_params;
     }
 

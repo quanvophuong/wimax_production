@@ -123,7 +123,7 @@ class RecurringHookController extends AbstractController{
               //or store them locally to reference to avoid hitting Stripe rate limits.
                 log_info('🔔 ' . $type . ' Webhook received! ' . $object);
                 if ($this->paidDebounce($object)) {
-                  $this->rec_service->invoicePaid($object);
+                  //$this->rec_service->invoicePaid($object);
                 }
               break;
             case 'customer.subscription.deleted':
