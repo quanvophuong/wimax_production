@@ -31,10 +31,10 @@ file that was distributed with this source code.
             const date = new Date();
             return new Date(date.getFullYear(), date.getMonth() + 1, 1);
         }
-        
+
         $(function () {
 
-            
+
             var $redirectCallback = function() {
                 loadingOverlay();
                 $('#shopping_order_redirect_to').val($(this).attr('data-path'));
@@ -62,6 +62,7 @@ file that was distributed with this source code.
             $('#cart_move').click(function(e){
                 e.preventDefault();
                 var form = $('#shopping-form');
+                console.log(form.serialize());
                 var url = '{{ url('shopping_confirm') }}'
                 console.log(hr)
                 console.log(url);
@@ -71,7 +72,12 @@ file that was distributed with this source code.
                     data: form.serialize(),
                     dataType: 'json',
                 }).done(function(data) {
-                    window.location.href = hr;
+                    result = data['done'];
+                    if (result){
+                        window.location.href = hr;
+                    }else{
+                        alert(data['messages']);
+                    }
                 }).fail(function(data) {
                     alert('{{ '失敗しました。'|trans }}');
                 })
@@ -175,58 +181,58 @@ file that was distributed with this source code.
                             </ul>
                         </div>
                         <h3>配送情報</h3>
-                            <div class="ec-orderDelivery">
-                                {% for shipping in Order.shippings %}
-                                    {% set idx = loop.index0 %}
-                                    {% set isShowReducedTaxMess = false %}
-                                    <div class="ec-orderDelivery__title">{{ 'お届け先'|trans }}{% if Order.multiple %}({{ loop.index }}){% endif %}
-                                        <div class="ec-orderDelivery__change">
-                                            {% if is_granted('ROLE_USER') %}
-                                                <button class="ec-inlineBtn" data-id="{{ shipping.id }}" data-trigger="click" data-path="{{ path('shopping_shipping', {'id': shipping.id}) }}">{{ '変更'|trans }}</button>
-                                            {% else %}
-                                                <button class="ec-inlineBtn" data-id="{{ shipping.id }}" data-trigger="click" data-path="{{ path('shopping_shipping_edit', {'id': shipping.id}) }}">{{ '変更'|trans }}</button>
-                                            {% endif %}
-                                        </div>
+                        <div class="ec-orderDelivery">
+                            {% for shipping in Order.shippings %}
+                                {% set idx = loop.index0 %}
+                                {% set isShowReducedTaxMess = false %}
+                                <div class="ec-orderDelivery__title">{{ 'お届け先'|trans }}{% if Order.multiple %}({{ loop.index }}){% endif %}
+                                    <div class="ec-orderDelivery__change">
+                                        {% if is_granted('ROLE_USER') %}
+                                            <button class="ec-inlineBtn" data-id="{{ shipping.id }}" data-trigger="click" data-path="{{ path('shopping_shipping', {'id': shipping.id}) }}">{{ '変更'|trans }}</button>
+                                        {% else %}
+                                            <button class="ec-inlineBtn" data-id="{{ shipping.id }}" data-trigger="click" data-path="{{ path('shopping_shipping_edit', {'id': shipping.id}) }}">{{ '変更'|trans }}</button>
+                                        {% endif %}
                                     </div>
-                                    <div class="ec-orderDelivery__address">
-                                        <p>{{ ''|trans }}{{ shipping.name01 }} {{ shipping.name02 }}{{ ' 様'|trans }}</p>
-                                        <p>{{ '〒'|trans }}{{ shipping.postal_code }} <br>{{ shipping.pref }}{{ shipping.addr01 }}{{ shipping.addr02 }}</p>
-                                        <p>{{ shipping.phone_number }}</p>
-                                    </div>
-                                    <div class="ec-orderDelivery__actions">
-                                        <div class="">
-                                            <div class="ec-select">
-                                                <label>{{ '配送方法'|trans }}</label>
-                                                {{ form_widget(form.Shippings[idx].Delivery, { 'attr': { 'class': 'form-control', 'data-trigger': 'change' }}) }}
-                                                {{ form_errors(form.Shippings[idx].Delivery) }}
-                                            </div>
-                                            <div class="ec-select ec-select__time">
-                                                <label>{{ 'お届け時間'|trans }}</label>
-                                                <select name="" id="">
-                                                    <option value="">指定不可</option>
-            {#                                        <option value="">指定なし</option>#}
-            {#                                        <option value="8:00 - 12:00">8:00 - 12:00</option>#}
-            {#                                        <option value="14:00 - 16:00">14:00 - 16:00</option>#}
-            {#                                        <option value="16:00 - 18:00">16:00 - 18:00</option>#}
-            {#                                        <option value="18:00 - 20:00">18:00 - 20:00</option>#}
-            {#                                        <option value="19:00 - 21:00">19:00 - 21:00</option>#}
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                                <div class="warning" style="margin-bottom:20px;">
-                                    【ご注意】お届け日の指定はできません。<br>
-                                    ご注文日より最短でのお届けとなります。
                                 </div>
+                                <div class="ec-orderDelivery__address">
+                                    <p>{{ ''|trans }}{{ shipping.name01 }} {{ shipping.name02 }}{{ ' 様'|trans }}</p>
+                                    <p>{{ '〒'|trans }}{{ shipping.postal_code }} <br>{{ shipping.pref }}{{ shipping.addr01 }}{{ shipping.addr02 }}</p>
+                                    <p>{{ shipping.phone_number }}</p>
+                                </div>
+                                <div class="ec-orderDelivery__actions">
+                                    <div class="">
+                                        <div class="ec-select">
+                                            <label>{{ '配送方法'|trans }}</label>
+                                            {{ form_widget(form.Shippings[idx].Delivery, { 'attr': { 'class': 'form-control', 'data-trigger': 'change' }}) }}
+                                            {{ form_errors(form.Shippings[idx].Delivery) }}
+                                        </div>
+                                        <div class="ec-select ec-select__time">
+                                            <label>{{ 'お届け時間'|trans }}</label>
+                                            <select name="" id="">
+                                                <option value="">指定不可</option>
+                                                {#                                        <option value="">指定なし</option>#}
+                                                {#                                        <option value="8:00 - 12:00">8:00 - 12:00</option>#}
+                                                {#                                        <option value="14:00 - 16:00">14:00 - 16:00</option>#}
+                                                {#                                        <option value="16:00 - 18:00">16:00 - 18:00</option>#}
+                                                {#                                        <option value="18:00 - 20:00">18:00 - 20:00</option>#}
+                                                {#                                        <option value="19:00 - 21:00">19:00 - 21:00</option>#}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="warning" style="margin-bottom:20px;">
+                                【ご注意】お届け日の指定はできません。<br>
+                                ご注文日より最短でのお届けとなります。
                             </div>
+                        </div>
                         <h3>お支払方法</h3>
                         <div class="confirmationContentBlockL__inner">
                             クレジットカード決済
                         </div>
                         <h3>クーポン</h3>
                         <div class="confirmationContentBlockL__inner">
-                            <input type="text" value="" name="" placeholder="クーポンをお持ちの方はクーポンコードを入力してください">
+                            <input type="text" value="" name="coupon_cd" placeholder="クーポンをお持ちの方はクーポンコードを入力してください">
                         </div>
                         <h3>お問い合わせ欄</h3>
                         <div class="confirmationContentBlockL__inner">
@@ -306,7 +312,7 @@ file that was distributed with this source code.
                                 <dl>
                                     <dt>小計：</dt>
                                     <dd>
-                                    {{ Order.MergedProductOrderItems[0].initPrice|number_format }}円</dd>
+                                        {{ Order.MergedProductOrderItems[0].initPrice|number_format }}円</dd>
                                 </dl>
                             </div>
                             <button data-href="https://free-max.com/user_data/creditcard?price={{ Order.subtotal }}" id="cart_move" class="btn">カード入力へ進む</button>
