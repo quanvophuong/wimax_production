@@ -8110,3 +8110,20 @@ Styleguide 22.1
         margin-top: 0;
         margin-left: 30px; } }
 /*# sourceMappingURL=style.css.map */
+
+.fix-css {
+    text-align: center;
+}
+
+.fix-css1{
+    color: #F8190E;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: underline;
+}
+@media screen and (max-width: 768px) {
+    .fix-css {
+        position: relative;
+        top: 20px;
+    }
+}
