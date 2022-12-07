@@ -1,60 +1,68 @@
 
-                            {% for shipping in Order.shippings %}
-                                {% set idx = loop.index0 %}
-                                {% set isShowReducedTaxMess = false %}
-                                <div class="ec-orderDelivery__item">
-                                    <ul class="ec-borderedList">
-                                        {% for orderItem in shipping.productOrderItems %}
-                                            <ul>
-                                                <li>
-                                                    <dl>
-                                                        <dt>{{ orderItem.productName }}：</dt>
-                                                        <dd>{% if orderItem.ship == 1 %}4,800円{% else %}(4,800円){% endif %}</dd>
-                                                    </dl>
-                                                </li>
-                                                <li>
-                                                    <dl>
-                                                        <dt>初期費用：</dt>
-                                                        <dd>3,300円</dd>
-                                                    </dl>
-                                                </li>
-                                                <li>
-                                                    <dl>
-                                                        <dt>端末補償：</dt>
-                                                        <dd>
-                                                            {{ orderItem.productClass.classCategory1 }}
-                                                            {% if orderItem.productClass.classCategory1 == 'フリー補償' %}
-                                                                (550円)
-                                                            {% elseif orderItem.productClass.classCategory1 == 'ライト補償' %}
-                                                                (275円)
-                                                            {% endif %}
-                                                        </dd>
-                                                    </dl>
-                                                </li>
-                                                <li>
-                                                    <dl>
-                                                        <dt>利用開始日：</dt>
-                                                        <dd>{% if orderItem.ship == 1 %} 最短 {% else %} 翌月 {% endif %}</dd>
-                                                    </dl>
-                                                </li>
-                                                {% if(orderItem.productName == "モバイルプラン") %}
-                                                    <li>
-                                                        <dl>
-                                                            <dt>USB ACアダプター:</dt>
-                                                            <dd>
-                                                                {% if (orderItem.productClass.classCategory2=='購入する') %}
-                                                                    1,540円
-                                                                {% else %}
-                                                                    購入しない
-                                                                {% endif %}
-                                                            </dd>
-                                                        </dl>
-                                                    </li>
-                                                {% endif %}
-                                            </ul>
-                                        {% endfor %}
-                                    </ul>
-                                    <p>{{ isShowReducedTaxMess ? '※ は軽減税率対象商品です。'|trans }}</p>
-                                </div>
-                            {% endfor %}      
-            
+{% for shipping in Order.shippings %}
+    {% set idx = loop.index0 %}
+    {% set isShowReducedTaxMess = false %}
+    <div class="ec-orderDelivery__item">
+        <ul class="ec-borderedList">
+            {% for orderItem in shipping.productOrderItems %}
+                <ul>
+                    <li>
+                        <dl>
+                            <dt>{{ orderItem.productName }}：</dt>
+                            <dd>{% if orderItem.ship == 1 %}4,800円{% else %}(4,800円){% endif %}</dd>
+                        </dl>
+                    </li>
+                    <li>
+                        <dl>
+                            <dt>初期費用：</dt>
+                            <dd>3,300円</dd>
+                        </dl>
+                    </li>
+                    {% if (Order.discount>0) %}
+                        <li>
+                            <dl style="color:red;">
+                                <dt>割引額：</dt>
+                                <dd>({{ Order.discount|number_format }}円)</dd>
+                            </dl>
+                        </li>
+                    {% endif %}
+                    <li>
+                        <dl>
+                            <dt>端末補償：</dt>
+                            <dd>
+                                {{ orderItem.productClass.classCategory1 }}
+                                {% if orderItem.productClass.classCategory1 == 'フリー補償' %}
+                                    (550円)
+                                {% elseif orderItem.productClass.classCategory1 == 'ライト補償' %}
+                                    (275円)
+                                {% endif %}
+                            </dd>
+                        </dl>
+                    </li>
+                    <li>
+                        <dl>
+                            <dt>利用開始日：</dt>
+                            <dd>{% if orderItem.ship == 1 %} 最短 {% else %} 翌月 {% endif %}</dd>
+                        </dl>
+                    </li>
+                    {% if(orderItem.productName == "モバイルプラン") %}
+                        <li>
+                            <dl>
+                                <dt>USB ACアダプター:</dt>
+                                <dd>
+                                    {% if (orderItem.productClass.classCategory2=='購入する') %}
+                                        1,540円
+                                    {% else %}
+                                        購入しない
+                                    {% endif %}
+                                </dd>
+                            </dl>
+                        </li>
+                    {% endif %}
+                </ul>
+            {% endfor %}
+        </ul>
+        <p>{{ isShowReducedTaxMess ? '※ は軽減税率対象商品です。'|trans }}</p>
+    </div>
+{% endfor %}
+

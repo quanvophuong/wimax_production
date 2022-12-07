@@ -36,6 +36,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class OrderType extends AbstractType
 {
@@ -106,6 +107,11 @@ class OrderType extends AbstractType
             'entry_type' => ShippingType::class,
             'by_reference' => false,
         ])->add('redirect_to', HiddenType::class, [
+            'mapped' => false,
+        ])->add('coupon_cd', TextType::class, [
+            'label' => 'plugin_coupon.front.code',
+            'required' => false,
+            'trim' => true,
             'mapped' => false,
         ]);
 

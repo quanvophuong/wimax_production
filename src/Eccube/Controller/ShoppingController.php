@@ -38,6 +38,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Plugin\Coupon4\Repository\CouponRepository;
+use Plugin\Coupon4\Repository\CouponOrderRepository;
+use Plugin\Coupon4\Service\CouponService;
+use Plugin\Coupon4\Entity\Coupon;
+use Symfony\Component\Form\FormError;
 
 class ShoppingController extends AbstractShoppingController
 {
@@ -61,16 +66,26 @@ class ShoppingController extends AbstractShoppingController
      */
     protected $orderRepository;
 
+    private $couponRepository;
+    private $couponOrderRepository;
+    private $couponService;
+
     public function __construct(
         CartService $cartService,
         MailService $mailService,
         OrderRepository $orderRepository,
-        OrderHelper $orderHelper
+        OrderHelper $orderHelper,
+        CouponRepository $couponRepository,
+        CouponOrderRepository $couponOrderRepository,
+        CouponService $couponService
     ) {
         $this->cartService = $cartService;
         $this->mailService = $mailService;
         $this->orderRepository = $orderRepository;
         $this->orderHelper = $orderHelper;
+        $this->couponRepository = $couponRepository;
+        $this->couponOrderRepository = $couponOrderRepository;
+        $this->couponService = $couponService;
     }
 
     /**
@@ -108,6 +123,7 @@ class ShoppingController extends AbstractShoppingController
         log_info('[注文手続] 受注の初期化処理を開始します.');
         $Customer = $this->getUser() ? $this->getUser() : $this->orderHelper->getNonMember();
         $Order = $this->orderHelper->initializeOrder($Cart, $Customer);
+        $CouponOrder  = $this->couponOrderRepository->findOneBy(array('pre_order_id'=>$Order->getPreOrderId()));
 
         // 集計処理.
         log_info('[注文手続] 集計処理を開始します.', [$Order->getId()]);
@@ -139,6 +155,9 @@ class ShoppingController extends AbstractShoppingController
 
         $form = $this->createForm(OrderType::class, $Order);
 
+        if ($CouponOrder){
+            $form->get('coupon_cd')->setData($CouponOrder->getCouponCd());
+        }
         return [
             'form' => $form->createView(),
             'Order' => $Order,
@@ -176,7 +195,8 @@ class ShoppingController extends AbstractShoppingController
         // 受注の存在チェック.
         $preOrderId = $this->cartService->getPreOrderId();
         $Order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
-        
+        $CouponOrder  = $this->couponOrderRepository->findOneBy(array('pre_order_id'=>$Order->getPreOrderId()));
+
         if (!$Order) {
             log_info('[リダイレクト] 購入処理中の受注が存在しません.');
 
@@ -225,6 +245,10 @@ class ShoppingController extends AbstractShoppingController
 
         log_info('[リダイレクト] フォームエラーのため, 注文手続き画面を表示します.', [$Order->getId()]);
 
+        if ($CouponOrder){
+            $form->get('coupon_cd')->setData($CouponOrder->getCouponCd());
+        }
+
         return [
             'form' => $form->createView(),
             'Order' => $Order,
@@ -239,7 +263,7 @@ class ShoppingController extends AbstractShoppingController
      * PaymentMethod::verifyでエラーが発生した場合は, 注文手続き画面へリダイレクトします.
      *
      * @Route("/shopping/confirm", name="shopping_confirm", methods={"POST"})
-     * @Template("Shopping/confirm.twig")
+     * @Template("Shopping/index.twig")
      */
     public function confirm(Request $request)
     {
@@ -249,7 +273,6 @@ class ShoppingController extends AbstractShoppingController
 
             return $this->redirectToRoute('shopping_login');
         }
-
         // 受注の存在チェック
         $preOrderId = $this->cartService->getPreOrderId();
         $Order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
@@ -261,6 +284,65 @@ class ShoppingController extends AbstractShoppingController
 
         $form = $this->createForm(OrderType::class, $Order);
         $form->handleRequest($request);
+
+        $mode = $request->get('mode');
+
+        if ($mode=='apply_coupon'){
+            $coupon_code = $form->get('coupon_cd')->getData();
+            if (empty($coupon_code)){
+                $form->get('coupon_cd')->addError(new FormError('クーポンコードをご入力ください'));
+            }else{
+                $Coupon = $this->couponRepository->findActiveCoupon($coupon_code);
+                if (!$Coupon) {
+                    $form->get('coupon_cd')->addError(new FormError('クーポンコードを確認してください。'));
+                }else{
+                    $Customer = $this->getUser();
+
+                    $discount = 0;
+                    $init_price = 0;
+                    $order_items = $Order->getProductOrderItems();
+
+                    if (!empty($order_items)){
+                        $init_price = $order_items[0]->getInitPrice();
+                    }
+
+                    if ($Coupon->getDiscountType() == Coupon::DISCOUNT_PRICE) {
+                        $discount = $Coupon->getDiscountPrice();
+                    }else{
+                        $discount = $init_price * $Coupon->getDiscountRate()/100;
+                    }
+                    if ($init_price<$discount) $discount = $init_price;
+                    if (!empty($discount)){
+                        $this->couponService->saveCouponOrder($Order, $Coupon, $coupon_code, $Customer, $discount);
+                        $Order->setDiscount($discount);
+                    }
+                }
+            }
+//            dump($coupon_code);die();
+
+            // FIXME @Templateの差し替え.
+
+            //$request->attributes->set('_template', new Template(['template' => 'Shopping/index.twig']));
+//dump($Order->getShippings());die();
+            return [
+                'form' => $form->createView(),
+                'Order' => $Order
+            ];
+        }
+
+        if ($mode=='cancel_coupon'){
+            $this->couponService->removeCouponOrder($Order);
+
+            $form = $this->createForm(OrderType::class, $Order);
+            $form->get('coupon_cd')->setData('');
+
+            $Order->setDiscount(0);
+            return [
+                'form' => $form->createView(),
+                'Order' => $Order
+            ];
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             log_info('[注文確認] 集計処理を開始します.', [$Order->getId()]);
             $response = $this->executePurchaseFlow($Order);
@@ -320,8 +402,8 @@ class ShoppingController extends AbstractShoppingController
         //    'Order' => $Order,
         //];
         return $this->json([
-           'done' => true,
-           'messages' => "success",
+            'done' => true,
+            'messages' => "success",
         ]);
     }
 
@@ -433,7 +515,7 @@ class ShoppingController extends AbstractShoppingController
             //   'done' => true,
             //   'messages' => "success",
             //]);
-            
+
             return $this->redirectToRoute('shopping_complete');
             // return $this->redirectToRoute('user_thanks');
         }

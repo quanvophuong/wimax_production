@@ -37,16 +37,22 @@ use Plugin\StripeRec\Repository\StripeRecOrderRepository;
 use Plugin\StripeRec\Service\MailExService;
 use Stripe\PaymentMethod;
 use Stripe\PaymentIntent;
+use Plugin\Coupon4\Repository\CouponRepository;
+use Plugin\Coupon4\Repository\CouponOrderRepository;
+use Plugin\Coupon4\Service\CouponService;
 
 class ShoppingExController extends ShoppingController
 {
     protected $container;
     private $em;
-    private $stripe_config;    
+    private $stripe_config;
     protected $util_service;
     protected $session;
     protected $stripeCustomerRepository;
     protected $eccubeConfig;
+    private $couponRepository;
+    private $couponOrderRepository;
+    private $couponService;
 
     public function __construct(
         ContainerInterface $container,
@@ -55,23 +61,29 @@ class ShoppingExController extends ShoppingController
         OrderRepository $orderRepository,
         OrderHelper $orderHelper,
         SessionInterface $session,
-        EccubeConfig $eccubeConfig
+        EccubeConfig $eccubeConfig,
+        CouponRepository $couponRepository,
+        CouponOrderRepository $couponOrderRepository,
+        CouponService $couponService
     ) {
         parent::__construct(
             $cartService,
             $mailService,
             $orderRepository,
-            $orderHelper
+            $orderHelper,
+            $couponRepository,
+            $couponOrderRepository,
+            $couponService
         );
         $this->container = $container;
-        $this->em = $container->get('doctrine.orm.entity_manager'); 
-        
+        $this->em = $container->get('doctrine.orm.entity_manager');
+
         $this->util_service = $this->container->get("plg_stripe_recurring.service.util");
         $this->session = $session;
         $this->stripeCustomerRepository = $this->em->getRepository(StripeCustomer::class);
         $this->eccubeConfig = $eccubeConfig;
     }
-    
+
 
     /**
      * @Route("/plugin/StripeRec/presubscribe", name="plugin_striperec_presubscripe")
@@ -86,7 +98,7 @@ class ShoppingExController extends ShoppingController
         if (!$Order) {
             return $this->json(['error' => 'true', 'message' => trans('stripe_payment_gateway.admin.order.invalid_request')]);
         }
-		$StripeConfig = $this->em->getRepository(StripeConfig::class)->getConfigByOrder($Order);
+        $StripeConfig = $this->em->getRepository(StripeConfig::class)->getConfigByOrder($Order);
         $stripeClient = new StripeClient($StripeConfig->secret_key);
         $paymentMethodId = $request->get('payment_method_id');
 
@@ -94,7 +106,7 @@ class ShoppingExController extends ShoppingController
         if(is_array($stripeCustomerId)) { // エラー
             return $this->json($stripeCustomerId);
         }
-        
+
         if($Order->hasStripePriceId()){
             $this->session->getFlashBag()->set("stripe_customer_id", $stripeCustomerId);
             $this->session->getFlashBag()->set("payment_method_id", $paymentMethodId);
@@ -115,10 +127,10 @@ class ShoppingExController extends ShoppingController
      * @Route("/plugin/stripe_rec/extra_payemnt/{id}/{stamp}", name="plugin_stripe_rec_extra_pay")
      * @Template("@StripeRec/default/Shopping/checkout_recurring_extra.twig")
      */
-    public function extraPay(Request $request, $id, $stamp, 
-        StripeRecOrderRepository $recOrderRepository, 
-        StripeConfigRepository $stripeConfigRepository,
-        MailExService $mail_service)
+    public function extraPay(Request $request, $id, $stamp,
+                             StripeRecOrderRepository $recOrderRepository,
+                             StripeConfigRepository $stripeConfigRepository,
+                             MailExService $mail_service)
     {
         $recOrder = $recOrderRepository->find($id);
         if (!$recOrder) {
@@ -132,7 +144,7 @@ class ShoppingExController extends ShoppingController
         $already = $this->orderRepository->findOneBy(['recOrder' => $recOrder, 'manual_link_stamp' => $stamp]);
         if ($already) {
             return [
-                'amount'    => 0, 
+                'amount'    => 0,
                 'recOrder'  => $recOrder,
                 'stripeConfig'=> $stripeConfig,
                 'already_paid'=> true
@@ -151,7 +163,7 @@ class ShoppingExController extends ShoppingController
         }
 
 
-        
+
         $stripeClient = new StripeClient($stripeConfig->secret_key);
         if ($request->getMethod() === "POST") {
             $payment_intent_id = $request->request->get('payment_intent_id');
@@ -213,7 +225,7 @@ class ShoppingExController extends ShoppingController
         $StripeConfig = $stripeConfigRepository->getConfigByOrder($Order);
 
         $stripeClient = new StripeClient($StripeConfig->secret_key);
-        
+
         $paymentMethodId = $request->request->get('payment_method_id');
         $isSaveCardOn = $request->request->get('is_save_on') === "true" ? true : false;
         $stripeCustomerId = $this->procStripeCustomer($stripeClient, $Order, $isSaveCardOn);
@@ -233,10 +245,10 @@ class ShoppingExController extends ShoppingController
         }
 
         $paymentIntent = $stripeClient->createPaymentIntentWithCustomer(
-            $amount, 
-            $paymentMethodId, 
-            $Order->getId(), 
-            $isSaveCardOn, 
+            $amount,
+            $paymentMethodId,
+            $Order->getId(),
+            $isSaveCardOn,
             $stripeCustomerId,
             $Order->getCurrencyCode());
         return $this->json($this->genPaymentResponse($paymentIntent));
@@ -263,11 +275,11 @@ class ShoppingExController extends ShoppingController
             $this->entityManager->flush();
             $this->entityManager->commit();
         }
-        
+
         $this->entityManager->remove($rec_order);
         $this->entityManager->flush();
         $this->entityManager->commit();
-        
+
         return $this->redirectToRoute("shopping");
     }
 
@@ -290,11 +302,11 @@ class ShoppingExController extends ShoppingController
         $Order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
         if (!$Order) {
             log_info('[注文処理] 購入処理中の受注が存在しません.', [$preOrderId]);
-            
+
             return $this->redirectToRoute('shopping_error');
         }
         $StripeConfig = $this->entityManager->getRepository(StripeConfig::class)->getConfigByOrder($Order);
-        
+
         $Customer = $Order->getCustomer();
         // フォームの生成.
         $form = $this->createForm(OrderType::class, $Order,[
@@ -308,7 +320,7 @@ class ShoppingExController extends ShoppingController
 
         if($this->isGranted('ROLE_USER')){
             $stripePaymentMethodObj = $this->checkSaveCardOn($Customer, $StripeConfig);
-            
+
             if($stripePaymentMethodObj){
                 $exp = \sprintf("%02d/%d", $stripePaymentMethodObj->card->exp_month, $stripePaymentMethodObj->card->exp_year);
             }else{
@@ -318,16 +330,16 @@ class ShoppingExController extends ShoppingController
             $stripePaymentMethodObj = false;
             $exp = "";
         }
-        
+
         //if ($form->isSubmitted() && $form->isValid()) {
-            return [
-                'stripeConfig'  =>  $StripeConfig,
-                'stripePaymentMethodObj'    =>  $stripePaymentMethodObj,
-                'exp'       =>  $exp,
-                'Order'         =>  $Order,
-                'checkout_ga_enable' => $checkout_ga_enable,
-                'coupon_enable' =>  $coupon_enable,
-            ];
+        return [
+            'stripeConfig'  =>  $StripeConfig,
+            'stripePaymentMethodObj'    =>  $stripePaymentMethodObj,
+            'exp'       =>  $exp,
+            'Order'         =>  $Order,
+            'checkout_ga_enable' => $checkout_ga_enable,
+            'coupon_enable' =>  $coupon_enable,
+        ];
         //}
         return $this->redirectToRoute('shopping');
     }
@@ -354,8 +366,8 @@ class ShoppingExController extends ShoppingController
         $pb_service = $this->container->get('plg_stripe_rec.service.pointbundle_service');
         $bundle_include_arr = $this->session->get('bundle_include_arr');
         $bundles = $pb_service->getBundleProducts($Order, $bundle_include_arr);
-        
-        $price_sum = $pb_service->getPriceSum($Order);        
+
+        $price_sum = $pb_service->getPriceSum($Order);
         extract($price_sum);
         if($bundles){
             $bundle_order_items = $bundles['order_items'];
@@ -365,7 +377,7 @@ class ShoppingExController extends ShoppingController
         }
         $initial_discount = $coupon_service->couponDiscountAmount($initial_amount, $res);
         $recurring_discount = $coupon_service->couponDiscountAmount($recurring_amount, $res);
-        
+
         return $this->json([
             'success'   =>  true,
             'initial_amount'    =>  $initial_amount,
@@ -523,7 +535,7 @@ class ShoppingExController extends ShoppingController
 
     private function getErrorMessages(\Symfony\Component\Form\Form $form) {
         $errors = array();
-    
+
         foreach ($form->getErrors() as $key => $error) {
             if ($form->isRoot()) {
                 $errors['#'][] = $error->getMessage();
@@ -531,13 +543,13 @@ class ShoppingExController extends ShoppingController
                 $errors[] = $error->getMessage();
             }
         }
-    
+
         foreach ($form->all() as $child) {
             if (!$child->isValid()) {
                 $errors[$child->getName()] = $this->getErrorMessages($child);
             }
         }
-    
+
         return $errors;
     }
     private function getOrder(){
@@ -545,8 +557,8 @@ class ShoppingExController extends ShoppingController
         $preOrderId = $this->cartService->getPreOrderId();
         /** @var Order $Order */
         return $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
-   }
-   /**
+    }
+    /**
      * PaymentMethodをコンテナから取得する.
      *
      * @param Order $Order
@@ -597,11 +609,11 @@ class ShoppingExController extends ShoppingController
         return ['error' => true, 'message' => $errorMessage];
     }
 
-    
+
     private function checkSaveCardOn($Customer, $StripeConfig){
         $isStripeCustomer = false;
         $StripeCustomer=$this->entityManager->getRepository(StripeCustomer::class)->findOneBy(array('Customer'=>$Customer));
-        $stripeClient = new StripeClient($StripeConfig->secret_key);    
+        $stripeClient = new StripeClient($StripeConfig->secret_key);
         if($StripeCustomer instanceof StripeCustomer){
             $stripLibCustomer = $stripeClient->retrieveCustomer($StripeCustomer->getStripeCustomerId());
             if(is_array($stripLibCustomer) || isset($stripLibCustomer['error'])) {
@@ -614,8 +626,8 @@ class ShoppingExController extends ShoppingController
         }
         if(!$isStripeCustomer) return false;
         if($StripeCustomer->getIsSaveCardOn()){
-           $stripePaymentMethodObj = $stripeClient->retrieveLastPaymentMethodByCustomer($StripeCustomer->getStripeCustomerId());
-           if( !($stripePaymentMethodObj instanceof PaymentMethod) || !$stripeClient->isPaymentMethodId($stripePaymentMethodObj->id) ) {
+            $stripePaymentMethodObj = $stripeClient->retrieveLastPaymentMethodByCustomer($StripeCustomer->getStripeCustomerId());
+            if( !($stripePaymentMethodObj instanceof PaymentMethod) || !$stripeClient->isPaymentMethodId($stripePaymentMethodObj->id) ) {
                 return false;
             }else{
                 return $stripePaymentMethodObj;
