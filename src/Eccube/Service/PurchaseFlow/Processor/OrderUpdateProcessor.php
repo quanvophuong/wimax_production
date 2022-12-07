@@ -45,16 +45,23 @@ class OrderUpdateProcessor extends AbstractPurchaseProcessor
             return;
         }
         $OrderItems = $target->getOrderItems();
-        $OrderStatus = OrderStatus::NEW;
+        $order_status_id = OrderStatus::NEW;
         foreach($OrderItems as $OrderItem){
             if (!$OrderItem->isProduct()) continue;
             if ($OrderItem->getShip()==2){
-                $OrderStatus = OrderStatus::IN_PROGRESS;
+                $order_status_id = OrderStatus::IN_PROGRESS;
                 break;
             }
         }
 
-        $OrderStatus = $this->orderStatusRepository->find($OrderStatus);
+        foreach($target->getShippings() as $Shipping){
+            if ($Shipping->getDelivery()->getName() == '店頭受取'){
+                $order_status_id = OrderStatus::PICKUP;
+                break;
+            }
+        }
+
+        $OrderStatus = $this->orderStatusRepository->find($order_status_id);
         $target->setOrderStatus($OrderStatus);
         $target->setOrderDate(new \DateTime());
     }
