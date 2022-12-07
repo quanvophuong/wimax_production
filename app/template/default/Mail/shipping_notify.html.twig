@@ -40,7 +40,7 @@ file that was distributed with this source code.
                             レンタル内容
                             <hr style="border-top: 3px double #8c8b8b;">
                             注文番号　　　　{{ Order.order_no }}<br/>
-                            商品名　　　　　{{ Order.MergedProductOrderItems[0].Product.name }}<br/>	
+                            商品名　　　　　{{ Order.MergedProductOrderItems[0].Product.name }}<br/>
                             月額料金　　　　4,800円<br/>
                             支払方法　　　　クレジットカード決済<br/>
                             <br/>
@@ -48,27 +48,27 @@ file that was distributed with this source code.
                             ［初回ご利用額］<br/>
                             月額料金　　　　{% if Order.MergedProductOrderItems[0].ship == 1 %}4,800円{% else %}0円{% endif %}<br/>
                             初期費用　　　　3,300円<br/>
-                            <br/>
+                            割引料金　　　　({{ Order.discount|number_format }}円)<br/>
                             端末補償　　　　{{ Order.MergedProductOrderItems[0].productClass.classCategory1 }}{% if Order.MergedProductOrderItems[0].productClass.classCategory1 == 'フリー補償' %}
-                                            (550円)
-                                        {% elseif Order.MergedProductOrderItems[0].productClass.classCategory1 == 'ライト補償' %}
-                                            (275円)
-                                        {% else %}
-                                            (0円)
-                                        {% endif %}<br/>
+                            (550円)
+                        {% elseif Order.MergedProductOrderItems[0].productClass.classCategory1 == 'ライト補償' %}
+                            (275円)
+                        {% else %}
+                            (0円)
+                            {% endif %}<br/>
                             利用開始　　　　{% if Order.MergedProductOrderItems[0].ship == 1 %}
-                                            最短
-                                        {% else %}
-                                            翌月
-                                        {% endif %}<br/>
+                            最短
+                        {% else %}
+                            翌月
+                            {% endif %}<br/>
                             オプション　　　USB ACアダプター: {{ Order.MergedProductOrderItems[0].productClass.classCategory2 }}
-                                        {% if Order.MergedProductOrderItems[0].productClass.classCategory2 == '購入する' %}
-                                            (1,540円)
-                                        {% endif %}<br/>
+                            {% if Order.MergedProductOrderItems[0].productClass.classCategory2 == '購入する' %}
+                            (1,540円)
+                            {% endif %}<br/>
                             <br/>
                             送　　料　　　　0円<br/>
-                            <hr style="border-top: 2px dashed #8c8b8b;">		
-                            合　計　　　　　¥{{ Order.MergedProductOrderItems[0].initPrice|number_format }}<br/>		
+                            <hr style="border-top: 2px dashed #8c8b8b;">
+                            合　計　　　　　¥{{ (Order.MergedProductOrderItems[0].initPrice - Order.discount)|number_format }}<br/>
                             <br/>
                             <br/>
                             <hr style="border-top: 3px double #8c8b8b;">
@@ -76,7 +76,7 @@ file that was distributed with this source code.
                             <hr style="border-top: 3px double #8c8b8b;">
                             メンバーID：{{ RecOrder.scheduleId|default('') }}<br/>
                             ご案内：こちらの商品は月額レンタル商品です。<br/>
-                            本取引では{{ Order.MergedProductOrderItems[0].initPrice|number_format }}円を課金し、以下の内容で自動継続課金の登録を行いました。<br/>
+                            本取引では{{ (Order.MergedProductOrderItems[0].initPrice - Order.discount)|number_format }}円を課金し、以下の内容で自動継続課金の登録を行いました。<br/>
                             ・月額料金：{{ Order.MergedProductOrderItems[0].nextPrice|number_format }}円<br/>
                             ・次回お支払日：{{ 'now'|date_modify("+#{1} months")|date("Y年m月1日") }}<br/>
                             ・課金間隔：1ヵ月ごと<br/>
@@ -102,7 +102,7 @@ file that was distributed with this source code.
                             {% for Shipping in Order.Shippings %}
                                 ◎お届け先お名前　：{{ Shipping.name01 }} {{ Shipping.name02 }}様<br/>
                                 フリガナ：{{ Shipping.kana01 }} {{ Shipping.kana02 }}様<br/>
-                                 {% if Shipping.company_name %}
+                                {% if Shipping.company_name %}
                                     会社名：{{ Shipping.company_name }}<br/>
                                 {% endif %}
                                 郵便番号：〒{{ Shipping.postal_code }}<br/>
@@ -117,13 +117,13 @@ file that was distributed with this source code.
                                 {% for OrderItem in Shipping.productOrderItems %}
                                     商品名：{{ OrderItem.product_name }}<br/>
                                     安心保障：{{ OrderItem.classcategory_name1 }}
-                                        {% if OrderItem.productClass.classCategory1 == 'フリー補償' %}
-                                            (550円)
-                                        {% elseif OrderItem.productClass.classCategory1 == 'ライト補償' %}
-                                            (275円)
-                                        {% else %}
-                                            (0円)
-                                        {% endif %}
+                                    {% if OrderItem.productClass.classCategory1 == 'フリー補償' %}
+                                        (550円)
+                                    {% elseif OrderItem.productClass.classCategory1 == 'ライト補償' %}
+                                        (275円)
+                                    {% else %}
+                                        (0円)
+                                    {% endif %}
                                     <br/>
                                     数量：{{ OrderItem.quantity|number_format }}<br/>
                                     <br/>

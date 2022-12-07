@@ -56,6 +56,7 @@ use Plugin\StripeRec\Entity\StripeRecOrder;
 use Plugin\StripeRec\Entity\StripeRecOrderItem;
 use Plugin\StripeRec\Service\ConfigService;
 use Eccube\Repository\ProductClassRepository;
+use Plugin\Coupon4\Entity\CouponOrder;
 
 
 /**
@@ -193,22 +194,22 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         // $purchase_point = $this->session->getFlashBag()->get("purchase_point");
 
         $result = new PaymentResult();
-        
+
         $order_items = $this->Order->getProductOrderItems();
         log_info("StripeRecurringNagMethod---verify---order_item id: ". $order_items[0]->getId());
-        
+
         foreach($order_items as $order_item){
             $pc = $order_item->getProductClass();
             if(empty($pc) || !$pc->isRegistered()){
 
-                $result->setSuccess(false);                
+                $result->setSuccess(false);
                 $result->setErrors(['stripe_rec.shopping.error.not_recurring_order']);
-                return $result;                
+                return $result;
             }
         }
-        
+
         $result->setSuccess(true);
-        
+
         return $result;
     }
 
@@ -254,7 +255,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         $payment_method_id = $this->session->getFlashBag()->get("payment_method_id");
         $purchase_point = $this->session->getFlashBag()->get("purchase_point");
         $bundle_include_arr = $this->session->get('bundle_include_arr');
-        
+
         $customer_id = $customer_id[0];
         $payment_method_id = $payment_method_id[0];
         $purchase_point = $purchase_point[0];
@@ -267,7 +268,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         $StripeConfig = $this->stripeConfigRepository->getConfigByOrder($this->Order);
         // $stripeClient = new StripeClient($StripeConfig->secret_key);
         Stripe::setApiKey($StripeConfig->secret_key);
-        
+
         $coupon_enable = $rec_config[ConfigService::COUPON_ENABLE];
 
 
@@ -276,7 +277,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $payment_method->attach([
                 'customer' => $customer_id
             ]);
-            
+
         }catch(Exception $e){
             $result->setSuccess(false);
             $result->setErrors([trans('stripe_recurring.checkout.payment_method.retrieve_error')]);
@@ -306,7 +307,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             if(empty($pc) || !$pc->isRegistered()){
                 return false;
             }
-            
+
             $initial_price = $order_item->getInitPrice();
 
             // if($pc->isInitialPriced()){
@@ -323,14 +324,14 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             //             'quantity'  =>  $order_item->getQuantity()
             //         ];
             //     }else{
-            //         $subscription_items_initial_pre[$pc->getStripePriceId()]['quantity'] += $order_item->getQuantity();                    
+            //         $subscription_items_initial_pre[$pc->getStripePriceId()]['quantity'] += $order_item->getQuantity();
             //     }
             //     $initial_price += $pc->getInitialPriceIncTax() * $order_item->getQuantity();
             // }else{
             //     $initial_price += $pc->getPrice02IncTax() * $order_item->getQuantity();
             // }
 
-            
+
             if(empty( $subscription_items_pre[$pc->getStripePriceId()])){
                 $subscription_items_pre[$pc->getStripePriceId()] = [
                     'price' => $pc->getStripePriceId(),
@@ -341,7 +342,6 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             }
             $lastProductInterval=$pc->getInterval();
         }
-        
         //BOC add shipping fee
         $stripeShippingProductId=$this->getShippingProductId();
         if(!empty($stripeShippingProductId)) {
@@ -369,15 +369,15 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                 if(isset($subscription_items_initial_pre[$key] )){
                     $subscription_items_initial[] = $subscription_items_initial_pre[$key];
                 }else{
-                    $subscription_items_initial[] = $item;                    
+                    $subscription_items_initial[] = $item;
                 }
             }
         }
-        
+
         $pb_service = $this->container->get('plg_stripe_rec.service.pointbundle_service');
 
         // BOC --- compose subscription phases
-        $bundles = $pb_service->getBundleProducts($this->Order, $bundle_include_arr);        
+        $bundles = $pb_service->getBundleProducts($this->Order, $bundle_include_arr);
         if(empty($bundles)){
             if(empty($subscription_items_initial_pre)){
                 $phases = [
@@ -391,7 +391,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                     [
                         'items'     => $subscription_items_initial,
                         'iterations'=> 1,
-                        'proration_behavior' => 'none',      
+                        'proration_behavior' => 'none',
                     ],
                     [
                         'items' =>  $subscription_items,
@@ -401,7 +401,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             }
         }else{
             $items = [];
-            if(empty($subscription_items_initial_pre)){                
+            if(empty($subscription_items_initial_pre)){
                 $items = array_merge($subscription_items, $bundles['phase_items']);
             }else{
                 $items = array_merge($subscription_items_initial, $bundles['phase_items']);
@@ -421,7 +421,15 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $initial_price += $bundles['price'];
         }
 
+        $CouponOrder = $this->entityManager->getRepository(CouponOrder::class)->findOneBy(array('order_id'=>$this->Order->getId()));
+
+        if (!empty($CouponOrder)){
+            $discount = $CouponOrder->getDiscount();
+            if ($discount>0) $initial_price = $initial_price - $discount;
+        }
+
         $initial_price=self::getAmountToSentInStripe($initial_price,strtolower($this->Order->getCurrencyCode()));
+
         // EOC --- compose subscription phases
         $interval = $order_items[0]->getProductClass()->getInterval();
         if($this->isProrateOption($purchase_point, $interval)){
@@ -446,7 +454,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                 foreach($schedule_params['phases'] as $k => $v){
                     $schedule_params['phases'][$k]['coupon'] = $coupon_id;
                 }
-            
+
                 $coupon_service = $this->container->get('plg_stripe_rec.service.coupon_service');
                 $coupon_data = $coupon_service->retrieveCoupon($coupon_id);
                 if(empty($coupon_data)){
@@ -488,7 +496,6 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $stripeOrder->setRecStatus(StripeRecOrder::REC_STATUS_ACTIVE);
             $stripeOrder->setStartDate(new \DateTime());
         }else{
-            //dump($schedule_params);die('test');
             $subscription_schedule = SubscriptionSchedule::create($schedule_params);
             log_info(self::LOG_IF . "--- subscription schedule created.");
             log_info($subscription_schedule);
@@ -499,14 +506,14 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                 $result->setErrors([trans('stripe_recurring.subscribe.failed')]);
                 return $result;
             }
-            
+
             log_info(self::LOG_IF);
             $stripeOrder = new StripeRecOrder();
             $stripeOrder->setRecStatus(StripeRecOrder::REC_STATUS_SCHEDULED);
             $stripeOrder->setPaidStatus(StripeRecOrder::STATUS_PAY_UNDEFINED);
             $stripeOrder->setOrder($this->Order);
             $stripeOrder->setSubscriptionId($subscription_id);
-            
+
             $dt = new \DateTime();
             if($purchase_point === "now"){
                 if($subscription_schedule->current_phase){
@@ -522,13 +529,13 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $stripeOrder->setScheduleId($subscription_schedule->id);
         }
         // if($subscription_id){
-        //     
+        //
         //         $subscription = Subscription::retrieve($subscription_id);
-        //         
+        //
         //     }
         // }
         // else{
-            
+
         // }
         $stripeOrder->setOrder($this->Order);
         $stripeOrder->setStripeCustomerId($customer_id);
@@ -539,7 +546,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $stripeOrder->setCouponDiscountStr($coupon_service->couponDiscountStr($coupon_data));
             $stripeOrder->setCouponName($coupon_data->name);
         }
-        
+
         $this->entityManager->persist($stripeOrder);
         $this->entityManager->flush();
         $this->entityManager->commit();
@@ -556,12 +563,12 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             }
             $rec_item = new StripeRecOrderItem();
             $rec_item->copyOrderItem($order_item);
-            $rec_item->setRecOrder($stripeOrder);            
+            $rec_item->setRecOrder($stripeOrder);
             $stripeOrder->addOrderItem($rec_item);
-            
+
             $this->entityManager->persist($rec_item);
         }
-        
+
         // there can be order items with same interval for current requirement. so select the first item in the order.
         $stripeOrder->setInterval($order_items[0]->getProductClass()->getInterval());
         $this->entityManager->persist($stripeOrder);
@@ -578,7 +585,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         // purchaseFlow::commitを呼び出し, 購入処理を完了させる.
         $this->purchaseFlow->commit($this->Order, new PurchaseContext());
 
-        
+
         $result->setSuccess(true);
         //EOC create stripe Order
 
@@ -613,7 +620,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $payment_method->attach([
                 'customer' => $customer_id
             ]);
-            
+
         }catch(Exception $e){
             $result->setSuccess(false);
             $result->setErrors([trans('stripe_recurring.checkout.payment_method.retrieve_error')]);
@@ -638,7 +645,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                 }
             }
         }
-        
+
         $order_items = $this->Order->getProductOrderItems();
         $errors = [];
 
@@ -672,12 +679,12 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                 };
             }
 
-            
+
             if (empty($pc) || !$pc->isRegistered()) {
                 return false;
             }
             $initial_items = [];
-            
+
 
             if ($pc->isInitialPriced()) {
                 $initial_items[] = [
@@ -768,7 +775,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                 ];
             }
 
-            
+
             if ($this->isProrateOption($purchase_point, $interval)) {
                 $phases = [
                     [
@@ -839,7 +846,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                     $stripeOrder->setRecStatus(StripeRecOrder::REC_STATUS_SCHEDULED);
                     $stripeOrder->setPaidStatus(StripeRecOrder::STATUS_PAY_UNDEFINED);
                     $stripeOrder->setSubscriptionId($subscription_id);
-                    
+
                     $dt = new \DateTime();
                     if ($purchase_point === "now") {
                         if ($subscription_schedule->current_phase) {
@@ -870,7 +877,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                     $stripeOrder->setBundling($bundle_code . ":" . $bundle_item->getPrice02IncTax());
                 }
                 $this->entityManager->persist($stripeOrder);
-                
+
                 $rec_item = new StripeRecOrderItem();
                 $rec_item->copyOrderItem($order_item);
                 $rec_item->setQuantity(1);
@@ -966,15 +973,15 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         $purchase_point = $schedule_params['start_date'];
 
         $config_service = $this->container->get('plg_stripe_rec.service.admin.plugin.config');
-        
+
         $payday_options = $config_service->getPaymentDateOptions();
-        
+
 
         $option_1 = $payday_options[ConfigService::PAYDAY_OPTION_1];
         $option_2 = $payday_options[ConfigService::PAYDAY_OPTION_2];
         $payment_date = $payday_options[ConfigService::PAYMENT_DATE];
         $pay_full = $payday_options[ConfigService::PAY_FULL];
-        
+
         $start_time = new \DateTime();
         if($purchase_point != "now"){
             $start_time->setTimestamp($purchase_point);
@@ -985,6 +992,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         }
         $next_payday = new \DateTime();
         $next_payday->setTimestamp($start_time->getTimestamp());
+
         if($interval == "week" || $interval == "year" ){
             if(!$option_1){
                 return $schedule_params;
@@ -996,9 +1004,9 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             if($interval == "week"){
                 $w = $start_time->format('N');
                 $diff = new \DateInterval('P' . (7 - $w + 1) . 'D');
-                
+
                 $next_payday->add($diff);
-                
+
                 if($pay_full){
                     $initial_payment = $initial_price;
                 }else{
@@ -1020,11 +1028,11 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             // for monthly recurring
             $day = $start_time->format("j");
             $days_of_month = $start_time->format("t");
-            
+
             if($option_1 && !$option_2){
                 if($day > 1){
-                    $diff = new \DateInterval('P'. ($days_of_month - $day + 1) . 'D');   
-                    
+                    $diff = new \DateInterval('P'. ($days_of_month - $day + 1) . 'D');
+
                     $next_payday->add($diff);
                     if($pay_full){
                         $initial_payment = $initial_price;
@@ -1036,14 +1044,14 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                 }
             } else if(!$option_1 && $option_2){
                 // calculate initial payment
-                
+
                 if($day < $payment_date && $days_of_month < $payment_date ){
                     $payment_date = $days_of_month;
                 }
 
-                if($day == $payment_date){
-                    return $schedule_params;
-                }
+                // if($day == $payment_date){
+                //     return $schedule_params;
+                // }
 
                 if($day < $payment_date){
                     $diff = new \DateInterval('P' . ($payment_date - $day) . 'D');
@@ -1064,7 +1072,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                     // $days_of_month
                     if($day < $payment_date){
                         $initial_payment = $initial_price * ($payment_date - $day) / $days_of_month;
-                        
+
                     }else{
                         $initial_payment = $initial_price * ($days_of_month - $day + $payment_date) / $days_of_month;
                     }
@@ -1076,7 +1084,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                 if($day == $payment_date){
                     return $schedule_params;
                 }
-                if($day < $payment_date){                    
+                if($day < $payment_date){
                     $diff = new \DateInterval('P' . ($payment_date - $day) . 'D');
                     $next_payday->add($diff);
                 }else{
@@ -1103,7 +1111,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             }
 
         }
-        $next_payday = new \DateTime($next_payday->format('Y-m-d 09:30:00'));
+        $next_payday = new \DateTime($next_payday->format('Y-m-d 08:30:00'));
         $now = new \DateTime();
         $load_time = new \DateInterval('PT10S');
         $now->add($load_time);
@@ -1129,6 +1137,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         array_unshift($phases, $phase_first_prod);
         $phases[1]['billing_cycle_anchor'] = "phase_start";
         $schedule_params['phases'] = $phases;
+        //dump($schedule_params);die();
         return $schedule_params;
     }
 
@@ -1160,8 +1169,8 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
 
         $day = $start_time->format("j");
 
-        
-        
+
+
         if($option_1 && !$option_2 && $day == 1){
             return false;
         }

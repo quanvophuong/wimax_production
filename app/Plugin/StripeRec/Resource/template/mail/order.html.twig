@@ -28,7 +28,7 @@ file that was distributed with this source code.
                         <div class="title" style="font-family:Helvetica, Arial, sans-serif;font-size:18px;font-weight:600;color:#374550;">この度はご注文いただき誠にありがとうございます。</div>
                         <br>
                         <div class="body-text" style="font-family:Helvetica, Arial, sans-serif;font-size:14px;line-height:20px;text-align:left;color:#333333;">
-                        
+
                             {{ Order.name01 }} {{ Order.name02 }} 様<br/>
                             <br/>
                             この度はご注文いただき誠にありがとうございます。<br/>
@@ -36,9 +36,9 @@ file that was distributed with this source code.
                             下記ご注文内容にお間違えがないかご確認下さい。<br/>
                             <br/>
                             【商品のお届けについて】<br/>
-                            ・即日発送は、平日の14時までにお申込み手続きを完了頂いたお客様に限ります。<br/>					
-                            ・お申込み手続きの完了が14時以降のご注文の場合、翌営業日の発送となります。<br/>				
-                            ※土・日・祝日のご注文分は、翌営業日の発送となりますので予めご了承ください。<br/>			
+                            ・即日発送は、平日の14時までにお申込み手続きを完了頂いたお客様に限ります。<br/>
+                            ・お申込み手続きの完了が14時以降のご注文の場合、翌営業日の発送となります。<br/>
+                            ※土・日・祝日のご注文分は、翌営業日の発送となりますので予めご了承ください。<br/>
                             ・受取日を「翌月」指定でご注文いただいたお客様につきましては、翌月の最短営業日にて発送させていただきます。<br/>
                             ・天候不良により、一部地域で荷物のお届けに遅れが生じております。<br/>
                             ご希望の納期にお届けできない場合がございますので、ご了承のほど宜しくお願い致します。<br/>
@@ -48,44 +48,44 @@ file that was distributed with this source code.
                             <hr style="border-top: 3px double #8c8b8b;">
                             レンタル内容<br/>
                             <hr style="border-top: 3px double #8c8b8b;">
-                                注文番号　　　　{{ Order.order_no }}<br/>
-                                商品名　　　　　{{ Order.MergedProductOrderItems[0].Product.name }}<br/>
-                                月額料金　　　　4,800円<br/>
-                                支払方法　　　　クレジットカード決済<br/>
-                                <br />
+                            注文番号　　　　{{ Order.order_no }}<br/>
+                            商品名　　　　　{{ Order.MergedProductOrderItems[0].Product.name }}<br/>
+                            月額料金　　　　4,800円<br/>
+                            支払方法　　　　クレジットカード決済<br/>
+                            <br />
                             <hr style="border-top: 2px dashed #8c8b8b;">
                             ［初回ご利用額］<br/>
-                                月額料金　　　　{% if Order.MergedProductOrderItems[0].ship == 1 %}4,800円{% else %}0円{% endif %}<br/>
-                                初期費用　　　　3,300円<br/>
-                                <br />
-                                端末補償　　　　{{ Order.MergedProductOrderItems[0].productClass.classCategory1 }}
-                                        {% if Order.MergedProductOrderItems[0].productClass.classCategory1 == 'フリー補償' %}
-                                            (550円)
-                                        {% elseif Order.MergedProductOrderItems[0].productClass.classCategory1 == 'ライト補償' %}
-                                            (275円)
-                                        {% else %}
-                                            (0円)
-                                        {% endif %}<br/>
-                                利用開始　　　　{% if Order.MergedProductOrderItems[0].ship == '1' %}
-                                            最短
-                                        {% else %}
-                                            翌月
-                                        {% endif %}<br/>
-                                オプション　　　USB ACアダプター: {{ Order.MergedProductOrderItems[0].productClass.classCategory2 }}
-                                        {% if Order.MergedProductOrderItems[0].productClass.classCategory2 == '購入する' %}
-                                            (1,540円)
-                                        {% endif %}<br/>
-                                <br />
-                                送　　料　　　　0円<br />
+                            月額料金　　　　{% if Order.MergedProductOrderItems[0].ship == 1 %}4,800円{% else %}0円{% endif %}<br/>
+                            初期費用　　　　3,300円<br/>
+                            割引料金　　　　({{ Order.discount|number_format }}円)<br/>
+                            端末補償　　　　{{ Order.MergedProductOrderItems[0].productClass.classCategory1 }}
+                            {% if Order.MergedProductOrderItems[0].productClass.classCategory1 == 'フリー補償' %}
+                            (550円)
+                        {% elseif Order.MergedProductOrderItems[0].productClass.classCategory1 == 'ライト補償' %}
+                            (275円)
+                        {% else %}
+                            (0円)
+                            {% endif %}<br/>
+                            利用開始　　　　{% if Order.MergedProductOrderItems[0].ship == '1' %}
+                            最短
+                        {% else %}
+                            翌月
+                            {% endif %}<br/>
+                            オプション　　　USB ACアダプター: {{ Order.MergedProductOrderItems[0].productClass.classCategory2 }}
+                            {% if Order.MergedProductOrderItems[0].productClass.classCategory2 == '購入する' %}
+                            (1,540円)
+                            {% endif %}<br/>
+                            <br />
+                            送　　料　　　　0円<br />
                             <hr style="border-top: 2px dashed #8c8b8b;">
-                                合　計　　　　　¥{{ Order.MergedProductOrderItems[0].initPrice|number_format }}<br/>
-                                <br />
+                            合　計　　　　　¥{{ (Order.MergedProductOrderItems[0].initPrice - Order.discount)|number_format }}<br/>
+                            <br />
 
                             <hr style="border-top: 3px double #8c8b8b;">
                             毎月のご利用額<br/>
                             <hr style="border-top: 3px double #8c8b8b;">
                             ご案内：こちらの商品は月額レンタル商品です。<br/>
-                            本取引では{{ Order.MergedProductOrderItems[0].initPrice|number_format }}円を課金し、以下の内容で自動継続課金の登録を行いました。<br/>
+                            本取引では{{ (Order.MergedProductOrderItems[0].initPrice - Order.discount)|number_format }}円を課金し、以下の内容で自動継続課金の登録を行いました。<br/>
                             ・月額料金：{{ Order.MergedProductOrderItems[0].nextPrice|number_format }}円<br/>
                             ・次回お支払日：{{ 'now'|date_modify("+#{1} months")|date("Y年m月1日") }}<br/>
                             ・課金間隔：1ヵ月ごと<br/>
@@ -124,13 +124,13 @@ file that was distributed with this source code.
                                 {% for OrderItem in Shipping.productOrderItems %}
                                     商品名：{{ OrderItem.product_name }}<br/>
                                     安心保障：{{ OrderItem.classcategory_name1 }}
-                                        {% if OrderItem.productClass.classCategory1 == 'フリー補償' %}
-                                            (550円)
-                                        {% elseif OrderItem.productClass.classCategory1 == 'ライト補償' %}
-                                            (275円)
-                                        {% else %}
-                                            (0円)
-                                        {% endif %}
+                                    {% if OrderItem.productClass.classCategory1 == 'フリー補償' %}
+                                        (550円)
+                                    {% elseif OrderItem.productClass.classCategory1 == 'ライト補償' %}
+                                        (275円)
+                                    {% else %}
+                                        (0円)
+                                    {% endif %}
                                     <br/>
                                     数量：{{ OrderItem.quantity|number_format }}<br/>
                                     <br/>
@@ -139,23 +139,23 @@ file that was distributed with this source code.
                             <br />
                             ※ご契約内容につきましては当社ＨＰのマイページよりご確認いただけます。
                             マイページＵＲＬ：https://free-max.com/mypage/<br/>
-                            <br/>		
+                            <br/>
                             【ご注文後の注意点】<br/>
                             商品発送後のキャンセルはお受けできません。<br/>
                             店頭受取を選択された場合、平日11:00～18:00の間でお受け取りをご希望の時間帯を、当社まで事前にご連絡ください。<br/>
-                            <br/>		
+                            <br/>
                             【ご解約時の注意点】<br/>
                             必ず当社ＨＰのマイページよりお手続きください。<br/>
                             ご解約の締切日は毎月15日となります。16日以降のご解約申請に関しましては、翌月末でのご解約となりますので予めご了承ください。<br/>
                             <br/>
                             【ご返却について】<br/>
                             端末はレンタルとなります。また、ご返却にかかる費用はお客様のご負担となります。<br/>
-                            <br/>				
+                            <br/>
                             【返却先住所】<br/>
                             〒160-0023　東京都新宿区西新宿7-18-19　新宿税理士ビル第二別館佐竹ビル２Ｆ<br/>
                             FreeMax+5G　宛<br/>
                             050-8882-5589<br/>
-                            <br/>				
+                            <br/>
                             【返却品内容】<br/>
                             モバイルルーターをご契約のお客様<br/>
                             ・モバイルルーター本体<br/>
@@ -163,7 +163,7 @@ file that was distributed with this source code.
                             ホームルーターをご契約のお客様<br/>
                             ・ホームルーター本体<br/>
                             ・専用ACアダプター<br/>
-                            <br/>		
+                            <br/>
                             ※返却時に破損や水没が見られる場合や端末の紛失盗難の場合に、機器損害金（端末補償オプションの加入プランにより異なる）をお支払いいただく場合がございます。<br/>
                             <hr style="border-top: 2px dashed #8c8b8b;">
                             FreeMax+5G運営事務局<br/>

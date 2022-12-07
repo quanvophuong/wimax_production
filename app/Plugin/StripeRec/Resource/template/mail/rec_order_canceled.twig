@@ -15,7 +15,7 @@ file that was distributed with this source code.
 ************************************************
 
 ご注文日時：{{ order.order_date|date_sec }}
-ご注文番号：{{ rec_order.Id }}
+ご注文番号：{{ order.order_no }}
 {# お支払い合計：{{ (rec_order.Amount)|price}} #}
 お支払い方法：{{ 'stripe_recurring.payment_method.name'|trans }}
 
