@@ -430,6 +430,16 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
 
         $initial_price=self::getAmountToSentInStripe($initial_price,strtolower($this->Order->getCurrencyCode()));
 
+        $StripeConfig = $this->stripeConfigRepository->getConfigByOrder($this->Order);
+        $stripeClient = new StripeClient($StripeConfig->secret_key);
+        $paymentIntent = $stripeClient->createPaymentIntentWithCustomer($initial_price, $payment_method_id, $this->Order->getId(), true, $customer_id, $this->Order->getCurrencyCode());
+
+        if(is_array($paymentIntent)) { // エラー
+            $result->setSuccess(false);
+            $result->setErrors([trans('stripe_recurring.checkout.payment_method.retrieve_error')]);
+            return $result;
+        }
+
         // EOC --- compose subscription phases
         $interval = $order_items[0]->getProductClass()->getInterval();
         if($this->isProrateOption($purchase_point, $interval)){
