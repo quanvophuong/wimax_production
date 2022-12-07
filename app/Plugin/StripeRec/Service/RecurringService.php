@@ -26,7 +26,7 @@ use Plugin\StripeRec\Service\ConfigService;
 
 
 class RecurringService{
-    
+
     protected $container;
     protected $em;
     protected $rec_order_repo;
@@ -42,7 +42,7 @@ class RecurringService{
         ContainerInterface $container
         ){
         $this->container = $container;
-        $this->em = $this->container->get('doctrine.orm.entity_manager'); 
+        $this->em = $this->container->get('doctrine.orm.entity_manager');
         $this->rec_order_repo = $this->em->getRepository(StripeRecOrder::class);
         $this->mail_service = $this->container->get("plg_stripe_rec.service.email.service");
         $this->stripe_service = $this->container->get("plg_stripe_rec.service.stripe_service");
@@ -60,7 +60,7 @@ class RecurringService{
         }else{
             $rec_order = $this->rec_order_repo->findOneBy(['subscription_id' => $sub_id]);
         }
-        
+
         if(empty($rec_order)){
             log_info(RecurringService::LOG_IF . "rec_order is empty");
             return;
@@ -75,7 +75,7 @@ class RecurringService{
     public function subscriptionUpdated($object){
         // $sub_id = $object->id;
         // $items = $object->items->data;
-        
+
         // if(!empty($items[0]->price->id)){
         //     $rec_order = $this->rec_order_repo->findOneBy(['subscription_id' =>  $sub_id]);
         //     if(!empty($rec_order)){
@@ -86,7 +86,7 @@ class RecurringService{
         // }
         // $sub_id = $object->id;
         // $upcoming_invoice = $this->stripe_service->retrieveUpcomingInvoice(['subscription' => $sub_id]);
-        
+
         // TODO send upcoming invoice mail
 
     }
@@ -117,12 +117,12 @@ class RecurringService{
 
         $subscriptions = [];
         foreach($data as $item){
-            if(!empty($item->subscription)){                
+            if(!empty($item->subscription)){
                 if(!in_array($item->subscription, array_keys($subscriptions))){
                     if(count($subscriptions) === 0){
                         $subscriptions[$item->subscription] = [];
                     }
-                    
+
                     $rec_order = $this->createOrUpdateRecOrder(
                         StripeRecOrder::STATUS_PAY_UNDEFINED,
                         $item,
@@ -141,26 +141,26 @@ class RecurringService{
                 if($rec_item){
                     log_info("RecurringService---".$rec_item->getId());
                     $rec_item->setPaidStatus(StripeRecOrder::STATUS_PAID);
-                    $this->em->persist($rec_item);                     
+                    $this->em->persist($rec_item);
 
                 }
                 $rec_order->addInvoiceItem($item);
             }
         }
         $this->em->flush();
-        $this->em->commit(); 
+        $this->em->commit();
 
         $rec_item_class_ids = [];
         foreach($subscriptions as $sub_id => $rec_order){
             $rec_items = $rec_order->getOrderItems();
             $success_flg = true;
-            
-            $rec_order->setPaidStatus(StripeRecOrder::STATUS_PAID);                
-            
-            $rec_order = $this->checkScheduledStatus($rec_order, StripeRecOrder::REC_STATUS_ACTIVE);            
+
+            $rec_order->setPaidStatus(StripeRecOrder::STATUS_PAID);
+
+            $rec_order = $this->checkScheduledStatus($rec_order, StripeRecOrder::REC_STATUS_ACTIVE);
             $this->em->persist($rec_order);
             $this->em->flush();
-            $this->em->commit(); 
+            $this->em->commit();
             $order = $rec_order->getOrder();
             if($order){
                 if (!$this->hasOverlappedPaidOrder($rec_order)) {
@@ -169,7 +169,7 @@ class RecurringService{
                     //     'rec_order' =>  $rec_order,
                     // ]));
                 }
-                
+
                 if($rec_order->getLastChargeId() !== $object->charge){
                     $rec_order->setLastChargeId($object->charge);
                     $rec_order->setLastPaymentDate(new \DateTime());
@@ -179,7 +179,7 @@ class RecurringService{
                     $this->sendMail($rec_order, "invoice.paid");
                 }
             }
-        }        
+        }
     }
     public function sendMail($rec_order, $type){
         switch($type){
@@ -193,7 +193,7 @@ class RecurringService{
             break;
             case "invoice.failed":
                 log_info("sending mail invoice.paid");
-                $this->mail_service->sendFailedMail($rec_order);  
+                $this->mail_service->sendFailedMail($rec_order);
             break;
             case "subscription.canceled":
                 $this->mail_service->sendCancelMail($rec_order);
@@ -207,12 +207,12 @@ class RecurringService{
         $subscriptions = [];
         foreach($data as $item){
 
-            if(!empty($item->subscription)){                
+            if(!empty($item->subscription)){
                 if(!in_array($item->subscription, array_keys($subscriptions))){
                     if(count($subscriptions) === 0){
                         $subscriptions[$item->subscription] = [];
                     }
-                    
+
                     $rec_order = $this->createOrUpdateRecOrder(
                         StripeRecOrder::STATUS_PAY_UPCOMING,
                         $item,
@@ -223,7 +223,7 @@ class RecurringService{
 
                     if(!empty($object->charge) && $object->charge != $rec_order->getLastChargeId()){
                         $rec_order->setLastChargeId($object->charge);
-                        $this->em->persist($rec_order);                        
+                        $this->em->persist($rec_order);
                     }
                     $rec_order->setInvoiceData($object);
                 }else{
@@ -243,7 +243,7 @@ class RecurringService{
         $config_service = $this->container->get('plg_stripe_rec.service.admin.plugin.config');
         $upcoming_mail = $config_service->get(ConfigService::INCOMING_MAIL) ? true : false;
 
-        foreach($subscriptions as $sub_id => $rec_order){      
+        foreach($subscriptions as $sub_id => $rec_order){
             if ($upcoming_mail) {
                 if($rec_order->getOrder()){
                     $this->sendMail($rec_order, "invoice.upcoming");
@@ -255,19 +255,19 @@ class RecurringService{
         }
     }
     public function invoiceFailed($object){
-        
+
         $customer = $object->customer;
         $data = $object->lines->data;
 
         $subscriptions = [];
         foreach($data as $item){
 
-            if(!empty($item->subscription)){                
+            if(!empty($item->subscription)){
                 if(!in_array($item->subscription, array_keys($subscriptions))){
                     if(count($subscriptions) === 0){
                         $subscriptions[$item->subscription] = [];
                     }
-                    
+
                     $rec_order = $this->createOrUpdateRecOrder(
                         StripeRecOrder::STATUS_PAY_FAILED,
                         $item,
@@ -277,7 +277,7 @@ class RecurringService{
                     $rec_order->setFailedInvoice($object->id);
                     $this->em->persist($rec_order);
                     $this->em->flush();
-                    
+
                     $subscriptions[$item->subscription] = $rec_order;
 
                     if(!empty($object->charge) && $object->charge != $rec_order->getLastChargeId()){
@@ -300,7 +300,7 @@ class RecurringService{
                 $rec_order->addInvoiceItem($item);
             }
         }
-        foreach($subscriptions as $sub_id => $rec_order){      
+        foreach($subscriptions as $sub_id => $rec_order){
             if($rec_order->getOrder()){
                 $this->sendMail($rec_order, "invoice.failed");
             }
@@ -308,11 +308,11 @@ class RecurringService{
             $this->em->persist($rec_order);
             $this->em->flush();
         }
-    }    
+    }
     public function subscriptionCreated($object,$secret_key){
         $sub_id = $object->id;
         $invoice_id = $object->latest_invoice;
-        $stripe_customer_id = $object->customer;  
+        $stripe_customer_id = $object->customer;
         log_info("subscription_id : " . $sub_id);
         log_info("stripe_customer_id: " . $stripe_customer_id);
         log_info("invoice_id : " . $invoice_id);
@@ -342,7 +342,7 @@ class RecurringService{
 
         }
     }
-    public function subscriptionScheduleCanceled($object){        
+    public function subscriptionScheduleCanceled($object){
         $rec_order = $this->rec_order_repo->findOneBy(['schedule_id' => $object->id]);
         if($rec_order){
             $rec_order->setRecStatus(StripeRecOrder::REC_STATUS_SCHEDULED_CANCELED);
@@ -356,10 +356,10 @@ class RecurringService{
         $sub_id = $item->subscription;
         $rec_order = $this->rec_order_repo->findOneBy(['subscription_id' => $sub_id, "stripe_customer_id" => $stripe_customer_id]);
         if(empty($rec_order)){
-            
+
             log_info(RecurringService::LOG_IF . "rec order is empty in webhook");
             $rec_order = new StripeRecOrder;
-            $rec_order->setSubscriptionId($sub_id);            
+            $rec_order->setSubscriptionId($sub_id);
             $rec_order->setStripeCustomerId($stripe_customer_id);
 
             $stripe_customer = $this->em->getRepository(StripeCustomer::class)->findOneBy(['stripe_customer_id' => $stripe_customer_id]);
@@ -378,7 +378,7 @@ class RecurringService{
 
         $rec_order->setCurrentPeriodStart($this->convertDateTime($item->period->start));
         $rec_order->setCurrentPeriodEnd($this->convertDateTime($dt->getTimestamp()));
-        
+
         $rec_order->setPaidStatus($paid_status);
         if(!empty($last_payment_date)){
             $rec_order->setLastPaymentDate($last_payment_date);
@@ -395,12 +395,12 @@ class RecurringService{
         }
         $this->em->persist($rec_order);
         $this->em->flush();
-        $this->em->commit();  
+        $this->em->commit();
 
         $order = $rec_order->getOrder();
         log_info("Recurring---orderDate---" );
         if($order){
-            $Today = new \DateTime();            
+            $Today = new \DateTime();
             // $order->setOrderDate($this->convertDateTime($Today->getTimestamp()));
             if(empty($order->getRecOrder())){
                 $order->setRecOrder($rec_order);
@@ -410,7 +410,7 @@ class RecurringService{
                 $this->em->commit();
             }
         }
-        
+
         return $rec_order;
     }
 
@@ -422,7 +422,7 @@ class RecurringService{
             $this->em->persist($rec_order);
             $this->em->flush();
             $this->em->commit();
-            $this->sendMail($rec_order, 'subscription.canceled');
+            //$this->sendMail($rec_order, 'subscription.canceled');
         }
     }
     // public function completeOrder($object){
@@ -442,7 +442,7 @@ class RecurringService{
     //             $util_service->completeOrder($order, $object);
     //         }
     //         // log_info("RecurringService---completeOrder---prorate off");
-    //         // $this->stripe_service->prorationOff($object->subscription);            
+    //         // $this->stripe_service->prorationOff($object->subscription);
     //     }
     // }
     public function convertDateTime($timestamp){
@@ -459,7 +459,7 @@ class RecurringService{
             if($state[2] === StripeRecOrder::SCHEDULE_STARTED){
                 $this->err_msg = "stripe_recurring.schedule.error.alreasy_started";
                 return false;
-            }            
+            }
             $res = $this->stripe_service->cancelSchedule($rec_order->getScheduleId());
             if($res === false){
                 $this->err_msg = $this->stripe_service->getErrMsg();
@@ -467,11 +467,11 @@ class RecurringService{
                 $rec_order->setRecStatus(StripeRecOrder::REC_STATUS_SCHEDULED_CANCELED);
                 $this->em->persist($rec_order);
                 $this->em->flush();
-            }            
+            }
             return $res;
         }else{
             $sub_id = $rec_order->getSubscriptionId();
-            if(empty($sub_id)){                
+            if(empty($sub_id)){
                 return true;
             }
             if($rec_order->getRecStatus() != StripeRecOrder::REC_STATUS_CANCELED){
@@ -481,26 +481,26 @@ class RecurringService{
                     $this->em->persist($rec_order);
                     $this->em->flush();
                 }
-            }            
+            }
             return $res;
         }
     }
 
-    public function updateOrder($rec_order, $paid_status_id = OrderStatus::PAID) 
+    public function updateOrder($rec_order, $paid_status_id = OrderStatus::PAID)
     {
         log_info("create new order");
         $Order = $rec_order->getOrder();
-        
+
         $Today = new \DateTime();
         $Order->setPaymentDate($Today);
         $OrderStatus = $this->em->getRepository(OrderStatus::class)->find($paid_status_id);
         $Order->setOrderStatus($OrderStatus);
         $Order->setRecorder($rec_order);
-        
+
         if ($rec_order->getInvoiceData()) {
             $Order->setInvoiceid($rec_order->getInvoiceData()->id);
         }
-        
+
         if ($rec_order->getPaymentCount() == 0) {
             $Order->setIsInitialRec(true);
         } else {
@@ -512,13 +512,13 @@ class RecurringService{
         return $Order;
     }
 
-    public function createNewOrder($rec_order, $paid_status_id = OrderStatus::PAID) 
+    public function createNewOrder($rec_order, $paid_status_id = OrderStatus::PAID)
     {
         log_info("create new order");
         $OriginalOrder = $rec_order->getOrder();
-        
+
         $NewOrder = clone $OriginalOrder;
-        // $NewOrder->copy($OriginalOrder);       
+        // $NewOrder->copy($OriginalOrder);
 // OrderStatus
         // complete_message
         // complete_mail_message
@@ -534,7 +534,7 @@ class RecurringService{
         $OrderStatus = $this->em->getRepository(OrderStatus::class)->find($paid_status_id);
         $NewOrder->setOrderStatus($OrderStatus);
         $NewOrder->setRecorder($rec_order);
-        
+
         if ($rec_order->getInvoiceData()) {
             $NewOrder->setInvoiceid($rec_order->getInvoiceData()->id);
         }
@@ -569,10 +569,10 @@ class RecurringService{
                     $NewShipping->setOrder($NewOrder);
                     $NewOrder->addShipping($NewShipping);
                     $this->em->persist($NewShipping);
-    
+
                     $shipping_ids[$Shipping->getId()] = $NewShipping;
-                    
-                } 
+
+                }
                 $NewItem->setShipping($shipping_ids[$Shipping->getId()]);
             }
             if ($rec_order->getOrderItemId()) {
@@ -609,24 +609,24 @@ class RecurringService{
         return $NewOrder;
     }
 
-    public function hasOverlappedPaidOrder($rec_order, $invoice_data = null) 
+    public function hasOverlappedPaidOrder($rec_order, $invoice_data = null)
     {
         if (!$invoice_data ){
             $invoice_data = $rec_order->getInvoiceData();
         }
         $invoice_id = $invoice_data->id;
         $OrderRepository = $this->em->getRepository(Order::class);
-        
+
         $Order = $OrderRepository->findOneBy(['recOrder' => $rec_order, 'invoice_id' => $invoice_id]);
         return !empty($Order);
     }
 
-    public function getPriceDetail($rec_order) 
+    public function getPriceDetail($rec_order)
     {
         $pb_service = $this->container->get('plg_stripe_rec.service.pointbundle_service');
         $bundles = $pb_service->getBundleProducts($rec_order);
-        
-        $price_sum = $pb_service->getPriceSum($rec_order);        
+
+        $price_sum = $pb_service->getPriceSum($rec_order);
         extract($price_sum);
 
         if($bundles){
