@@ -1,298 +1,429 @@
 <?php
 
-namespace Plugin\StripeRec\Controller;
+/*
+ * This file is part of EC-CUBE
+ *
+ * Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+ *
+ * http://www.ec-cube.co.jp/
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-if( \file_exists(dirname(__FILE__).'/../../StripePaymentGateway/vendor/stripe/stripe-php/init.php')) {
-    include_once(dirname(__FILE__).'/../../StripePaymentGateway/vendor/stripe/stripe-php/init.php');
-}
-use Stripe\Webhook;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
-use Eccube\Controller\ShoppingController;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Eccube\Controller\AbstractController;
+namespace Eccube\Controller;
+
+use Eccube\Entity\CustomerAddress;
+use Eccube\Entity\Order;
+use Eccube\Entity\Shipping;
+use Eccube\Event\EccubeEvents;
+use Eccube\Event\EventArgs;
+use Eccube\Exception\ShoppingException;
+use Eccube\Form\Type\Front\CustomerLoginType;
+use Eccube\Form\Type\Front\ShoppingShippingType;
+use Eccube\Form\Type\Shopping\CustomerAddressType;
+use Eccube\Form\Type\Shopping\OrderType;
+use Eccube\Repository\OrderRepository;
 use Eccube\Service\CartService;
 use Eccube\Service\MailService;
 use Eccube\Service\OrderHelper;
-use Eccube\Entity\Order;
-use Eccube\Entity\Customer;
-use Eccube\Form\Type\Shopping\OrderType;
-use Eccube\Repository\OrderRepository;
+use Eccube\Service\Payment\PaymentDispatcher;
+use Eccube\Service\Payment\PaymentMethodInterface;
 use Eccube\Service\PurchaseFlow\PurchaseContext;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
-use Eccube\Common\EccubeConfig;
-use Eccube\Entity\Master\OrderStatus;
-use Plugin\StripePaymentGateway\Repository\StripeConfigRepository;
-use Plugin\StripePaymentGateway\StripeClient;
-use Plugin\StripePaymentGateway\Entity\StripeConfig;
-use Plugin\StripePaymentGateway\Entity\StripeOrder;
-use Plugin\StripePaymentGateway\Entity\StripeLog;
-use Plugin\StripePaymentGateway\Entity\StripeCustomer;
-use Plugin\StripeRec\Service\ConfigService;
-use Plugin\StripeRec\Entity\StripeRecOrder;
-use Plugin\StripeRec\Repository\StripeRecOrderRepository;
-use Plugin\StripeRec\Service\MailExService;
-use Stripe\PaymentMethod;
-use Stripe\PaymentIntent;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Plugin\Coupon4\Repository\CouponRepository;
+use Plugin\Coupon4\Repository\CouponOrderRepository;
 use Plugin\Coupon4\Service\CouponService;
+use Plugin\Coupon4\Entity\Coupon;
+use Symfony\Component\Form\FormError;
 
-class ShoppingExController extends ShoppingController
+class ShoppingController extends AbstractShoppingController
 {
-    protected $container;
-    private $em;
-    private $stripe_config;
-    protected $util_service;
-    protected $session;
-    protected $stripeCustomerRepository;
-    protected $eccubeConfig;
+    /**
+     * @var CartService
+     */
+    protected $cartService;
+
+    /**
+     * @var MailService
+     */
+    protected $mailService;
+
+    /**
+     * @var OrderHelper
+     */
+    protected $orderHelper;
+
+    /**
+     * @var OrderRepository
+     */
+    protected $orderRepository;
+
     private $couponRepository;
+    private $couponOrderRepository;
     private $couponService;
 
     public function __construct(
-        ContainerInterface $container,
         CartService $cartService,
         MailService $mailService,
         OrderRepository $orderRepository,
         OrderHelper $orderHelper,
-        SessionInterface $session,
-        EccubeConfig $eccubeConfig,
         CouponRepository $couponRepository,
+        CouponOrderRepository $couponOrderRepository,
         CouponService $couponService
     ) {
-        parent::__construct(
-            $cartService,
-            $mailService,
-            $orderRepository,
-            $orderHelper,
-            $couponRepository,
-            $couponService
-        );
-        $this->container = $container;
-        $this->em = $container->get('doctrine.orm.entity_manager');
-
-        $this->util_service = $this->container->get("plg_stripe_recurring.service.util");
-        $this->session = $session;
-        $this->stripeCustomerRepository = $this->em->getRepository(StripeCustomer::class);
-        $this->eccubeConfig = $eccubeConfig;
+        $this->cartService = $cartService;
+        $this->mailService = $mailService;
+        $this->orderRepository = $orderRepository;
+        $this->orderHelper = $orderHelper;
+        $this->couponRepository = $couponRepository;
+        $this->couponOrderRepository = $couponOrderRepository;
+        $this->couponService = $couponService;
     }
 
+    /**
+     * 注文手続き画面を表示する
+     *
+     * 未ログインまたはRememberMeログインの場合はログイン画面に遷移させる.
+     * ただし、非会員でお客様情報を入力済の場合は遷移させない.
+     *
+     * カート情報から受注データを生成し, `pre_order_id`でカートと受注の紐付けを行う.
+     * 既に受注が生成されている場合(pre_order_idで取得できる場合)は, 受注の生成を行わずに画面を表示する.
+     *
+     * purchaseFlowの集計処理実行後, warningがある場合はカートど同期をとるため, カートのPurchaseFlowを実行する.
+     *
+     * @Route("/shopping", name="shopping", methods={"GET"})
+     * @Template("Shopping/index.twig")
+     */
+    public function index(PurchaseFlow $cartPurchaseFlow)
+    {
+        // ログイン状態のチェック.
+        if ($this->orderHelper->isLoginRequired()) {
+            log_info('[注文手続] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
+
+            return $this->redirectToRoute('shopping_login');
+        }
+
+        // カートチェック.
+        $Cart = $this->cartService->getCart();
+        if (!($Cart && $this->orderHelper->verifyCart($Cart))) {
+            log_info('[注文手続] カートが購入フローへ遷移できない状態のため, カート画面に遷移します.');
+
+            return $this->redirectToRoute('cart');
+        }
+
+        // 受注の初期化.
+        log_info('[注文手続] 受注の初期化処理を開始します.');
+        $Customer = $this->getUser() ? $this->getUser() : $this->orderHelper->getNonMember();
+        $Order = $this->orderHelper->initializeOrder($Cart, $Customer);
+        $CouponOrder  = $this->couponOrderRepository->findOneBy(array('pre_order_id'=>$Order->getPreOrderId()));
+
+        // 集計処理.
+        log_info('[注文手続] 集計処理を開始します.', [$Order->getId()]);
+        $flowResult = $this->executePurchaseFlow($Order, false);
+        $this->entityManager->flush();
+
+        if ($flowResult->hasError()) {
+            log_info('[注文手続] Errorが発生したため購入エラー画面へ遷移します.', [$flowResult->getErrors()]);
+
+            return $this->redirectToRoute('shopping_error');
+        }
+
+        if ($flowResult->hasWarning()) {
+            log_info('[注文手続] Warningが発生しました.', [$flowResult->getWarning()]);
+
+            // 受注明細と同期をとるため, CartPurchaseFlowを実行する
+            $cartPurchaseFlow->validate($Cart, new PurchaseContext($Cart, $this->getUser()));
+
+            // 注文フローで取得されるカートの入れ替わりを防止する
+            // @see https://github.com/EC-CUBE/ec-cube/issues/4293
+            $this->cartService->setPrimary($Cart->getCartKey());
+        }
+
+        // マイページで会員情報が更新されていれば, Orderの注文者情報も更新する.
+        if ($Customer->getId()) {
+            $this->orderHelper->updateCustomerInfo($Order, $Customer);
+            $this->entityManager->flush();
+        }
+
+        $form = $this->createForm(OrderType::class, $Order);
+
+        if ($CouponOrder){
+            $form->get('coupon_cd')->setData($CouponOrder->getCouponCd());
+        }
+        return [
+            'form' => $form->createView(),
+            'Order' => $Order,
+        ];
+    }
 
     /**
-     * @Route("/plugin/StripeRec/presubscribe", name="plugin_striperec_presubscripe")
+     * 他画面への遷移を行う.
+     *
+     * お届け先編集画面など, 他画面へ遷移する際に, フォームの値をDBに保存してからリダイレクトさせる.
+     * フォームの`redirect_to`パラメータの値にリダイレクトを行う.
+     * `redirect_to`パラメータはpath('遷移先のルーティング')が渡される必要がある.
+     *
+     * 外部のURLやPathを渡された場合($router->matchで展開出来ない場合)は, 購入エラーとする.
+     *
+     * プラグインやカスタマイズでこの機能を使う場合は, twig側で以下のように記述してください.
+     *
+     * <button data-trigger="click" data-path="path('ルーティング')">更新する</button>
+     *
+     * data-triggerは, click/change/blur等のイベント名を指定してください。
+     * data-pathは任意のパラメータです. 指定しない場合, 注文手続き画面へリダイレクトします.
+     *
+     * @Route("/shopping/redirect_to", name="shopping_redirect_to", methods={"POST"})
+     * @Template("Shopping/index.twig")
      */
-    public function presubscribe(Request $request)
+    public function redirectTo(Request $request, RouterInterface $router)
     {
+        // ログイン状態のチェック.
+        if ($this->orderHelper->isLoginRequired()) {
+            log_info('[リダイレクト] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
 
-//        $StripeConfig = $this->stripeConfigRepository->get();
+            return $this->redirectToRoute('shopping_login');
+        }
+
+        // 受注の存在チェック.
         $preOrderId = $this->cartService->getPreOrderId();
-        /** @var Order $Order */
+        $Order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
+        $CouponOrder  = $this->couponOrderRepository->findOneBy(array('pre_order_id'=>$Order->getPreOrderId()));
+
+        if (!$Order) {
+            log_info('[リダイレクト] 購入処理中の受注が存在しません.');
+
+            return $this->redirectToRoute('shopping_error');
+        }
+
+        $form = $this->createForm(OrderType::class, $Order);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            log_info('[リダイレクト] 集計処理を開始します.', [$Order->getId()]);
+            $response = $this->executePurchaseFlow($Order);
+            $this->entityManager->flush();
+
+            if ($response) {
+                return $response;
+            }
+
+            $redirectTo = $form['redirect_to']->getData();
+            if (empty($redirectTo)) {
+                log_info('[リダイレクト] リダイレクト先未指定のため注文手続き画面へ遷移します.');
+
+                return $this->redirectToRoute('shopping');
+            }
+
+            try {
+                // リダイレクト先のチェック.
+                $pattern = '/^'.preg_quote($request->getBasePath(), '/').'/';
+                $redirectTo = preg_replace($pattern, '', $redirectTo);
+                $result = $router->match($redirectTo);
+                // パラメータのみ抽出
+                $params = array_filter($result, function ($key) {
+                    return 0 !== \strpos($key, '_');
+                }, ARRAY_FILTER_USE_KEY);
+
+                log_info('[リダイレクト] リダイレクトを実行します.', [$result['_route'], $params]);
+
+                // pathからurlを再構築してリダイレクト.
+                return $this->redirectToRoute($result['_route'], $params);
+            } catch (\Exception $e) {
+                log_info('[リダイレクト] URLの形式が不正です', [$redirectTo, $e->getMessage()]);
+
+                return $this->redirectToRoute('shopping_error');
+            }
+        }
+
+        log_info('[リダイレクト] フォームエラーのため, 注文手続き画面を表示します.', [$Order->getId()]);
+
+        if ($CouponOrder){
+            $form->get('coupon_cd')->setData($CouponOrder->getCouponCd());
+        }
+
+        return [
+            'form' => $form->createView(),
+            'Order' => $Order,
+        ];
+    }
+
+    /**
+     * 注文確認画面を表示する.
+     *
+     * ここではPaymentMethod::verifyがコールされます.
+     * PaymentMethod::verifyではクレジットカードの有効性チェック等, 注文手続きを進められるかどうかのチェック処理を行う事を想定しています.
+     * PaymentMethod::verifyでエラーが発生した場合は, 注文手続き画面へリダイレクトします.
+     *
+     * @Route("/shopping/confirm", name="shopping_confirm", methods={"POST"})
+     * @Template("Shopping/index.twig")
+     */
+    public function confirm(Request $request)
+    {
+        // ログイン状態のチェック.
+        if ($this->orderHelper->isLoginRequired()) {
+            log_info('[注文確認] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
+
+            return $this->redirectToRoute('shopping_login');
+        }
+        // 受注の存在チェック
+        $preOrderId = $this->cartService->getPreOrderId();
         $Order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
         if (!$Order) {
-            return $this->json(['error' => 'true', 'message' => trans('stripe_payment_gateway.admin.order.invalid_request')]);
-        }
-        $StripeConfig = $this->em->getRepository(StripeConfig::class)->getConfigByOrder($Order);
-        $stripeClient = new StripeClient($StripeConfig->secret_key);
-        $paymentMethodId = $request->get('payment_method_id');
+            log_info('[注文確認] 購入処理中の受注が存在しません.', [$preOrderId]);
 
-        $stripeCustomerId = $this->procStripeCustomer($stripeClient, $Order, true);
-        if(is_array($stripeCustomerId)) { // エラー
-            return $this->json($stripeCustomerId);
+            return $this->redirectToRoute('shopping_error');
         }
 
-        if($Order->hasStripePriceId()){
-            $this->session->getFlashBag()->set("stripe_customer_id", $stripeCustomerId);
-            $this->session->getFlashBag()->set("payment_method_id", $paymentMethodId);
-            return $this->json(["success" => true]);
-        }else {
-            return $this->json(["error" => "Not Recurring Product"]);
-        }
-    }
+        $form = $this->createForm(OrderType::class, $Order);
+        $form->handleRequest($request);
 
-    /**
-     * @Route("/plugin/stripe_rec/success", name="plugin_stripe_rec_success")
-     */
-    public function success(Request $request){
-        $this->cartService->clear();
-        return $this->redirectToRoute("shopping_complete");
-    }
-    /**
-     * @Route("/plugin/stripe_rec/extra_payemnt/{id}/{stamp}", name="plugin_stripe_rec_extra_pay")
-     * @Template("@StripeRec/default/Shopping/checkout_recurring_extra.twig")
-     */
-    public function extraPay(Request $request, $id, $stamp,
-                             StripeRecOrderRepository $recOrderRepository,
-                             StripeConfigRepository $stripeConfigRepository,
-                             MailExService $mail_service)
-    {
-        $recOrder = $recOrderRepository->find($id);
-        if (!$recOrder) {
-            throw new NotFoundHttpException();
-        }
-        if ($recOrder->getManualLinkStamp() != $stamp) {
-            throw new NotFoundHttpException();
-        }
-        $stripeConfig = $stripeConfigRepository->getConfigByOrder($recOrder->getOrder());
+        $mode = $request->get('mode');
 
-        $already = $this->orderRepository->findOneBy(['recOrder' => $recOrder, 'manual_link_stamp' => $stamp]);
-        if ($already) {
+        if ($mode=='apply_coupon'){
+            $coupon_code = $form->get('coupon_cd')->getData();
+            if (empty($coupon_code)){
+                $form->get('coupon_cd')->addError(new FormError('クーポンコードをご入力ください'));
+            }else{
+                $Coupon = $this->couponRepository->findActiveCoupon($coupon_code);
+                if (!$Coupon) {
+                    $form->get('coupon_cd')->addError(new FormError('クーポンコードを確認してください。'));
+                }else{
+                    $Customer = $this->getUser();
+
+                    $discount = 0;
+                    $init_price = 0;
+                    $order_items = $Order->getProductOrderItems();
+
+                    if (!empty($order_items)){
+                        $init_price = $order_items[0]->getInitPrice();
+                    }
+
+                    if ($Coupon->getDiscountType() == Coupon::DISCOUNT_PRICE) {
+                        $discount = $Coupon->getDiscountPrice();
+                    }else{
+                        $discount = $init_price * $Coupon->getDiscountRate()/100;
+                    }
+                    if ($init_price<$discount) $discount = $init_price;
+                    if (!empty($discount)){
+                        $this->couponService->saveCouponOrder($Order, $Coupon, $coupon_code, $Customer, $discount);
+                        $Order->setDiscount($discount);
+                    }
+                }
+            }
+//            dump($coupon_code);die();
+
+            // FIXME @Templateの差し替え.
+
+            //$request->attributes->set('_template', new Template(['template' => 'Shopping/index.twig']));
+//dump($Order->getShippings());die();
             return [
-                'amount'    => 0,
-                'recOrder'  => $recOrder,
-                'stripeConfig'=> $stripeConfig,
-                'already_paid'=> true
+                'form' => $form->createView(),
+                'Order' => $Order
             ];
         }
 
-        $rec_service = $this->container->get('plg_stripe_rec.service.recurring_service');
-        $details = $rec_service->getPriceDetail($recOrder);
-        extract($details);
+        if ($mode=='cancel_coupon'){
+            $this->couponService->removeCouponOrder($Order);
 
-        if ($recOrder->getPaymentCount() == 0) {
-            // 'bundle_order_items', 'initial_amount', 'recurring_amount', 'initial_discount', 'recurring_discount'
-            $amount = $initial_amount - $initial_discount;
-        } else {
-            $amount = $recurring_amount - $recurring_discount;
+            $form = $this->createForm(OrderType::class, $Order);
+            $form->get('coupon_cd')->setData('');
+
+            $Order->setDiscount(0);
+            return [
+                'form' => $form->createView(),
+                'Order' => $Order
+            ];
         }
 
-
-
-        $stripeClient = new StripeClient($stripeConfig->secret_key);
-        if ($request->getMethod() === "POST") {
-            $payment_intent_id = $request->request->get('payment_intent_id');
-
-            if (empty($payment_intent_id)) {
-                throw new NotFoundHttpException();
-            }
-            $is_auth_capture = $stripeConfig->is_auth_and_capture_on;
-
-            log_info("----extra_pay---");
-            if ($is_auth_capture) {//Capture if on
-                log_info("capturing payment, payment_intent_id : $payment_intent_id");
-                $payment_intent = $stripeClient->capturePaymentIntent($payment_intent_id, $amount, $recOrder->getOrder()->getCurrencyCode());
-                log_info("captured payment, payment_intent_id : $payment_intent_id");
-            } else {
-                $payment_intent = $stripeClient->retrievePaymentIntent($payment_intent_id);
-            }
-
-            if (is_array($payment_intent) && isset($payment_intent['error'])) {
-                $errorMessage = StripeClient::getErrorMessageFromCode($payment_intent['error'], $this->eccubeConfig['locale']);
-
-                return $this->json(['error' =>  $errorMessage]);
-            }
-
-            $rec_service = $this->container->get("plg_stripe_rec.service.recurring_service");
-
-            if ($is_auth_capture) {
-                $status_id = OrderStatus::PAID;
-            } else {
-                $status_id = OrderStatus::NEW;
-            }
-            $NewOrder = $rec_service->createNewOrder($recOrder, $status_id);
-            $NewOrder->setManualLinkStamp($stamp);
-            $this->entityManager->persist($NewOrder);
-            $recOrder->setLastChargeId($payment_intent->charges->data[0]->id);
-            $recOrder->setPaidStatus(StripeRecOrder::STATUS_PAID);
-            $recOrder->setLastPaymentDate(new \DateTime());
-            $this->entityManager->persist($recOrder);
+        if ($form->isSubmitted() && $form->isValid()) {
+            log_info('[注文確認] 集計処理を開始します.', [$Order->getId()]);
+            $response = $this->executePurchaseFlow($Order);
             $this->entityManager->flush();
 
-            $recOrder->setCurrentPaymentTotal($amount);
-            $mail_service->sendPaidMail($recOrder);
+            if ($response) {
+                return $response;
+            }
 
-            return $this->json(['success' => true, 'order_id' => $NewOrder->getId()]);
-        }
+            log_info('[注文確認] PaymentMethod::verifyを実行します.', [$Order->getPayment()->getMethodClass()]);
+            $paymentMethod = $this->createPaymentMethod($Order, $form);
+            $PaymentResult = $paymentMethod->verify();
 
-        return compact('amount', 'recOrder', 'stripeConfig');
-    }
-    /**
-     * @Route("/plugin/stripe_rec/extra_payment/intent/{id}", name="plugin_stripe_rec_extra_pay_intent")
-     */
-    public function extraPayIntent(Request $request, $id, StripeConfigRepository $stripeConfigRepository)
-    {
-        $rec_order = $this->entityManager->getRepository(StripeRecOrder::class)->find($id);
-        if (!$rec_order) {
-            throw new NotFoundHttpException();
-        }
-        $Order = $rec_order->getOrder();
-        $StripeConfig = $stripeConfigRepository->getConfigByOrder($Order);
+            if ($PaymentResult) {
+                if (!$PaymentResult->isSuccess()) {
+                    $this->entityManager->rollback();
+                    foreach ($PaymentResult->getErrors() as $error) {
+                        $this->addError($error);
+                    }
 
-        $stripeClient = new StripeClient($StripeConfig->secret_key);
+                    log_info('[注文確認] PaymentMethod::verifyのエラーのため, 注文手続き画面へ遷移します.', [$PaymentResult->getErrors()]);
 
-        $paymentMethodId = $request->request->get('payment_method_id');
-        $isSaveCardOn = $request->request->get('is_save_on') === "true" ? true : false;
-        $stripeCustomerId = $this->procStripeCustomer($stripeClient, $Order, $isSaveCardOn);
+                    return $this->redirectToRoute('shopping');
+                }
 
-        if (is_array($stripeCustomerId)) {
-            return $this->json($stripeCustomerid);
-        }
-        $rec_service = $this->container->get('plg_stripe_rec.service.recurring_service');
-        $details = $rec_service->getPriceDetail($rec_order);
-        extract($details);
+                $response = $PaymentResult->getResponse();
+                if ($response instanceof Response && ($response->isRedirection() || $response->isSuccessful())) {
+                    $this->entityManager->flush();
 
-        if ($rec_order->getPaymentCount() == 0) {
-            // 'bundle_order_items', 'initial_amount', 'recurring_amount', 'initial_discount', 'recurring_discount'
-            $amount = $initial_amount - $initial_discount;
-        } else {
-            $amount = $recurring_amount - $recurring_discount;
-        }
+                    log_info('[注文確認] PaymentMethod::verifyが指定したレスポンスを表示します.');
 
-        $paymentIntent = $stripeClient->createPaymentIntentWithCustomer(
-            $amount,
-            $paymentMethodId,
-            $Order->getId(),
-            $isSaveCardOn,
-            $stripeCustomerId,
-            $Order->getCurrencyCode());
-        return $this->json($this->genPaymentResponse($paymentIntent));
-    }
+                    return $response;
+                }
+            }
 
-
-    /**
-     * @Route("/plugin/stripe_rec/cancel", name="plugin_stripe_rec_cancel")
-     */
-    public function cancel(Request $request){
-        $preOrderId = $this->cartService->getPreOrderId();
-        $order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
-
-        if(empty($order)){
-            return $this->redirectToRoute("shopping");
-        }
-        if(!$order->isRecurring()){
-            return $this->redirectToRoute("shopping");
-        }
-        $rec_order = $order->getRecOrder();
-        $rec_items  = $rec_order->getOrderItems();
-        foreach($rec_items as $rec_item){
-            $this->entityManager->remove($rec_item);
             $this->entityManager->flush();
-            $this->entityManager->commit();
+
+            log_info('[注文確認] 注文確認画面を表示します.');
+
+            //return [
+            //    'form' => $form->createView(),
+            //    'Order' => $Order,
+            //];
+            return $this->json([
+                'done' => true,
+                'messages' => "success",
+            ]);
         }
 
-        $this->entityManager->remove($rec_order);
-        $this->entityManager->flush();
-        $this->entityManager->commit();
+        log_info('[注文確認] フォームエラーのため, 注文手続画面を表示します.', [$Order->getId()]);
 
-        return $this->redirectToRoute("shopping");
+        // FIXME @Templateの差し替え.
+        $request->attributes->set('_template', new Template(['template' => 'Shopping/index.twig']));
+
+        //return [
+        //    'form' => $form->createView(),
+        //    'Order' => $Order,
+        //];
+        return $this->json([
+            'done' => true,
+            'messages' => "success",
+        ]);
     }
 
     /**
-     * @Route("/plugin/stripe_rec/checkout_page", name="plugin_striperec_checkout_page")
-     * @Template("@StripeRec/default/Shopping/checkout.twig")
+     * 注文処理を行う.
+     *
+     * 決済プラグインによる決済処理および注文の確定処理を行います.
+     *
+     * @Route("/shopping/checkout", name="shopping_checkout", methods={"POST"})
+     * @Template("Shopping/confirm.twig")
      */
-    public function credit_payment(Request $request)
+    public function checkout(Request $request)
     {
-        $this->session->getFlashBag()->set("purchase_point", "now");
-
         // ログイン状態のチェック.
         if ($this->orderHelper->isLoginRequired()) {
             log_info('[注文処理] 未ログインもしくはRememberMeログインのため, ログイン画面に遷移します.');
 
             return $this->redirectToRoute('shopping_login');
         }
+
         // 受注の存在チェック
         $preOrderId = $this->cartService->getPreOrderId();
         $Order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
@@ -301,259 +432,376 @@ class ShoppingExController extends ShoppingController
 
             return $this->redirectToRoute('shopping_error');
         }
-        $StripeConfig = $this->entityManager->getRepository(StripeConfig::class)->getConfigByOrder($Order);
 
-        $Customer = $Order->getCustomer();
         // フォームの生成.
-        $form = $this->createForm(OrderType::class, $Order,[
-            'skip_add_form' =>  true,
+        $form = $this->createForm(OrderType::class, $Order, [
+            // 確認画面から注文処理へ遷移する場合は, Orderエンティティで値を引き回すためフォーム項目の定義をスキップする.
+            'skip_add_form' => true,
         ]);
         $form->handleRequest($request);
-        $checkout_ga_enable = $StripeConfig->checkout_ga_enable;
-        $config_service = $this->get("plg_stripe_rec.service.admin.plugin.config");
-        $rec_config = $config_service->getConfig();
-        $coupon_enable = $rec_config[ConfigService::COUPON_ENABLE];
 
-        if($this->isGranted('ROLE_USER')){
-            $stripePaymentMethodObj = $this->checkSaveCardOn($Customer, $StripeConfig);
+        if ($form->isSubmitted() && $form->isValid()) {
+            log_info('[注文処理] 注文処理を開始します.', [$Order->getId()]);
 
-            if($stripePaymentMethodObj){
-                $exp = \sprintf("%02d/%d", $stripePaymentMethodObj->card->exp_month, $stripePaymentMethodObj->card->exp_year);
-            }else{
-                $exp = "";
+            try {
+                /*
+                 * 集計処理
+                 */
+                log_info('[注文処理] 集計処理を開始します.', [$Order->getId()]);
+                $response = $this->executePurchaseFlow($Order);
+                $this->entityManager->flush();
+
+                if ($response) {
+                    return $response;
+                }
+
+                log_info('[注文処理] PaymentMethodを取得します.', [$Order->getPayment()->getMethodClass()]);
+                $paymentMethod = $this->createPaymentMethod($Order, $form);
+
+                /*
+                 * 決済実行(前処理)
+                 */
+                log_info('[注文処理] PaymentMethod::applyを実行します.');
+                if ($response = $this->executeApply($paymentMethod)) {
+                    return $response;
+                }
+
+                /*
+                 * 決済実行
+                 *
+                 * PaymentMethod::checkoutでは決済処理が行われ, 正常に処理出来た場合はPurchaseFlow::commitがコールされます.
+                 */
+                log_info('[注文処理] PaymentMethod::checkoutを実行します.');
+                if ($response = $this->executeCheckout($paymentMethod)) {
+                    return $response;
+                }
+
+                $this->entityManager->flush();
+
+                log_info('[注文処理] 注文処理が完了しました.', [$Order->getId()]);
+            } catch (ShoppingException $e) {
+                log_error('[注文処理] 購入エラーが発生しました.', [$e->getMessage()]);
+
+                $this->entityManager->rollback();
+
+                $this->addError($e->getMessage());
+
+                return $this->redirectToRoute('shopping_error');
+            } catch (\Exception $e) {
+                log_error('[注文処理] 予期しないエラーが発生しました.', [$e->getMessage()]);
+
+                $this->entityManager->rollback();
+
+                $this->addError('front.shopping.system_error');
+
+                return $this->redirectToRoute('shopping_error');
             }
-        }else{
-            $stripePaymentMethodObj = false;
-            $exp = "";
+
+            // カート削除
+            log_info('[注文処理] カートをクリアします.', [$Order->getId()]);
+            $this->cartService->clear();
+
+            // 受注IDをセッションにセット
+            $this->session->set(OrderHelper::SESSION_ORDER_ID, $Order->getId());
+
+            // メール送信
+            log_info('[注文処理] 注文メールの送信を行います.', [$Order->getId()]);
+            $this->mailService->sendOrderMail($Order);
+            $this->entityManager->flush();
+
+            log_info('[注文処理] 注文処理が完了しました. 購入完了画面へ遷移します.', [$Order->getId()]);
+
+            //return $this->json([
+            //   'done' => true,
+            //   'messages' => "success",
+            //]);
+
+            return $this->redirectToRoute('shopping_complete');
+            // return $this->redirectToRoute('user_thanks');
         }
 
-        //if ($form->isSubmitted() && $form->isValid()) {
+        log_info('[注文処理] フォームエラーのため, 購入エラー画面へ遷移します.', [$Order->getId()]);
+
+        return $this->redirectToRoute('shopping_error');
+    }
+
+    /**
+     * 購入完了画面を表示する.
+     *
+     * @Route("/shopping/complete", name="shopping_complete", methods={"GET"})
+     * @Template("Shopping/complete.twig")
+     */
+    public function complete(Request $request)
+    {
+        log_info('[注文完了] 注文完了画面を表示します.');
+
+        // 受注IDを取得
+        $orderId = $this->session->get(OrderHelper::SESSION_ORDER_ID);
+
+        if (empty($orderId)) {
+            log_info('[注文完了] 受注IDを取得できないため, トップページへ遷移します.');
+
+            return $this->redirectToRoute('homepage');
+        }
+
+        $Order = $this->orderRepository->find($orderId);
+
+        $event = new EventArgs(
+            [
+                'Order' => $Order,
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_SHOPPING_COMPLETE_INITIALIZE, $event);
+
+        if ($event->getResponse() !== null) {
+            return $event->getResponse();
+        }
+
+        log_info('[注文完了] 購入フローのセッションをクリアします. ');
+        $this->orderHelper->removeSession();
+
+        $hasNextCart = !empty($this->cartService->getCarts());
+
+        log_info('[注文完了] 注文完了画面を表示しました. ', [$hasNextCart]);
+
         return [
-            'stripeConfig'  =>  $StripeConfig,
-            'stripePaymentMethodObj'    =>  $stripePaymentMethodObj,
-            'exp'       =>  $exp,
-            'Order'         =>  $Order,
-            'checkout_ga_enable' => $checkout_ga_enable,
-            'coupon_enable' =>  $coupon_enable,
+            'Order' => $Order,
+            'hasNextCart' => $hasNextCart,
         ];
-        //}
-        return $this->redirectToRoute('shopping');
-    }
-    /**
-     * @Route("/plugin/stripe_rec/check_coupon", name="plugin_striperec_coupon_check")
-     */
-    public function checkCoupon(Request $request){
-        $coupon_id = $request->request->get('coupon_id');
-        $coupon_service = $this->container->get('plg_stripe_rec.service.coupon_service');
-        $res = $coupon_service->retrieveCoupon($coupon_id);
-        if(empty($res)){
-            return $this->json([
-                'error' =>  true,
-                'message'   =>  $coupon_service->getError()
-            ]);
-        }
-        if(empty($res->valid)){
-            return $this->json([
-                'error' =>  true,
-                'message'   =>  trans("stripe_recurring.coupon.error.expired_or_invalid")
-            ]);
-        }
-        $Order = $this->getOrder();
-        $pb_service = $this->container->get('plg_stripe_rec.service.pointbundle_service');
-        $bundle_include_arr = $this->session->get('bundle_include_arr');
-        $bundles = $pb_service->getBundleProducts($Order, $bundle_include_arr);
-
-        $price_sum = $pb_service->getPriceSum($Order);
-        extract($price_sum);
-        if($bundles){
-            $bundle_order_items = $bundles['order_items'];
-            $initial_amount += $bundles['price'];
-        }else{
-            $bundle_order_items = null;
-        }
-        $initial_discount = $coupon_service->couponDiscountAmount($initial_amount, $res);
-        $recurring_discount = $coupon_service->couponDiscountAmount($recurring_amount, $res);
-
-        return $this->json([
-            'success'   =>  true,
-            'initial_amount'    =>  $initial_amount,
-            'recurring_amount'  =>  $recurring_amount,
-            'initial_discount'  =>  $initial_discount,
-            'recurring_discount'=>  $recurring_discount,
-        ]);
     }
 
     /**
-     * @Route("/plugin/striperec/checkout", name="plugin_striperec_checkout")
+     * お届け先選択画面.
+     *
+     * 会員ログイン時, お届け先を選択する画面を表示する
+     * 非会員の場合はこの画面は使用しない。
+     *
+     * @Route("/shopping/shipping/{id}", name="shopping_shipping", requirements={"id" = "\d+"}, methods={"GET", "POST"})
+     * @Template("Shopping/shipping.twig")
      */
-    public function checkout(Request $request){
-        $Order = $this->getOrder();
+    public function shipping(Request $request, Shipping $Shipping)
+    {
+        // ログイン状態のチェック.
+        if ($this->orderHelper->isLoginRequired()) {
+            return $this->redirectToRoute('shopping_login');
+        }
+
+        // 受注の存在チェック
+        $preOrderId = $this->cartService->getPreOrderId();
+        $Order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
         if (!$Order) {
-            $this->addError(trans('stripe_payment_gateway.admin.order.invalid_request'));
             return $this->redirectToRoute('shopping_error');
         }
-        // EOC validation checking
-        try {
+
+        // 受注に紐づくShippingかどうかのチェック.
+        if (!$Order->findShipping($Shipping->getId())) {
+            return $this->redirectToRoute('shopping_error');
+        }
+
+        $builder = $this->formFactory->createBuilder(CustomerAddressType::class, null, [
+            'customer' => $this->getUser(),
+            'shipping' => $Shipping,
+        ]);
+
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            log_info('お届先情報更新開始', [$Shipping->getId()]);
+
+            /** @var CustomerAddress $CustomerAddress */
+            $CustomerAddress = $form['addresses']->getData();
+
+            // お届け先情報を更新
+            $Shipping->setFromCustomerAddress($CustomerAddress);
+
+            // 合計金額の再計算
             $response = $this->executePurchaseFlow($Order);
             $this->entityManager->flush();
+
             if ($response) {
                 return $response;
             }
-            log_info('[注文処理] PaymentMethodを取得します.', [$Order->getPayment()->getMethodClass()]);
-            $paymentMethod = $this->createPaymentMethod($Order, null);
 
-            /*
-                * 決済実行(前処理)
-                */
-            log_info('[注文処理] PaymentMethod::applyを実行します.');
-            if ($response = $this->executeApply($paymentMethod)) {
-                return $response;
+            $event = new EventArgs(
+                [
+                    'Order' => $Order,
+                    'Shipping' => $Shipping,
+                ],
+                $request
+            );
+            $this->eventDispatcher->dispatch(EccubeEvents::FRONT_SHOPPING_SHIPPING_COMPLETE, $event);
+
+            log_info('お届先情報更新完了', [$Shipping->getId()]);
+
+            return $this->redirectToRoute('shopping');
+        }
+
+        return [
+            'form' => $form->createView(),
+            'Customer' => $this->getUser(),
+            'shippingId' => $Shipping->getId(),
+        ];
+    }
+
+    /**
+     * お届け先の新規作成または編集画面.
+     *
+     * 会員時は新しいお届け先を作成し, 作成したお届け先を選択状態にして注文手続き画面へ遷移する.
+     * 非会員時は選択されたお届け先の編集を行う.
+     *
+     * @Route("/shopping/shipping_edit/{id}", name="shopping_shipping_edit", requirements={"id" = "\d+"}, methods={"GET", "POST"})
+     * @Template("Shopping/shipping_edit.twig")
+     */
+    public function shippingEdit(Request $request, Shipping $Shipping)
+    {
+        // ログイン状態のチェック.
+        if ($this->orderHelper->isLoginRequired()) {
+            return $this->redirectToRoute('shopping_login');
+        }
+
+        // 受注の存在チェック
+        $preOrderId = $this->cartService->getPreOrderId();
+        $Order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
+        if (!$Order) {
+            return $this->redirectToRoute('shopping_error');
+        }
+
+        // 受注に紐づくShippingかどうかのチェック.
+        if (!$Order->findShipping($Shipping->getId())) {
+            return $this->redirectToRoute('shopping_error');
+        }
+
+        $CustomerAddress = new CustomerAddress();
+        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
+            // ログイン時は会員と紐付け
+            $CustomerAddress->setCustomer($this->getUser());
+        } else {
+            // 非会員時はお届け先をセット
+            $CustomerAddress->setFromShipping($Shipping);
+        }
+        $builder = $this->formFactory->createBuilder(ShoppingShippingType::class, $CustomerAddress);
+
+        $event = new EventArgs(
+            [
+                'builder' => $builder,
+                'Order' => $Order,
+                'Shipping' => $Shipping,
+                'CustomerAddress' => $CustomerAddress,
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_SHOPPING_SHIPPING_EDIT_INITIALIZE, $event);
+
+        $form = $builder->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            log_info('お届け先追加処理開始', ['order_id' => $Order->getId(), 'shipping_id' => $Shipping->getId()]);
+
+            $Shipping->setFromCustomerAddress($CustomerAddress);
+
+            if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
+                $this->entityManager->persist($CustomerAddress);
             }
 
-            /*
-            * 決済実行
-            *
-            * PaymentMethod::checkoutでは決済処理が行われ, 正常に処理出来た場合はPurchaseFlow::commitがコールされます.
-            */
-            log_info('[注文処理] PaymentMethod::checkoutを実行します.');
-            if ($response = $this->executeCheckout($paymentMethod)) {
-                return $response;
-            }
-
+            // 合計金額の再計算
+            $response = $this->executePurchaseFlow($Order);
             $this->entityManager->flush();
 
-            log_info('[注文処理] 注文処理が完了しました.', [$Order->getId()]);
-        }catch (ShoppingException $e) {
-            log_error('[注文処理] 購入エラーが発生しました.', [$e->getMessage()]);
+            if ($response) {
+                return $response;
+            }
 
-            $this->entityManager->rollback();
+            $event = new EventArgs(
+                [
+                    'form' => $form,
+                    'Shipping' => $Shipping,
+                    'CustomerAddress' => $CustomerAddress,
+                ],
+                $request
+            );
+            $this->eventDispatcher->dispatch(EccubeEvents::FRONT_SHOPPING_SHIPPING_EDIT_COMPLETE, $event);
 
-            $this->addError($e->getMessage());
+            log_info('お届け先追加処理完了', ['order_id' => $Order->getId(), 'shipping_id' => $Shipping->getId()]);
 
-            return $this->redirectToRoute('shopping_error');
-        } catch (\Exception $e) {
-            log_error('[注文処理] 予期しないエラーが発生しました.', [$e->getMessage()]);
-
-            $this->entityManager->rollback();
-
-            $this->addError('front.shopping.system_error');
-
-            return $this->redirectToRoute('shopping_error');
+            return $this->redirectToRoute('shopping');
         }
 
-        // カート削除
-        log_info('[注文処理] カートをクリアします.', [$Order->getId()]);
-        $this->cartService->clear();
-
-        // 受注IDをセッションにセット
-        $this->session->set(OrderHelper::SESSION_ORDER_ID, $Order->getId());
-
-        // メール送信
-        log_info('[注文処理] 注文メールの送信を行います.', [$Order->getId()]);
-        $this->mailService->sendOrderMail($Order);
-        $this->entityManager->flush();
-
-        log_info('[注文処理] 注文処理が完了しました. 購入完了画面へ遷移します.', [$Order->getId()]);
-
-        return $this->redirectToRoute('shopping_complete');
+        return [
+            'form' => $form->createView(),
+            'shippingId' => $Shipping->getId(),
+        ];
     }
 
-    // For original card input recurring
-    private function procStripeCustomer(StripeClient $stripeClient, $Order, $isSaveCardOn) {
+    /**
+     * ログイン画面.
+     *
+     * @Route("/shopping/login", name="shopping_login", methods={"GET"})
+     * @Template("Shopping/login.twig")
+     */
+    public function login(Request $request, AuthenticationUtils $authenticationUtils)
+    {
+        if ($this->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->redirectToRoute('shopping');
+        }
 
-        $Customer = $Order->getCustomer();
-        $isEcCustomer=false;
-        $isStripeCustomer=false;
-        $StripeCustomer = false;
-        $stripeCustomerId = false;
+        /* @var $form \Symfony\Component\Form\FormInterface */
+        $builder = $this->formFactory->createNamedBuilder('', CustomerLoginType::class);
 
-        if($Customer instanceof Customer ){
-            $isEcCustomer=true;
-            $StripeCustomer=$this->stripeCustomerRepository->findOneBy(array('Customer'=>$Customer));
-            if($StripeCustomer instanceof StripeCustomer){
-                $stripLibCustomer = $stripeClient->retrieveCustomer($StripeCustomer->getStripeCustomerId());
-                if(is_array($stripLibCustomer) || isset($stripLibCustomer['error'])) {
-                    if(isset($stripLibCustomer['error']['code']) && $stripLibCustomer['error']['code'] == 'resource_missing') {
-                        $isStripeCustomer = false;
-                    }
-                } else {
-                    $isStripeCustomer=true;
-                }
+        if ($this->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+            $Customer = $this->getUser();
+            if ($Customer) {
+                $builder->get('login_email')->setData($Customer->getEmail());
             }
         }
 
-        if($isEcCustomer) {//Create/Update customer
-            if($isSaveCardOn) {
-                //BOC check if is StripeCustomer then update else create one
-                if($isStripeCustomer) {
-                    $stripeCustomerId=$StripeCustomer->getStripeCustomerId();
-                    //BOC save is save card
-                    $StripeCustomer->setIsSaveCardOn($isSaveCardOn);
-                    $this->entityManager->persist($StripeCustomer);
-                    $this->entityManager->flush($StripeCustomer);
-                    //EOC save is save card
+        $event = new EventArgs(
+            [
+                'builder' => $builder,
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_SHOPPING_LOGIN_INITIALIZE, $event);
 
-                    $updateCustomerStatus = $stripeClient->updateCustomerV2($stripeCustomerId,$Customer->getEmail());
-                    if (is_array($updateCustomerStatus) && isset($updateCustomerStatus['error'])) {//In case of update fail
-                        $errorMessage=StripeClient::getErrorMessageFromCode($updateCustomerStatus['error'], $this->eccubeConfig['locale']);
-                        return ['error' => true, 'message' => $errorMessage];
-                    }
-                } else {
-                    $stripeCustomerId=$stripeClient->createCustomerV2($Customer->getEmail(),$Customer->getId());
-                    if (is_array($stripeCustomerId) && isset($stripeCustomerId['error'])) {//In case of fail
-                        $errorMessage=StripeClient::getErrorMessageFromCode($stripeCustomerId['error'], $this->eccubeConfig['locale']);
-                        return ['error' => true, 'message' => $errorMessage];
-                    } else {
-                        if(!$StripeCustomer) {
-                            $StripeCustomer = new StripeCustomer();
-                            $StripeCustomer->setCustomer($Customer);
-                        }
-                        $StripeCustomer->setStripeCustomerId($stripeCustomerId);
-                        $StripeCustomer->setIsSaveCardOn($isSaveCardOn);
-                        $StripeCustomer->setCreatedAt(new \DateTime());
-                        $this->entityManager->persist($StripeCustomer);
-                        $this->entityManager->flush($StripeCustomer);
-                    }
-                }
-                //EOC check if is StripeCustomer then update else create one
-                return $stripeCustomerId;
-            }
-        }
-        //Create temp customer
-        $stripeCustomerId=$stripeClient->createCustomerV2($Order->getEmail(),0,$Order->getId());
-        if (is_array($stripeCustomerId) && isset($stripeCustomerId['error'])) {//In case of fail
-            $errorMessage=StripeClient::getErrorMessageFromCode($stripeCustomerId['error'], $this->eccubeConfig['locale']);
-            return ['error' => true, 'message' => $errorMessage];
-        }
-        return $stripeCustomerId;
+        $form = $builder->getForm();
+
+        return [
+            'error' => $authenticationUtils->getLastAuthenticationError(),
+            'form' => $form->createView(),
+        ];
     }
 
-
-    private function getErrorMessages(\Symfony\Component\Form\Form $form) {
-        $errors = array();
-
-        foreach ($form->getErrors() as $key => $error) {
-            if ($form->isRoot()) {
-                $errors['#'][] = $error->getMessage();
-            } else {
-                $errors[] = $error->getMessage();
-            }
+    /**
+     * 購入エラー画面.
+     *
+     * @Route("/shopping/error", name="shopping_error", methods={"GET"})
+     * @Template("Shopping/shopping_error.twig")
+     */
+    public function error(Request $request, PurchaseFlow $cartPurchaseFlow)
+    {
+        // 受注とカートのずれを合わせるため, カートのPurchaseFlowをコールする.
+        $Cart = $this->cartService->getCart();
+        if (null !== $Cart) {
+            $cartPurchaseFlow->validate($Cart, new PurchaseContext($Cart, $this->getUser()));
+            $this->cartService->setPreOrderId(null);
+            $this->cartService->save();
         }
 
-        foreach ($form->all() as $child) {
-            if (!$child->isValid()) {
-                $errors[$child->getName()] = $this->getErrorMessages($child);
-            }
+        $event = new EventArgs(
+            [],
+            $request
+        );
+        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_SHOPPING_SHIPPING_ERROR_COMPLETE, $event);
+
+        if ($event->getResponse() !== null) {
+            return $event->getResponse();
         }
 
-        return $errors;
+        return [];
     }
-    private function getOrder(){
-        // BOC validation checking
-        $preOrderId = $this->cartService->getPreOrderId();
-        /** @var Order $Order */
-        return $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
-    }
+
     /**
      * PaymentMethodをコンテナから取得する.
      *
@@ -562,74 +810,86 @@ class ShoppingExController extends ShoppingController
      *
      * @return PaymentMethodInterface
      */
-    private function createPaymentMethod(Order $Order)
+    private function createPaymentMethod(Order $Order, FormInterface $form)
     {
         $PaymentMethod = $this->container->get($Order->getPayment()->getMethodClass());
         $PaymentMethod->setOrder($Order);
+        $PaymentMethod->setFormType($form);
 
         return $PaymentMethod;
     }
 
-    private function genPaymentResponse($intent) {
-        if($intent instanceof PaymentIntent ) {
-            log_info("genPaymentResponse: " . $intent->status);
-            switch($intent->status) {
-                case 'requires_action':
-                case 'requires_source_action':
-                    return [
-                        'action'=> 'requires_action',
-                        'payment_intent_id'=> $intent->id,
-                        'client_secret'=> $intent->client_secret
-                    ];
-                case 'requires_payment_method':
-                case 'requires_source':
-                    return [
-                        'error' => true,
-                        'message' => StripeClient::getErrorMessageFromCode('invalid_number', $this->eccubeConfig['locale'])
-                    ];
-                case 'requires_capture':
-                    return [
-                        'action' => 'requires_capture',
-                        'payment_intent_id' => $intent->id
-                    ];
-                default:
-                    return ['error' => true, 'message' => trans('stripe_payment_gateway.front.unexpected_error')];
-//                    return ['error' => true, 'message' => trans('stripe_payment_gateway.front.unexpected_error')];
+    /**
+     * PaymentMethod::applyを実行する.
+     *
+     * @param PaymentMethodInterface $paymentMethod
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    protected function executeApply(PaymentMethodInterface $paymentMethod)
+    {
+        $dispatcher = $paymentMethod->apply(); // 決済処理中.
+
+        // リンク式決済のように他のサイトへ遷移する場合などは, dispatcherに処理を移譲する.
+        if ($dispatcher instanceof PaymentDispatcher) {
+            $response = $dispatcher->getResponse();
+            $this->entityManager->flush();
+
+            // dispatcherがresponseを保持している場合はresponseを返す
+            if ($response instanceof Response && ($response->isRedirection() || $response->isSuccessful())) {
+                log_info('[注文処理] PaymentMethod::applyが指定したレスポンスを表示します.');
+
+                return $response;
+            }
+
+            // forwardすることも可能.
+            if ($dispatcher->isForward()) {
+                log_info('[注文処理] PaymentMethod::applyによりForwardします.',
+                    [$dispatcher->getRoute(), $dispatcher->getPathParameters(), $dispatcher->getQueryParameters()]);
+
+                return $this->forwardToRoute($dispatcher->getRoute(), $dispatcher->getPathParameters(),
+                    $dispatcher->getQueryParameters());
+            } else {
+                log_info('[注文処理] PaymentMethod::applyによりリダイレクトします.',
+                    [$dispatcher->getRoute(), $dispatcher->getPathParameters(), $dispatcher->getQueryParameters()]);
+
+                return $this->redirectToRoute($dispatcher->getRoute(),
+                    array_merge($dispatcher->getPathParameters(), $dispatcher->getQueryParameters()));
             }
         }
-        if(isset($intent['error'])) {
-            $errorMessage=StripeClient::getErrorMessageFromCode($intent['error'], $this->eccubeConfig['locale']);
-        } else {
-            $errorMessage = trans('stripe_payment_gateway.front.unexpected_error');
-        }
-        return ['error' => true, 'message' => $errorMessage];
     }
 
+    /**
+     * PaymentMethod::checkoutを実行する.
+     *
+     * @param PaymentMethodInterface $paymentMethod
+     *
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response|null
+     */
+    protected function executeCheckout(PaymentMethodInterface $paymentMethod)
+    {
+        $PaymentResult = $paymentMethod->checkout();
+        $response = $PaymentResult->getResponse();
+        // PaymentResultがresponseを保持している場合はresponseを返す
+        if ($response instanceof Response && ($response->isRedirection() || $response->isSuccessful())) {
+            $this->entityManager->flush();
+            log_info('[注文処理] PaymentMethod::checkoutが指定したレスポンスを表示します.');
 
-    private function checkSaveCardOn($Customer, $StripeConfig){
-        $isStripeCustomer = false;
-        $StripeCustomer=$this->entityManager->getRepository(StripeCustomer::class)->findOneBy(array('Customer'=>$Customer));
-        $stripeClient = new StripeClient($StripeConfig->secret_key);
-        if($StripeCustomer instanceof StripeCustomer){
-            $stripLibCustomer = $stripeClient->retrieveCustomer($StripeCustomer->getStripeCustomerId());
-            if(is_array($stripLibCustomer) || isset($stripLibCustomer['error'])) {
-                if(isset($stripLibCustomer['error']['code']) && $stripLibCustomer['error']['code'] == 'resource_missing') {
-                    $isStripeCustomer = false;
-                }
-            } else {
-                $isStripeCustomer=true;
-            }
+            return $response;
         }
-        if(!$isStripeCustomer) return false;
-        if($StripeCustomer->getIsSaveCardOn()){
-            $stripePaymentMethodObj = $stripeClient->retrieveLastPaymentMethodByCustomer($StripeCustomer->getStripeCustomerId());
-            if( !($stripePaymentMethodObj instanceof PaymentMethod) || !$stripeClient->isPaymentMethodId($stripePaymentMethodObj->id) ) {
-                return false;
-            }else{
-                return $stripePaymentMethodObj;
+
+        // エラー時はロールバックして購入エラーとする.
+        if (!$PaymentResult->isSuccess()) {
+            $this->entityManager->rollback();
+            foreach ($PaymentResult->getErrors() as $error) {
+                $this->addError($error);
             }
-        }else{
-            return false;
+
+            log_info('[注文処理] PaymentMethod::checkoutのエラーのため, 購入エラー画面へ遷移します.', [$PaymentResult->getErrors()]);
+
+            return $this->redirectToRoute('shopping_error');
         }
+
+        return null;
     }
 }

@@ -38,6 +38,7 @@ use Plugin\StripeRec\Service\MailExService;
 use Stripe\PaymentMethod;
 use Stripe\PaymentIntent;
 use Plugin\Coupon4\Repository\CouponRepository;
+use Plugin\Coupon4\Repository\CouponOrderRepository;
 use Plugin\Coupon4\Service\CouponService;
 
 class ShoppingExController extends ShoppingController
@@ -50,6 +51,7 @@ class ShoppingExController extends ShoppingController
     protected $stripeCustomerRepository;
     protected $eccubeConfig;
     private $couponRepository;
+    private $couponOrderRepository;
     private $couponService;
 
     public function __construct(
@@ -61,6 +63,7 @@ class ShoppingExController extends ShoppingController
         SessionInterface $session,
         EccubeConfig $eccubeConfig,
         CouponRepository $couponRepository,
+        CouponOrderRepository $couponOrderRepository,
         CouponService $couponService
     ) {
         parent::__construct(
@@ -69,6 +72,7 @@ class ShoppingExController extends ShoppingController
             $orderRepository,
             $orderHelper,
             $couponRepository,
+            $couponOrderRepository,
             $couponService
         );
         $this->container = $container;
