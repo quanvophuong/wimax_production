@@ -525,8 +525,8 @@ class OrderController extends AbstractController
                             $this->orderStateMachine->apply($Order, $OrderStatus);
                         }
 
-                        $this->mailService->sendShippingNotifyMail($Shipping);
-                        $Shipping->setMailSendDate(new \DateTime());
+                        //$this->mailService->sendShippingNotifyMail($Shipping);
+                        //$Shipping->setMailSendDate(new \DateTime());
                     } else {
                         $this->orderStateMachine->apply($Order, $OrderStatus);
                     }
@@ -758,7 +758,7 @@ class OrderController extends AbstractController
         return $response;
     }
 
-    
+
     /**
      * @Route("/%eccube_admin_route%/order/export/pdf/orderdownload", name="admin_order_pdf_order_download", methods={"POST"})
      *

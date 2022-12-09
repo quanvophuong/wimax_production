@@ -49,7 +49,7 @@ stripe_recurring.admin.product.first_cycle_free: 最初のサイクルは無料
 stripe_recurring.payment_method.name: クレジットカード定期購入
 stripe_recurring.subscribe.failed: 定期支払い失敗
 stripe_recurring.confirm.card_verify_error: カード検証エラー
-stripe_recurring.checkout.payment_method.retrieve_error: 支払い取得エラー
+stripe_recurring.checkout.payment_method.retrieve_error: ご入力されたカードはお取り扱いできませんでした。カード情報をご確認いただき再度ご入力いただくか、別のカードをお試しください。
 stripe_recurring.cart.quant_limit_error: この商品は1つしかカートに入れることができません。
 stripe_recurring.label.paid_status.paid: 支払い済み
 stripe_recurring.label.paid_status.upcoming: 待機
@@ -88,7 +88,7 @@ stripe_recurring.admin.license.license_key.error.blank: ライセンスキーが
 stripe_recurring.admin.license.license_key.error.regex: 有効なライセンスキーを入力してください。
 
 stripe_recurring.admin.license.email: メールアドレス
-stripe_recurring.admin.license.email.error.blank: メールアドレスが入力されていません。 
+stripe_recurring.admin.license.email.error.blank: メールアドレスが入力されていません。
 stripe_recurring.admin.license.email.error.regex: 有効なメールアドレスを入力してください。
 
 stripe_recurring.admin.license.stripe.testkey: テストStripeキーを入力してください。
