@@ -20,13 +20,13 @@ file that was distributed with this source code.
         @media screen and (max-width: 640px){
             #wrap main {
                 width: 100% !important;
-                
+
             }
             #wrap main .formContent{
                 width: 92% !important;
             }
         }
-       
+
         .slick-slider {
             margin-bottom: 30px;
         }
@@ -125,136 +125,137 @@ file that was distributed with this source code.
 {% endblock %}
 
 {% block javascript %}
-    <script>
-        //sp total toggle
-        $(function () {
-            $('.displayBtn').click(function () {
-                $(this).toggleClass("add");
-                $('.displayArea').slideToggle();
-            });
-        });
-        $(function() {
-            $('.main_visual').slick({
-                dots: true,
-                arrows: false,
-                autoplay: true,
-                speed: 300
-            });
-        });
-        function getNextMonday(date = new Date()) {
-            const dateCopy = new Date(date.getTime());
+<script>
+    //sp total toggle
+    $(function () {
+    $('.displayBtn').click(function () {
+        $(this).toggleClass("add");
+        $('.displayArea').slideToggle();
+    });
+});
+    $(function() {
+    $('.main_visual').slick({
+        dots: true,
+        arrows: false,
+        autoplay: true,
+        speed: 300
+    });
+});
+    function getNextMonday(date = new Date()) {
+    const dateCopy = new Date(date.getTime());
 
-            const nextMonday = new Date(
-                dateCopy.setDate(
-                    dateCopy.getDate() + ((7 - dateCopy.getDay() + 1) % 7 || 7),
-                ),
-            );
+    const nextMonday = new Date(
+    dateCopy.setDate(
+    dateCopy.getDate() + ((7 - dateCopy.getDay() + 1) % 7 || 7),
+    ),
+    );
 
-            return nextMonday;
-        }
+    return nextMonday;
+}
 
-        function getFirstDayOfNextMonth() {
-            const date = new Date();
-            return new Date(date.getFullYear(), date.getMonth() + 1, 1);
-        }
-        $(function () {
+    function getFirstDayOfNextMonth() {
+    const date = new Date();
+    return new Date(date.getFullYear(), date.getMonth() + 1, 1);
+}
+    $(function () {
 
-            var current = new Date();
-            var weekday = current.getDay();
-            var month, day;
-            if(weekday == 6 || weekday == 0){
-                var nextMon = getNextMonday(current);
-                month = nextMon.getMonth() + 1;
-                day = nextMon.getDate();
-                console.log(nextMon);
-            }
-            else{
-                if(current.getHours() < 14){
-                    month = current.getMonth() + 1;
-                    day = current.getDate();
-                }
-                else{
-                    current.setTime(current.getTime() + 86400000);
-                    month = current.getMonth() + 1;
-                    day = current.getDate();
-                }
+    var current = new Date();
+    var weekday = current.getDay();
+    var month, day;
+    if(weekday == 6 || weekday == 0){
+    var nextMon = getNextMonday(current);
+    month = nextMon.getMonth() + 1;
+    day = nextMon.getDate();
+    console.log(nextMon);
+}
+    else{
+    if(current.getHours() < 14){
+    month = current.getMonth() + 1;
+    day = current.getDate();
+}
+    else{
+    current.setTime(current.getTime() + 86400000);
+    month = current.getMonth() + 1;
+    day = current.getDate();
+}
 
-            }
+}
 
-            
-            var txt = month + '月' + day + '日発送予定';
-            $('#current_month').text(txt);
 
-            var nextMonth = getFirstDayOfNextMonth();
-            var nextWeekDay = nextMonth.getDay();
-            month = nextMonth.getMonth() + 1;
-            day = 1;
-            if(nextWeekDay == 6){
-                day = 3;
-            }
-            else if(nextWeekDay == 0){
-                day = 2;
-            }
-            txt = month + '月' + day + '日発送予定';
-            $('#next_month').text(txt);
+    var txt = month + '月' + day + '日発送予定';
+    //$('#current_month').text(txt);
 
-            $('[name=tab_item]').click(function () {
-                var option = 0;
-                if($("input[name='option']:checked").val() != undefined)
-                    option = parseInt($("input[name='option']:checked").val());
-                if($(this).val() == 4){
-                    $("#noneUsb").attr('checked', true).trigger('click');
-                    $('#usb_part').hide();
-                    $('#usb_value').text('0円');
-                    calcAmount();
-                }
-                else{
-                    $('#usb_part').show();
-                    calcAmount();
-                }
+    var nextMonth = getFirstDayOfNextMonth();
+    var nextWeekDay = nextMonth.getDay();
+    month = nextMonth.getMonth() + 1;
+    day = 1;
+    if(nextWeekDay == 6){
+    day = 3;
+}
+    else if(nextWeekDay == 0){
+    day = 2;
+}
+    txt = '1月5日発送予定';
+    //txt = month + '月' + day + '日発送予定';
+    //$('#next_month').text(txt);
 
-            });
-            $('[name=option]').click(function () {
-                calcAmount();
-            });
-            $('[name=usb]').click(function () {
-                calcAmount();
-            });
-            
-            $('[name=send]').click(function () {
-                calcAmount()
-            });
+    $('[name=tab_item]').click(function () {
+    var option = 0;
+    if($("input[name='option']:checked").val() != undefined)
+    option = parseInt($("input[name='option']:checked").val());
+    if($(this).val() == 4){
+    $("#noneUsb").attr('checked', true).trigger('click');
+    $('#usb_part').hide();
+    $('#usb_value').text('0円');
+    calcAmount();
+}
+    else{
+    $('#usb_part').show();
+    calcAmount();
+}
 
-            $('.shopCartBtn').click(function (){
-                var $thisBtn = $(this);
-                var $form = $('#productForm');
-                var product_id = $('input[name=tab_item]:checked').val();
-                var classcategory_id1 = parseInt($('input[name=option]:checked').val());
-                var classcategory_id2 = parseInt($('input[name=usb]:checked').val());
-                var ship = parseInt($('input[name=send]:checked').val());
-                $('#product_id').val(product_id);
-               
-                $('#ship').val(ship);
-                
-                if(classcategory_id1 == 550){
-                    classcategory_id1 = 7;
-                }
-                else if(classcategory_id1 == 275){
-                    classcategory_id1 = 8;
-                }
-                else{
-                    classcategory_id1 = 9;
-                }
+});
+    $('[name=option]').click(function () {
+    calcAmount();
+});
+    $('[name=usb]').click(function () {
+    calcAmount();
+});
 
-                if(classcategory_id2 == 1540){
-                    classcategory_id2 = 10;
-                }
-                else{
-                    classcategory_id2 = 11;
-                }
+    $('[name=send]').click(function () {
+    calcAmount()
+});
 
-                if(product_id == 3){
-                    var url = '{{ url('product_add_cart', {id:3}) }}'
+    $('.shopCartBtn').click(function (){
+    var $thisBtn = $(this);
+    var $form = $('#productForm');
+    var product_id = $('input[name=tab_item]:checked').val();
+    var classcategory_id1 = parseInt($('input[name=option]:checked').val());
+    var classcategory_id2 = parseInt($('input[name=usb]:checked').val());
+    var ship = parseInt($('input[name=send]:checked').val());
+    $('#product_id').val(product_id);
+
+    $('#ship').val(ship);
+
+    if(classcategory_id1 == 550){
+    classcategory_id1 = 7;
+}
+    else if(classcategory_id1 == 275){
+    classcategory_id1 = 8;
+}
+    else{
+    classcategory_id1 = 9;
+}
+
+    if(classcategory_id2 == 1540){
+    classcategory_id2 = 10;
+}
+    else{
+    classcategory_id2 = 11;
+}
+
+    if(product_id == 3){
+    var url = '{{ url('product_add_cart', {id:3}) }}'
                     if(classcategory_id1 == 9){
                         if(classcategory_id2 == 11){
                             $('#ProductClass').val(14)
@@ -335,7 +336,7 @@ file that was distributed with this source code.
             var optionSend = 1;
             if($("input[name='send']:checked").val() != undefined)
                     optionSend = parseInt($("input[name='send']:checked").val());
-            
+
             var option = 0;
             if($("input[name='option']:checked").val() != undefined)
                 option = parseInt($("input[name='option']:checked").val());
@@ -351,7 +352,7 @@ file that was distributed with this source code.
             total += usb;
 
             $('#total').val(total);
-            
+
             $('#option_value').text(option.toLocaleString() + '円');
             $('#usb_value').text(usb.toLocaleString() + '円');
             $('#total_value').text(total.toLocaleString() + '円');
@@ -446,8 +447,8 @@ file that was distributed with this source code.
                     </div>
                     <div class="formContentBlock" id="usb_part">
                         <h3>USB ACアダプター</h3>
-{#                        <div class="formContentBlock__text">Anker PowerPort mini：2A 12W 2ポート USB急速充電器<br>#}
-{#                            【折りたたみ式プラグ/PowerIQ/超コンパクトサイズ 】iPhone iPad Android各種対応</div>#}
+                        {#                        <div class="formContentBlock__text">Anker PowerPort mini：2A 12W 2ポート USB急速充電器<br>#}
+                        {#                            【折りたたみ式プラグ/PowerIQ/超コンパクトサイズ 】iPhone iPad Android各種対応</div>#}
                         <div class="formContentBlock__text">ケーブル一体型充電器　Type-C</div>
                         <input type="radio" id="buyUsb" name="usb" value="1540" checked>
                         <label for="buyUsb">
@@ -459,10 +460,10 @@ file that was distributed with this source code.
                             <em>購入しない</em>
                         </label>
                         <ul>
-{#                            <li>✔3000万人以上が支持する充電製品No.1ブランドを是非お試しください｡</li>#}
-{#                            <li>✔Anker独自のPowerIQにより、フルスピード充電が可能です。</li>#}
-{#                            <li>※USBケーブルは付属しておりますが、ACアダプターは付属しておりません。</li>#}
-{#                            <li>※2AのACアダプターを推奨しております。</li>#}
+                            {#                            <li>✔3000万人以上が支持する充電製品No.1ブランドを是非お試しください｡</li>#}
+                            {#                            <li>✔Anker独自のPowerIQにより、フルスピード充電が可能です。</li>#}
+                            {#                            <li>※USBケーブルは付属しておりますが、ACアダプターは付属しておりません。</li>#}
+                            {#                            <li>※2AのACアダプターを推奨しております。</li>#}
                             <li>※レンタル商品に充電用アダプター、ケーブルは付属しておりません。</li>
                         </ul>
                     </div>
@@ -471,7 +472,7 @@ file that was distributed with this source code.
                         <input type="radio" id="creditcard" name="payment" value="" checked>
                         <label for="creditcard">
                             <div>クレジットカード</div>
-{#                            <span>※3Dセキュアサービス導入のクレジットカードはご利用できません。</span>#}
+                            {#                            <span>※3Dセキュアサービス導入のクレジットカードはご利用できません。</span>#}
                             <div>※デビットカード、プリペイドカードはご利用できません。<br />ご利用可能なクレジットカードは以下の通りです。<br />
                                 <img src="/html/user_data/assets/img/common/card_brand.png">
                             </div>
@@ -481,14 +482,16 @@ file that was distributed with this source code.
                     <div class="formContentBlock">
                         <h3>発送希望日</h3>
                         <input type="radio" id="short" name="send" value="1" checked>
-                        <label for="short">
-                            <em>最短発送</em>
-                            <span id="current_month"></span>
-                        </label>
-                        <input type="radio" id="next" name="send" value="2">
+                        {% if(is_use_current_month) %}
+                            <label for="short">
+                                <em>最短発送</em>
+                                <span id="current_month">{{ current_delivery_date }}</span>
+                            </label>
+                        {% endif %}
+                        <input type="radio" id="next" name="send" value="2" >
                         <label for="next">
                             <em>翌月</em>
-                            <span id="next_month"></span>
+                            <span id="">{{ next_delivery_date }}</span>
                         </label>
                         <ul>
                             <li>※「翌月」発送をご選択の場合、ご注文時に初期費用のみ決済させていただきます。</li>
@@ -513,11 +516,11 @@ file that was distributed with this source code.
         </main>
     </div>
 
-{#    <div class="ec-sliderRole">#}
-{#        <div class="main_visual">#}
-{#            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc01.jpg') }}"></div>#}
-{#            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc02.jpg') }}"></div>#}
-{#            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc03.jpg') }}"></div>#}
-{#        </div>#}
-{#    </div>#}
+    {#    <div class="ec-sliderRole">#}
+    {#        <div class="main_visual">#}
+    {#            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc01.jpg') }}"></div>#}
+    {#            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc02.jpg') }}"></div>#}
+    {#            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc03.jpg') }}"></div>#}
+    {#        </div>#}
+    {#    </div>#}
 {% endblock %}

@@ -10,344 +10,517 @@ file that was distributed with this source code.
 #}
 {% extends 'default_frame.twig' %}
 
+{% set body_class = 'front_page' %}
 
-{% form_theme form 'Form/form_div_layout.twig' %}
-
-{% block main %}
+{% block stylesheet %}
     <style>
-        .ec-layoutRole .ec-layoutRole__contents{
-            max-width: none;
+        .ec-layoutRole__contents{
+            max-width: 100% !important;
         }
-        .select-css {
-            padding: 0 10px !important;
-            height: 40px !important;
+        @media screen and (max-width: 640px){
+            #wrap main {
+                width: 100% !important;
+
+            }
+            #wrap main .formContent{
+                width: 92% !important;
+            }
         }
-        #coupon{
-            display: none !important;
+
+        .slick-slider {
+            margin-bottom: 30px;
+        }
+
+        .slick-dots {
+            position: absolute;
+            bottom: -45px;
+            display: block;
+            width: 100%;
+            padding: 0;
+            list-style: none;
+            text-align: center;
+        }
+
+        .slick-dots li {
+            position: relative;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin: 0 5px;
+            padding: 0;
+
+            cursor: pointer;
+        }
+
+        .slick-dots li button {
+            font-size: 0;
+            line-height: 0;
+            display: block;
+            width: 20px;
+            height: 20px;
+            padding: 5px;
+            cursor: pointer;
+            color: transparent;
+            border: 0;
+            outline: none;
+            background: transparent;
+        }
+
+        .slick-dots li button:hover,
+        .slick-dots li button:focus {
+            outline: none;
+        }
+
+        .slick-dots li button:hover:before,
+        .slick-dots li button:focus:before {
+            opacity: 1;
+        }
+
+        .slick-dots li button:before {
+            content: " ";
+            line-height: 20px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            text-align: center;
+            opacity: .25;
+            background-color: black;
+            border-radius: 50%;
+
+        }
+
+        .slick-dots li.slick-active button:before {
+            opacity: .75;
+            background-color: black;
+        }
+
+        .slick-dots li button.thumbnail img {
+            width: 0;
+            height: 0;
+        }
+
+        #page_homepage .ec-layoutRole__contents{
+            max-width: none !important;
+            display: flex;
+            justify-content: space-between;
+        }
+        #select #wrap {
+            width: calc(100% - 300px);
+        }
+
+        .secret-group label em{
+            width: 100px;
+        }
+
+        .secret-group label p{
+            width: 50%;
+        }
+
+        .secret-group label span{
+            width: 140px;
         }
     </style>
-    <script>
-        function getFirstDayOfNextMonth() {
-            const date = new Date();
-            return new Date(date.getFullYear(), date.getMonth() + 1, 1);
-        }
+{% endblock %}
 
-        $(function () {
+{% block javascript %}
+<script>
+    //sp total toggle
+    $(function () {
+    $('.displayBtn').click(function () {
+        $(this).toggleClass("add");
+        $('.displayArea').slideToggle();
+    });
+});
+    $(function() {
+    $('.main_visual').slick({
+        dots: true,
+        arrows: false,
+        autoplay: true,
+        speed: 300
+    });
+});
+    function getNextMonday(date = new Date()) {
+    const dateCopy = new Date(date.getTime());
+
+    const nextMonday = new Date(
+    dateCopy.setDate(
+    dateCopy.getDate() + ((7 - dateCopy.getDay() + 1) % 7 || 7),
+    ),
+    );
+
+    return nextMonday;
+}
+
+    function getFirstDayOfNextMonth() {
+    const date = new Date();
+    return new Date(date.getFullYear(), date.getMonth() + 1, 1);
+}
+    $(function () {
+
+    var current = new Date();
+    var weekday = current.getDay();
+    var month, day;
+    if(weekday == 6 || weekday == 0){
+    var nextMon = getNextMonday(current);
+    month = nextMon.getMonth() + 1;
+    day = nextMon.getDate();
+    console.log(nextMon);
+}
+    else{
+    if(current.getHours() < 14){
+    month = current.getMonth() + 1;
+    day = current.getDate();
+}
+    else{
+    current.setTime(current.getTime() + 86400000);
+    month = current.getMonth() + 1;
+    day = current.getDate();
+}
+
+}
 
 
-            var $redirectCallback = function() {
-                loadingOverlay();
-                $('#shopping_order_redirect_to').val($(this).attr('data-path'));
-                $('#shopping-form').attr('action', '{{ url("shopping_redirect_to") }}').submit();
-                setTimeout(function () {
-                    loadingOverlay("hide");
-                }, 2000);
-            };
-            $('[data-trigger]').each(function() {
-                $(this).on($(this).attr('data-trigger'), $redirectCallback);
-            });
+    var txt = month + '月' + day + '日発送予定';
+    //$('#current_month').text(txt);
 
+    var nextMonth = getFirstDayOfNextMonth();
+    var nextWeekDay = nextMonth.getDay();
+    month = nextMonth.getMonth() + 1;
+    day = 1;
+    if(nextWeekDay == 6){
+    day = 3;
+}
+    else if(nextWeekDay == 0){
+    day = 2;
+}
+    txt = '1月5日発送予定';
+    //txt = month + '月' + day + '日発送予定';
+    //$('#next_month').text(txt);
 
-            var nextMonth = getFirstDayOfNextMonth();
-            var month = nextMonth.getMonth() + 1;
-            var day = 1;
+    $('[name=tab_item]').click(function () {
+    var option = 0;
+    if($("input[name='option']:checked").val() != undefined)
+    option = parseInt($("input[name='option']:checked").val());
+    if($(this).val() == 4){
+    $("#noneUsb").attr('checked', true).trigger('click');
+    $('#usb_part').hide();
+    $('#usb_value').text('0円');
+    calcAmount();
+}
+    else{
+    $('#usb_part').show();
+    calcAmount();
+}
 
-            var txt = '・次回課金日：'+ nextMonth.getFullYear() + '年' + month + '月' + day + '日';
-            $('#next_month').text(txt);
+});
+    $('[name=option]').click(function () {
+    calcAmount();
+});
+    $('[name=usb]').click(function () {
+    calcAmount();
+});
 
-            console.log($('#cart_move').data('href'))
-            //var hr = $('#cart_move').data('href') + '&token=' + $('#shopping_order__token').val();
-            var url = window.location.origin;
-            var hr = url + '/plugin/stripe_rec/checkout_page';
-            $('#cart_move').click(function(e){
-                e.preventDefault();
-                var form = $('#shopping-form');
-                console.log(form.serialize());
-                var url = '{{ url('shopping_confirm') }}'
-                console.log(hr)
-                console.log(url);
+    $('[name=send]').click(function () {
+    calcAmount()
+});
+
+    $('.shopCartBtn').click(function (){
+    var $thisBtn = $(this);
+    var $form = $('#productForm');
+    var product_id = $('input[name=tab_item]:checked').val();
+    var classcategory_id1 = parseInt($('input[name=option]:checked').val());
+    var classcategory_id2 = parseInt($('input[name=usb]:checked').val());
+    var ship = parseInt($('input[name=send]:checked').val());
+    $('#product_id').val(product_id);
+
+    $('#ship').val(ship);
+
+    if(classcategory_id1 == 550){
+    classcategory_id1 = 7;
+}
+    else if(classcategory_id1 == 275){
+    classcategory_id1 = 8;
+}
+    else{
+    classcategory_id1 = 9;
+}
+
+    if(classcategory_id2 == 1540){
+    classcategory_id2 = 10;
+}
+    else{
+    classcategory_id2 = 11;
+}
+
+    if(product_id == 3){
+    var url = '{{ url('product_add_cart', {id:3}) }}'
+                    if(classcategory_id1 == 9){
+                        if(classcategory_id2 == 11){
+                            $('#ProductClass').val(14)
+                        }
+                        else{
+                            $('#ProductClass').val(15)
+                        }
+                    }
+                    if(classcategory_id1 == 8){
+                        if(classcategory_id2 == 11){
+                            $('#ProductClass').val(16)
+                        }
+                        else{
+                            $('#ProductClass').val(17)
+                        }
+                    }
+                    if(classcategory_id1 == 7){
+                        if(classcategory_id2 == 11){
+                            $('#ProductClass').val(18)
+                        }
+                        else{
+                            $('#ProductClass').val(19)
+                        }
+                    }
+
+                     $('#classcategory_id1').val(classcategory_id1);
+                    $('#classcategory_id2').val(classcategory_id2)
+                }
+                else{
+                    classcategory_id2 = 11;
+                    var url = '{{ url('product_add_cart', {id:4}) }}'
+                    if(classcategory_id1 == 9){
+                        if(classcategory_id2 == 11){
+                            $('#ProductClass').val(20)
+                        }
+                        else{
+                            $('#ProductClass').val(23)
+                        }
+                    }
+                    if(classcategory_id1 == 8){
+                        if(classcategory_id2 == 11){
+                            $('#ProductClass').val(21)
+                        }
+                        else{
+                            $('#ProductClass').val(24)
+                        }
+                    }
+                    if(classcategory_id1 == 7){
+                        if(classcategory_id2 == 11){
+                            $('#ProductClass').val(22)
+                        }
+                        else{
+                            $('#ProductClass').val(25)
+                        }
+                    }
+                     $('#classcategory_id1').val(classcategory_id2);
+                    $('#classcategory_id2').val(classcategory_id1)
+                }
+
                 $.ajax({
                     url: url,
-                    type: form.attr('method'),
-                    data: form.serialize(),
+                    type: $form.attr('method'),
+                    data: $form.serialize(),
                     dataType: 'json',
-                }).done(function(data) {
-                    result = data['done'];
-                    if (result){
-                        window.location.href = hr;
-                    }else{
-                        alert(data['messages']);
+                    beforeSend: function(xhr, settings) {
+                        // Buttonを無効にする
+                        $thisBtn.prop('disabled', true);
                     }
+                }).done(function(data) {
+                    window.location.href = '{{ url('cart') }}'
                 }).fail(function(data) {
-                    alert('{{ '失敗しました。'|trans }}');
+                     alert('{{ 'カートへの追加に失敗しました。'|trans }}');
                 })
+            });
+        });
 
-            })
+        function calcAmount(){
+            var optionSend = 1;
+            if($("input[name='send']:checked").val() != undefined)
+                    optionSend = parseInt($("input[name='send']:checked").val());
 
-            $('#btn_apply_coupon').click(function(e){
-                //coupon_code = $('#shopping_order_coupon_cd').val();
-                //if (coupon_code == ''){
-                //    alert('クーポンコードをご入力ください');
-                //    return;
-                //}
-                $('#mode').val('apply_coupon');
+            var option = 0;
+            if($("input[name='option']:checked").val() != undefined)
+                option = parseInt($("input[name='option']:checked").val());
+            var usb = 0;
+            if($("input[name='usb']:checked").val() != undefined)
+                usb = parseInt($("input[name='usb']:checked").val());
 
-                $('#shopping-form').submit();
-            })
-            $('#btn_cancel_coupon').click(function(e){
-                //coupon_code = $('#shopping_order_coupon_cd').val();
-                //if (coupon_code == ''){
-                //    alert('クーポンコードをご入力ください');
-                //    return;
-                //}
-                $('#mode').val('cancel_coupon');
+            var total = 3300;
+            let next = 4800 + option;
+            if (optionSend == 1){
+                total += 4800 + option;
+            }
+            total += usb;
 
-                $('#shopping-form').submit();
-            })
-        })
+            $('#total').val(total);
 
+            $('#option_value').text(option.toLocaleString() + '円');
+            $('#usb_value').text(usb.toLocaleString() + '円');
+            $('#total_value').text(total.toLocaleString() + '円');
+            $('#next_total').text(next.toLocaleString() + '円')
+        }
     </script>
+{% endblock javascript %}
+
+{% block main %}
     <div id="wrap" class="formBg">
-        <main id="confirmation">
-            <section class="formContent confirmationContent" style="max-width: 860px !important;">
-                <h2>お客様情報入力</h2>
-                <form id="shopping-form" method="post" action="{{ url('shopping_confirm') }}">
-                    {{ form_widget(form._token) }}
-                    {{ form_widget(form.redirect_to) }}
-                    {% if is_granted('ROLE_USER') == false %}
-                        <div style="display: none !important;">
-                            <input type="hidden" id="customer-name01" class="customer-in" name="customer_name01" value="{{ Order.name01 }}">
-                            <input type="hidden" id="customer-name02" class="customer-in" name="customer_name02" value="{{ Order.name02 }}">
-                            <input type="hidden" id="customer-kana01" class="customer-in" name="customer_kana01" value="{{ Order.kana01 }}">
-                            <input type="hidden" id="customer-kana02" class="customer-in" name="customer_kana02" value="{{ Order.kana02 }}">
-                            <input type="hidden" id="customer-company-name" class="customer-in" name="customer_company_name" value="{{ Order.companyName }}">
-                            <input type="hidden" id="customer-postal_code" class="customer-in" name="customer_postal_code" value="{{ Order.postal_code }}">
-                            <input type="hidden" id="customer-pref" class="customer-in" name="customer_pref" value="{{ Order.pref }}">
-                            <input type="hidden" id="customer-addr01" class="customer-in" name="customer_addr01" value="{{ Order.addr01 }}">
-                            <input type="hidden" id="customer-addr02" class="customer-in" name="customer_addr02" value="{{ Order.addr02 }}">
-                            <input type="hidden" id="customer-phone_number" class="customer-in" name="customer_phone_number" value="{{ Order.phone_number }}">
-                            <input type="hidden" id="customer-email" class="customer-in" name="customer_email" value="{{ Order.email }}">
-                        </div>
-                    {% endif %}
-
-                    <input type="hidden" id="mode" name="mode">
-
-                    {# {% for shipping in Order.shippings %}
-                        {% set idx = loop.index0 %}
-                        {% set isShowReducedTaxMess = false %}
-                        <div class="ec-orderDelivery__actions" style="display: none !important">
-                            <div class="ec-selects">
-                                <div class="ec-select">
-                                    <label>{{ '配送方法'|trans }}</label>
-                                    {{ form_widget(form.Shippings[idx].Delivery, { 'attr': { 'class': 'form-control', 'data-trigger': 'change' }}) }}
-                                    {{ form_errors(form.Shippings[idx].Delivery) }}
-                                </div>
-                                <div class="ec-select ec-select__delivery">
-                                    <label>{{ 'お届け日'|trans }}</label>
-                                    {{ form_widget(form.Shippings[idx].shipping_delivery_date, {'attr': {'class': 'form-control'}}) }}
-                                    {{ form_errors(form.Shippings[idx].shipping_delivery_date) }}
-                                </div>
-                                <div class="ec-select ec-select__time">
-                                    <label>{{ 'お届け時間'|trans }}</label>
-                                    {{ form_widget(form.Shippings[idx].DeliveryTime, {'attr': {'class': 'form-control'}}) }}
-                                    {{ form_errors(form.Shippings[idx].DeliveryTime) }}
+        <main style="width: calc(100vw - 300px);">
+            <section class="formContent" style="max-width: 860px;">
+                <h2>端末を選択する</h2>
+                <form action="">
+                    <div class="tabs">
+                        <input id="all" type="radio" name="tab_item" value="3" checked>
+                        <label class="tab_item" for="all">モバイルルーター</label>
+                        <input id="design" type="radio" name="tab_item" value="4">
+                        <label class="tab_item" for="design">ホームルーター</label>
+                        <div class="tab_content" id="all_content">
+                            <div class="boxL">
+                                <img src="/html/user_data/assets/img/common/mobile_img.png" alt="mobile">
+                            </div>
+                            <div class="boxR">
+                                <h4>モバイルプラン</h4>
+                                <ul>
+                                    <li>製品名：Galaxy 5G Mobile Wi-Fi</li>
+                                    <li>重量：約203g</li>
+                                    <li>サイズ：約W147×H76×D10.9mm</li>
+                                    <li>連続通信時間：約1,000分</li>
+                                    <li>Wi-Fi規格：IEEE802.11a/n/ac（5GHz）、IEEE802.11b/g/n（2.4GHz）</li>
+                                    <li>最大通信速度：下り速度 最大2.2Gbps、上り速度 最大183Mbps</li>
+                                    <li>最大接続台数：10台</li>
+                                    <li>充電ポート：USB 3.0 Type-C</li>
+                                    <li>バッテリー容量：5,000mAh</li>
+                                </ul>
+                                <div class="text">
+                                    ※本製品にはACアダプタが付属されておりません。ご希望の場合は、ご注文画面で購入頂けます。
                                 </div>
                             </div>
                         </div>
-                    {% endfor %} #}
-                    <div class="ec-orderPayment" style="display: none;">
-                        <div class="ec-rectHeading">
-                            <h2>{{ 'お支払方法'|trans }}</h2>
-                        </div>
-                        <div class="ec-radio">
-                            {% for key, child in form.Payment %}
-                                <div style="display: block;">
-                                    {% set Payment = form.Payment.vars.choices[key].data %}
-                                    {{ form_widget(child, { 'attr': { 'data-trigger': 'change' }}) }}
-                                    {% if Payment.payment_image is not null %}
-                                        <p><img src="{{ asset(Payment.payment_image, 'save_image') }}"></p>
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                        </div>
-                        <div class="ec-input {{ has_errors(form.Payment) ? ' error' }}">{{ form_errors(form.Payment) }}</div>
-                    </div>
-                    {% if BaseInfo.isOptionPoint and Order.Customer is not null %}
-                        <div class="ec-orderPayment" style="display: none;">
-                            <div class="ec-input {{ has_errors(form.use_point) ? ' error' }}">
-                                <p>{{ '%point% pt が利用可能です。'|trans({ '%point%': Order.Customer.Point|number_format }) }}</p>
-                                {{ form_widget(form.use_point, { 'attr': { 'type': 'text', 'class': 'form-control', 'data-trigger': 'change' }}) }}
-                                {{ form_errors(form.use_point) }}
+                        <div class="tab_content" id="design_content">
+                            <div class="boxL">
+                                <img src="/html/user_data/assets/img/common/home_img.png" alt="mobile">
                             </div>
-                        </div>
-                    {% endif %}
-                    {#<div class="ec-orderConfirm" style="display: none;">#}
-                    {#    <div class="ec-input">#}
-                    {#        {{ form_widget(form.message, {'attr': {'class': 'form-control', 'placeholder': 'お問い合わせ事項がございましたら、こちらにご入力ください。(3000文字まで)'|trans, 'rows': '6'}}) }}#}
-                    {#        {{ form_errors(form.message) }}#}
-                    {#    </div>#}
-                    {#</div>#}
-                    <div class="confirmationContentBlockL">
-                        <h3>お客様情報</h3>
-                        <div class="confirmationContentBlockL__inner">
-                            {{ Order.name01 }} {{ Order.name02 }} 様<br>
-                            〒{{ Order.postal_code }}<br>
-                            {{ Order.pref }}{{ Order.addr01 }}{{ Order.addr02 }}<br>
-                            {{ Order.phone_number }}
-                        </div>
-                        <h3>定期購買情報</h3>
-                        <div class="confirmationContentBlockL__inner">
-                            本取引では{{ (Order.MergedProductOrderItems[0].initPrice - Order.discount)|number_format }}円を課金し、以下の内容で自動継続課金の登録を行います。
-                            <ul>
-                                <li id="next_value">・課金額：{{ Order.MergedProductOrderItems[0].nextPrice|number_format }}円 税込</li>
-                                <li id="next_month"></li>
-                                <li>・課金間隔：1ヵ月ごと</li>
-                            </ul>
-                        </div>
-                        <h3>配送情報</h3>
-                        <div class="ec-orderDelivery">
-                            {% for shipping in Order.shippings %}
-                                {% set idx = loop.index0 %}
-                                {% set isShowReducedTaxMess = false %}
-                                <div class="ec-orderDelivery__title">{{ 'お届け先'|trans }}{% if Order.multiple %}({{ loop.index }}){% endif %}
-                                    <div class="ec-orderDelivery__change">
-                                        {% if is_granted('ROLE_USER') %}
-                                            <button class="ec-inlineBtn" data-id="{{ shipping.id }}" data-trigger="click" data-path="{{ path('shopping_shipping', {'id': shipping.id}) }}">{{ '変更'|trans }}</button>
-                                        {% else %}
-                                            <button class="ec-inlineBtn" data-id="{{ shipping.id }}" data-trigger="click" data-path="{{ path('shopping_shipping_edit', {'id': shipping.id}) }}">{{ '変更'|trans }}</button>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <div class="ec-orderDelivery__address">
-                                    <p>{{ ''|trans }}{{ shipping.name01 }} {{ shipping.name02 }}{{ ' 様'|trans }}</p>
-                                    <p>{{ '〒'|trans }}{{ shipping.postal_code }} <br>{{ shipping.pref }}{{ shipping.addr01 }}{{ shipping.addr02 }}</p>
-                                    <p>{{ shipping.phone_number }}</p>
-                                </div>
-                                <div class="ec-orderDelivery__actions">
-                                    <div class="">
-                                        <div class="ec-select">
-                                            <label>{{ '配送方法'|trans }}</label>
-                                            {{ form_widget(form.Shippings[idx].Delivery, { 'attr': { 'class': 'form-control', 'data-trigger': 'change' }}) }}
-                                            {{ form_errors(form.Shippings[idx].Delivery) }}
-                                        </div>
-                                        <div class="ec-select ec-select__time">
-                                            <label>{{ 'お届け時間'|trans }}</label>
-                                            <select name="" id="">
-                                                <option value="">指定不可</option>
-                                                {#                                        <option value="">指定なし</option>#}
-                                                {#                                        <option value="8:00 - 12:00">8:00 - 12:00</option>#}
-                                                {#                                        <option value="14:00 - 16:00">14:00 - 16:00</option>#}
-                                                {#                                        <option value="16:00 - 18:00">16:00 - 18:00</option>#}
-                                                {#                                        <option value="18:00 - 20:00">18:00 - 20:00</option>#}
-                                                {#                                        <option value="19:00 - 21:00">19:00 - 21:00</option>#}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                            <div class="warning" style="margin-bottom:20px;">
-                                【ご注意】お届け日の指定はできません。<br>
-                                ご注文日より最短でのお届けとなります。
+                            <div class="boxR">
+                                <h4>ホームプラン</h4>
+                                <ul>
+                                    <li>製品名：Speed Wi-Fi HOME 5G L11</li>
+                                    <li>重量：約599g</li>
+                                    <li>サイズ：約W70×H182×D124mm</li>
+                                    <li>WiFi規格：IEEE802.11a/b/g/n/ac/ax(2.4GHz/5GHz)</li>
+                                    <li>最大通信速度：下り速度 最大2.7Gbps、上り速度 最大183Mbps</li>
+                                    <li>最大接続台数：有線LAN：2台・無線LAN：30台</li>
+                                    <li>充電ポート：専用AC</li>
+                                    <li>付属品：専用ACアダプター</li>
+                                </ul>
                             </div>
-                        </div>
-                        <h3>お支払方法</h3>
-                        <div class="confirmationContentBlockL__inner">
-                            クレジットカード決済
-                        </div>
-                        <h3>クーポン</h3>
-                        <div class="confirmationContentBlockL__inner">
-                            {{ form_widget(form.coupon_cd, { 'attr': { 'class': 'form-control', 'placeholder' : 'クーポンをお持ちの方はクーポンコードを入力してください' }}) }}
-                            {{ form_errors(form.coupon_cd) }}
-                            <div>&nbsp;</div>
-                            <button type="button" id="btn_apply_coupon" class="btn btn-warning">クーポン使用</button>&nbsp;&nbsp;
-                            <button type="button" id="btn_cancel_coupon" class="btn">キャンセル</button>
-                        </div>
-                        <h3>お問い合わせ欄</h3>
-                        <div class="confirmationContentBlockL__inner">
-                            {{ form_widget(form.message, {'attr': {'class': 'form-control', 'placeholder': 'お問い合わせ事項がございましたら、こちらにご入力ください。(3000文字まで)'|trans, 'rows': '6'}}) }}
                         </div>
                     </div>
-                    <div class="confirmationContentBlockR">
-                        <div class="confirmationContentBlockRInner">
-                            <div class="confirmationContentBlockRInner__img" style="text-align:center;">
-                                {% if Order.MergedProductOrderItems[0].Product.id==3 %}
-                                    <img src="/html/user_data/assets/img/common/mobile_img.png" alt="">
-                                {% else %}
-                                    <img src="/html/user_data/assets/img/common/home_img.png" alt="">
-                                {% endif %}
+                    <div class="formContentBlock secret-group">
+                        <h3>安心補償オプションを選択</h3>
+                        <div class="formContentBlock__text">端末の故障・破損・水濡れ・紛失・盗難・バッテリーの劣化など、様々な原因のトラブルに適用される万が一の時も「あんしん」できる端末補償サービスです。</div>
+                        <input type="radio" id="free" name="option" value="550" checked>
+                        <label for="free">
+                            <em>フリー補償</em>
+                            <p>
+                                すべてのトラブルに適用し<br />全額補償
+                            </p>
+                            <span>＋550円(税込)／月</span>
+                        </label>
+                        <input type="radio" id="light" name="option" value="275">
+                        <label for="light">
+                            <em>ライト補償</em>
+                            <p>
+                                破損/故障/水漏れは全額補償<br />補償外：紛失・盗難・バッテリーの劣化が発生した場合、端末代金として11,000円(税込)のご負担
+                            </p>
+                            <span>＋275円(税込)／月</span>
+                        </label>
+                        <input type="radio" id="noneOption" name="option" value="0">
+                        <label for="noneOption">
+                            <em>補償なし</em>
+                            <p>
+                                水没・落下・盗難・紛失が発生した場合、端末代金として22,000円(税込)のご負担
+                            </p>
+                            <span></span>
+                        </label>
+                        <ul>
+                            <li>※安心補償オプションは、ご契約時のみご加入いただけます。</li>
+                            <li>※ご契約後の解約、フルからライトプランへの変更は可能ですが、再加入はできませんのでご了承ください。</li>
+                        </ul>
+                    </div>
+                    <div class="formContentBlock" id="usb_part">
+                        <h3>USB ACアダプター</h3>
+                        {#                        <div class="formContentBlock__text">Anker PowerPort mini：2A 12W 2ポート USB急速充電器<br>#}
+                        {#                            【折りたたみ式プラグ/PowerIQ/超コンパクトサイズ 】iPhone iPad Android各種対応</div>#}
+                        <div class="formContentBlock__text">ケーブル一体型充電器　Type-C</div>
+                        <input type="radio" id="buyUsb" name="usb" value="1540" checked>
+                        <label for="buyUsb">
+                            <em>購入する</em>
+                            <span>＋1,540円(税込)</span>
+                        </label>
+                        <input type="radio" id="noneUsb" name="usb" value="0">
+                        <label for="noneUsb">
+                            <em>購入しない</em>
+                        </label>
+                        <ul>
+                            {#                            <li>✔3000万人以上が支持する充電製品No.1ブランドを是非お試しください｡</li>#}
+                            {#                            <li>✔Anker独自のPowerIQにより、フルスピード充電が可能です。</li>#}
+                            {#                            <li>※USBケーブルは付属しておりますが、ACアダプターは付属しておりません。</li>#}
+                            {#                            <li>※2AのACアダプターを推奨しております。</li>#}
+                            <li>※レンタル商品に充電用アダプター、ケーブルは付属しておりません。</li>
+                        </ul>
+                    </div>
+                    <div class="formContentBlock">
+                        <h3>お支払いを選択</h3>
+                        <input type="radio" id="creditcard" name="payment" value="" checked>
+                        <label for="creditcard">
+                            <div>クレジットカード</div>
+                            {#                            <span>※3Dセキュアサービス導入のクレジットカードはご利用できません。</span>#}
+                            <div>※デビットカード、プリペイドカードはご利用できません。<br />ご利用可能なクレジットカードは以下の通りです。<br />
+                                <img src="/html/user_data/assets/img/common/card_brand.png">
                             </div>
-                            {% for shipping in Order.shippings %}
-                                {% set idx = loop.index0 %}
-                                {% set isShowReducedTaxMess = false %}
-                                <div class="ec-orderDelivery__item">
-                                    <ul class="ec-borderedList">
-                                        {% for orderItem in shipping.productOrderItems %}
-                                            <ul>
-                                                <li>
-                                                    <dl>
-                                                        <dt>{{ orderItem.productName }}：</dt>
-                                                        <dd>{% if orderItem.ship == 1 %}4,800円{% else %}(4,800円){% endif %}</dd>
-                                                    </dl>
-                                                </li>
-                                                <li>
-                                                    <dl>
-                                                        <dt>初期費用111：</dt>
-                                                        <dd>3,300円</dd>
-                                                    </dl>
-                                                </li>
-                                                <li>
-                                                    <dl>
-                                                        <dt>端末補償：</dt>
-                                                        <dd>
-                                                            {{ orderItem.productClass.classCategory2 }}
-                                                            {% if orderItem.productClass.classCategory2 == 'フリー補償' %}
-                                                                (550円)
-                                                            {% elseif orderItem.productClass.classCategory2 == 'ライト補償' %}
-                                                                (275円)
-                                                            {% endif %}
-                                                        </dd>
-                                                    </dl>
-                                                </li>
-                                                <li>
-                                                    <dl>
-                                                        <dt>利用開始日：</dt>
-                                                        <dd>{% if orderItem.ship == 1 %} 最短 {% else %} 翌月 {% endif %}</dd>
-                                                    </dl>
-                                                </li>
-                                                {% if(orderItem.productName == "モバイルプラン") %}
-                                                    <li>
-                                                        <dl>
-                                                            <dt>USB ACアダプター:</dt>
-                                                            <dd>
-                                                                {% if (orderItem.productClass.classCategory2=='購入する') %}
-                                                                    1,540円
-                                                                {% else %}
-                                                                    購入しない
-                                                                {% endif %}
-                                                            </dd>
-                                                        </dl>
-                                                    </li>
-                                                {% endif %}
-                                            </ul>
-                                        {% endfor %}
-                                    </ul>
-                                    <p>{{ isShowReducedTaxMess ? '※ は軽減税率対象商品です。'|trans }}</p>
-                                </div>
-                            {% endfor %}
 
-                            <a href="{{ url("cart") }}" class="delete"><span>✕</span>内容変更または削除する</a>
-                            <div class="confirmationContentBlockRInner__total">
-                                <dl>
-                                    <dt>小計：</dt>
-                                    <dd>
-                                        {{ (Order.MergedProductOrderItems[0].initPrice - Order.discount)|number_format }}円</dd>
-                                </dl>
-                            </div>
-                            <button data-href="https://free-max.com/user_data/creditcard?price={{ Order.subtotal }}" id="cart_move" class="btn">カード入力へ進む</button>
-                        </div>
+                        </label>
+                    </div>
+                    <div class="formContentBlock">
+                        <h3>発送希望日</h3>
+                        <input type="radio" id="short" name="send" value="1" checked>
+                        {% if(is_use_current_month) %}
+                            <label for="short">
+                                <em>最短発送</em>
+                                <span id="current_month">{{ current_delivery_date }}</span>
+                            </label>
+                        {% endif %}
+                        <input type="radio" id="next" name="send" value="2" >
+                        <label for="next">
+                            <em>翌月</em>
+                            <span id="">{{ next_delivery_date }}</span>
+                        </label>
+                        <ul>
+                            <li>※「翌月」発送をご選択の場合、ご注文時に初期費用のみ決済させていただきます。</li>
+                            <li>※ご注文が土日祝日の場合、翌営業日の発送となります。</li>
+                            <li>※営業日のご注文は、14時までが当日発送、14時以降が翌営業日発送となります。</li>
+                        </ul>
                     </div>
                 </form>
+                <form id="productForm" name="form" method="post">
+                    <input type="hidden" id="classcategory_id1" name="classcategory_id1" value="9">
+                    <input type="hidden" id="classcategory_id2" name="classcategory_id2" value="11">
+                    <input type="hidden" id="product_id" name="product_id" value="3">
+                    <input type="hidden" id="ProductClass" name="ProductClass" value="14">
+                    <input type="hidden" id="quantity" name="quantity" value="1">
+                    <input type="hidden" id="ship" name="ship" value="1">
+                    <input type="hidden" name="_token" value="TCCpaSt87KKIpNQU5E6B-M2MsJp-htDYYXlAnq7VRZM">
+                </form>
+                <div class="shopCartBtnWrap">
+                    <button type="button" class="shopCartBtn">カートに追加する</button>
+                </div>
             </section>
         </main>
     </div>
+
+    {#    <div class="ec-sliderRole">#}
+    {#        <div class="main_visual">#}
+    {#            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc01.jpg') }}"></div>#}
+    {#            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc02.jpg') }}"></div>#}
+    {#            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc03.jpg') }}"></div>#}
+    {#        </div>#}
+    {#    </div>#}
 {% endblock %}

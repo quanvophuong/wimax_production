@@ -636,4 +636,33 @@ class ShoppingExController extends ShoppingController
             return false;
         }
     }
+
+    /**
+     * @Route("/plugin/striperec/payment_create", name="plugin_striperec_payment_create")
+     */
+    public function paymentCreate(Request $request){
+        $StripeConfig = $this->entityManager->getRepository(StripeConfig::class)->get();
+        $stripe = new \Stripe\StripeClient(
+            $StripeConfig->getSecretKey()
+        );
+        try{
+            $paymentMethod = $stripe->paymentMethods->create([
+                'type' => 'card',
+                'card' => [
+                    'number' => $request->get('number'),
+                    'exp_month' => $request->get('exp_month'),
+                    'exp_year' => $request->get('exp_year'),
+                    'cvc' => $request->get('cvc'),
+                ],
+            ]);
+
+            return $this->json([
+                'result' => 'success',
+                'paymentMethod' =>$paymentMethod
+            ]);
+
+        } catch (\Exception $e){
+            return $this->json(['result' => 'error']);
+        }
+    }
 }
