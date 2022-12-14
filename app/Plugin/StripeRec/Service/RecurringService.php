@@ -40,7 +40,7 @@ class RecurringService{
 
     public function __construct(
         ContainerInterface $container
-        ){
+    ){
         $this->container = $container;
         $this->em = $this->container->get('doctrine.orm.entity_manager');
         $this->rec_order_repo = $this->em->getRepository(StripeRecOrder::class);
@@ -128,7 +128,7 @@ class RecurringService{
                         $item,
                         $customer,
                         $this->convertDateTime($object->created)
-                        );
+                    );
                     $subscriptions[$item->subscription] = $rec_order;
 
                     $rec_order->setInvoiceData($object);
@@ -164,7 +164,7 @@ class RecurringService{
             $order = $rec_order->getOrder();
             if($order){
                 if (!$this->hasOverlappedPaidOrder($rec_order)) {
-                    $Order = $this->updateOrder($rec_order, OrderStatus::PAID);
+                    //$Order = $this->updateOrder($rec_order, OrderStatus::PAID);
                     // $this->dispatcher->dispatch(StripeRecEvent::REC_ORDER_SUBSCRIPTION_PAID, new EventArgs([
                     //     'rec_order' =>  $rec_order,
                     // ]));
@@ -186,15 +186,15 @@ class RecurringService{
             case "invoice.paid":
                 log_info("sending mail invoice.paid");
                 //$this->mail_service->sendPaidMail($rec_order);
-            break;
+                break;
             case "invoice.upcoming":
                 log_info("sending mail invoice.paid");
                 $this->mail_service->sendUpcomingMail($rec_order);
-            break;
+                break;
             case "invoice.failed":
                 log_info("sending mail invoice.paid");
                 $this->mail_service->sendFailedMail($rec_order);
-            break;
+                break;
             case "subscription.canceled":
                 $this->mail_service->sendCancelMail($rec_order);
         }
@@ -218,7 +218,7 @@ class RecurringService{
                         $item,
                         $customer,
                         $this->convertDateTime($object->created)
-                        );
+                    );
                     $subscriptions[$item->subscription] = $rec_order;
 
                     if(!empty($object->charge) && $object->charge != $rec_order->getLastChargeId()){
@@ -273,7 +273,7 @@ class RecurringService{
                         $item,
                         $customer,
                         $this->convertDateTime($object->created)
-                        );
+                    );
                     $rec_order->setFailedInvoice($object->id);
                     $this->em->persist($rec_order);
                     $this->em->flush();
