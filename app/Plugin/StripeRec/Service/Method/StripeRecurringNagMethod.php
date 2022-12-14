@@ -432,8 +432,12 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
 
         $StripeConfig = $this->stripeConfigRepository->getConfigByOrder($this->Order);
         $stripeClient = new StripeClient($StripeConfig->secret_key);
-        $paymentIntent = $stripeClient->createPaymentIntentWithCustomer($initial_price, $payment_method_id, $this->Order->getId(), true, $customer_id, $this->Order->getCurrencyCode());
 
+        $check_amount = $initial_price;
+        if (intval($initial_price) == 0){
+            $check_amount=self::getAmountToSentInStripe(50, strtolower($this->Order->getCurrencyCode()));
+        }
+        $paymentIntent = $stripeClient->createPaymentIntentWithCustomer($check_amount, $payment_method_id, $this->Order->getId(), true, $customer_id, $this->Order->getCurrencyCode());
         if(is_array($paymentIntent)) { // エラー
             $result->setSuccess(false);
             $result->setErrors([trans('stripe_recurring.checkout.payment_method.retrieve_error')]);
@@ -457,7 +461,6 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             'end_behavior' =>  'release',
             'phases'        =>  $phases,
         ], $initial_price, $order_items[0]->getProduct()->getStripeProdId(), $interval,strtolower($this->Order->getCurrencyCode()));
-
         if($coupon_enable){
             $coupon_id = $_REQUEST['coupon_id'];
             if(!empty($coupon_id)){
@@ -507,6 +510,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $stripeOrder->setStartDate(new \DateTime());
         }else{
             $subscription_schedule = SubscriptionSchedule::create($schedule_params);
+
             log_info(self::LOG_IF . "--- subscription schedule created.");
             log_info($subscription_schedule);
             $subscription_id = $subscription_schedule->subscription;

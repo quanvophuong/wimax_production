@@ -18,6 +18,7 @@ use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Repository\Master\DeviceTypeRepository;
 use Eccube\Repository\PageRepository;
+use Eccube\Repository\CalendarRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -34,6 +35,8 @@ class UserDataController extends AbstractController
      */
     protected $deviceTypeRepository;
 
+    protected $calendarRepository;
+
     /**
      * UserDataController constructor.
      *
@@ -42,10 +45,12 @@ class UserDataController extends AbstractController
      */
     public function __construct(
         PageRepository $pageRepository,
-        DeviceTypeRepository $deviceTypeRepository
+        DeviceTypeRepository $deviceTypeRepository,
+        CalendarRepository $calendarRepository
     ) {
         $this->pageRepository = $pageRepository;
         $this->deviceTypeRepository = $deviceTypeRepository;
+        $this->calendarRepository = $calendarRepository;
     }
 
     /**
@@ -74,7 +79,59 @@ class UserDataController extends AbstractController
             $request
         );
         $this->eventDispatcher->dispatch(EccubeEvents::FRONT_USER_DATA_INDEX_INITIALIZE, $event);
+        if($route == 'shop'){
+            $next_month = new \DateTime('now');
+            date_add($next_month, new \DateInterval('P1M'));
+            $next_month_day = $next_month->format('Y-m-01');
+            $next_date = new \DateTime($next_month_day);
 
+            $current_month = new \DateTime('now');
+            if($current_month->format('H') > 13) date_add($current_month, new \DateInterval('P1D'));
+            $current_month_day = $current_month->format('Y-m-d');
+            $current_date = new \DateTime($current_month_day);
+            $currnet_conf_date = $this->getAvailableDate($current_date);
+            $next_conf_date = $this->getAvailableDate($next_date);
+
+            $currnet_last_date = clone $currnet_conf_date;
+
+            date_add($currnet_last_date, new \DateInterval('P1D'));
+            $is_use_current = date('n') == $currnet_last_date->format('n');
+            // $is_use_current = true;
+            // while(1){
+            //     $weeknum = $next_date->format('N');
+            //     if ($weeknum < 6){
+            //         $Calendar = $this->calendarRepository->findOneBy(array('holiday' => $next_date));
+            //         if (empty($Calendar)){
+            //             break;
+            //         }
+            //     }
+            //     date_add($next_date, new \DateInterval('P1D'));
+            // }
+
+            $next_date_string = $next_conf_date->format('n月j日発送予定');
+            $current_date_string = $currnet_conf_date->format('n月j日発送予定');
+            return $this->render($file, array(
+                'next_delivery_date' => $next_date_string,
+                'current_delivery_date' => $current_date_string,
+                'is_use_current_month' => $is_use_current,
+            ));
+        }
         return $this->render($file);
+    }
+
+    function getAvailableDate($date){
+        while(1){
+            $weeknum = $date->format('N');
+            if ($weeknum < 6){
+                $Calendar = $this->calendarRepository->findOneBy(array('holiday' => $date));
+                $date->setTimezone(new \DateTimeZone('Asia/Tokyo'));
+                if (empty($Calendar)){
+                    return $date;
+                    break;
+                }
+            }
+            date_add($date, new \DateInterval('P1D'));
+        }
+
     }
 }
