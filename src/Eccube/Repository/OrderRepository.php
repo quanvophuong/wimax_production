@@ -402,6 +402,29 @@ class OrderRepository extends AbstractRepository
         return $this->queries->customize(QueryKey::ORDER_SEARCH_BY_CUSTOMER, $qb, ['customer' => $Customer]);
     }
 
+    
+    /**
+     * @param  \Eccube\Entity\Customer $Customer
+     *
+     * @return QueryBuilder
+     */
+    public function getQueryBuilderInWithdrawList(Customer $Customer)
+    {
+
+        $qb = $this->createQueryBuilder('o')
+        ->innerJoin('o.OrderStatus', 'os');
+        $qb  
+            ->where('o.Customer = :Customer')
+            ->andWhere($qb->expr()->in('os.id', ':subsriptions'))
+            ->setParameter('subsriptions', [1, 2, 11, 6, 12, 5])
+            ->setParameter('Customer', $Customer);
+
+        // Order By
+        $qb->addOrderBy('o.id', 'DESC');
+
+        return $this->queries->customize(QueryKey::ORDER_SEARCH_BY_CUSTOMER, $qb, ['customer' => $Customer]);
+    }
+
     /**
      * ステータスごとの受注件数を取得する.
      *

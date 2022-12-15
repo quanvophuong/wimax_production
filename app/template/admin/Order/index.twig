@@ -197,6 +197,77 @@ file that was distributed with this source code.
         updateTrackingNumber($target.data('shipping_id'), $target.data('url'), tracking_number, callback);
     });
 
+            // IMEI
+            var updateImei = function(id, url, imei, callback) {
+                $.ajax({
+                    type: 'PUT',
+                    url: url,
+                    data: {'order_imei': imei}
+                }).done(function(data, textStatus, jqXHR) {
+                    if (data['status'] == 'OK') {
+                        $('#imei_' + id).val(data['imei']);
+                        if (typeof callback == 'function') {
+                            callback();
+                        }
+                    } else {
+                        alert('Update failed.');
+                    }
+                    return true;
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    var response = JSON.parse(jqXHR.responseText);
+                    var messages = '';
+                    for (var i = 0; i < response.messages.length; i++) {
+                        messages += response.messages[i] + "\n";
+                    }
+                    alert(messages);
+                    return false;
+                });
+            };
+
+            $('button.update_order_imei').prop('disabled', true);
+            // フォームに変更があったら更新ボタンを有効にする
+            $('input.update_order_imei').on('keyup', function(event) {
+                var $imei = $(this);
+                var $button = $("button[data-target='#" + $imei.attr('id') + "']");
+                $button.prop('disabled', false);
+                $button.children('i')
+                    .removeClass('text-secondary')
+                    .addClass('text-success');
+            });
+            // enter キーで更新し、次のフォームへフォーカスを移動する
+            $('input.update_order_imei').on('keypress', function(event) {
+                var $imei = $(this);
+                var $button = $("button[data-target='#" + $imei.attr('id') + "']");
+
+                var code = event.which ? event.which : event.keyCode;
+
+                if (code == 13) { // on press to enter
+                    var index = $('input.update_order_imei').index(this);
+                    var callback = function() {
+                        $button.prop('disabled', true);
+                        $button.children('i')
+                            .removeClass('text-success')
+                            .addClass('text-secondary');
+                        $('input.update_order_imei:gt(' + index + '):first').focus();
+                    };
+                    updateImei($imei.data('order_id'), $imei.data('url'), $imei.val(), callback);
+                    event.preventDefault();
+                }
+            });
+            // 更新ボタンの制御
+            $('button.update_order_imei').on('click', function(event) {
+                event.preventDefault();
+                var $button = $(this);
+                var $target = $($(this).data('target'));
+                var $imei = $target.val();
+                var callback = function() {
+                    $button.prop('disabled', true);
+                    $button.children('i')
+                        .removeClass('text-success')
+                        .addClass('text-secondary');
+                };
+                updateImei($target.data('order_id'), $target.data('url'), $imei, callback);
+            });
     // 完了ボタン
     $('#bulkChangeComplete').on('click', function() {
         location.href = '{{ url('admin_order', { 'resume': 1 }) }}';
@@ -548,6 +619,7 @@ file that was distributed with this source code.
                                         <th class="border-top-0 pt-2 pb-2 text-center">購入金額</th>
                                         <th class="border-top-0 pt-2 pb-2 text-center">お問い合わせ</th>
                                         <th class="border-top-0 pt-2 pb-2 text-center">出荷状況</th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">IMEI</th>
                                         <th class="border-top-0 pt-2 pb-2 text-center">お問い合わせ番号</th>
                                         <th class="border-top-0 pt-2 pb-2 text-center">配送方法</th>
                                         <th class="border-top-0 pt-2 pb-2 text-center pr-3"></th>
@@ -634,6 +706,16 @@ file that was distributed with this source code.
                                                         {% set send_mail_date = Shipping.mail_send_date|date_min %}
                                                         <i class="fa fa-envelope fa-lg text-secondary" aria-hidden="true" data-tooltip="true" data-placement="top" data-original-title="{{ 'admin.order.shipping_mail__completed'|trans({'%date%': send_mail_date}) }}"></i>
                                                     {% endif %}
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <div class="input-group input-group-sm">
+                                                        <input type="text" id="imei_{{ Order.id }}" class="form-control update_order_imei" placeholder="{{ 'IMEI'|trans }}" value="{{ Order.imei }}" data-order_id="{{ Order.id }}" data-url="{{ url('admin_order_update_imei', { id : Order.id }) }}" tabindex="{{ loop.index }}"/>
+                                                        <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default update_order_imei" data-target="#imei_{{ Order.id }}">
+                                                        <i class="fa fa-check fa-lg text-secondary" aria-hidden="true"></i>
+                                                    </button>
+                                                </span>
+                                                    </div>
                                                 </td>
                                                 <td class="align-middle text-center">
                                                     <div class="input-group input-group-sm">

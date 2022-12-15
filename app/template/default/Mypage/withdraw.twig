@@ -17,8 +17,14 @@ file that was distributed with this source code.
 {% block javascript %}
 <script>
     $(function() {
+        var order_id;
     $('.btn-modal').each(function(){
         $(this).on('click', function () {
+            
+            var selOrderId = $(this).data('order');
+            if (selOrderId){
+                order_id = selOrderId;
+            }
 
             var action = $(this).data('action');
             var target = $(this).data('target');
@@ -26,11 +32,11 @@ file that was distributed with this source code.
 
             if (action=='withraw'){
                 $.ajax({
-                    url: '{{ url('option_withraw') }}',
+                    url: '{{ url('mypage_withdraw_request') }}',
                     type: 'POST',
                     data: {
-                            'type' : $(this).data('type'),
-                            'is_remove' : $(this).data('remove')
+                            'order_id' : order_id,
+                            'withdraw_type' : $(this).data('type')
                         },
                     dataType: 'json',
                 }).done(function(data) {
@@ -57,6 +63,7 @@ file that was distributed with this source code.
         $('form').submit();
     });
 
+
 });
 </script>
 {% endblock %}
@@ -67,6 +74,20 @@ file that was distributed with this source code.
         footer{
             background: white !important;
         }
+
+        .withdraw_btn .btn{
+            background: #ff9800;
+            border-color: #ff9800;
+            -webkit-box-shadow: 0px 1px 2px 1px rgb(0 0 0 / 25%);
+            box-shadow: 0px 1px 2px 1px rgb(0 0 0 / 25%);
+            border-radius: 5px;
+            width: 170px;
+            padding: 5px;
+            text-decoration: none;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+        }
     </style>
     <div id="wrap">
         <main id="mypage">
@@ -75,121 +96,140 @@ file that was distributed with this source code.
                 <div class="mypageContent__name">{{ 'ようこそ%last_name% %first_name%さん'|trans({ '%last_name%': app.user.name01, '%first_name%': app.user.name02 }) }}</div>
                 {% include 'Mypage/navi.twig' %}
                 <div class="mypageContentBox">
-                    <div style="font-size:100px;text-align:center;">
-                        <div class="ec-icon"><img src="{{ asset('assets/icon/exclamation.svg') }}" alt=""></div>
-                    </div>
-                    <h3>解約手続きの前にご確認ください</h3>
-                    <div class="mypageContentBox__text">安心補償解約の際は「安心補償解約へ」、プラン解約の際は「プラン解約へ」をご選択ください。ポップアップが表示されますので、「解約に関する注意事項」をお読みいただき、「解約する」をご選択ください。</div>
-                    <form method="post" action="{{ url('mypage_withdraw') }}">
-                        {{ form_widget(form._token) }}
-                        {% if hasOrder %}
-                            <div class="btn-wrap">
-                                <a class="btn" href="https://free-max.com/form/op-kaiyaku/" target="_blank" rel="noopener">安心補償取消へ</a>
-                                <a class="btn" href="https://free-max.com/form/kaiyaku/" target="_blank" rel="noopener">プラン解約へ</a>
-                            </div>
-                            <!--
-                            <div class="btn-wrap">
-                                <button type="button" class="btn btn-modal" name="mode" data-target="cancelGuarantee" {% if isSecretWithdraw and isCancelAction==false or not isUsingSecret %} disabled {% endif %}
-                                        value="confirm">{% if isSecretWithdraw %}安心補償取消へ{% else %}安心保障解約へ{% endif %}</button>
-                                <button type="button" class="btn btn-modal" name="mode" data-target="cancelPlan" {% if isPlanWithdraw and isCancelAction==false or not isUsingPlan %} disabled {% endif %}
-                                        value="confirm">{% if isPlanWithdraw %}プラン解約取消へ{% else %}プラン解約へ{% endif %}</button>
+                    {% if pagination.totalItemCount > 0 %}
+                        <p class="ec-para-normal">{{ '%count%件の履歴があります'|trans({'%count%':pagination.totalItemCount}) }}</p>
+                        <table>
+                            <thead>
+                            <tr>
+                                <th>注文<br class="sp">番号</th>
+                                <th>契約日</th>
+                                <th>契約<br class="sp">内容</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for Order in pagination %}
+                                {% set WithdrawPlan = repository('Customize\\Entity\\Withdraw').getWithdrawPlan(Order) %}
 
-                            </div>
-                            -->
-                        {% else %}
-                            <div class="btn-wrap">
-                                <button type="button" class="btn btn-modal" name="mode" data-target="cancelGuarantee" disabled
-                                        value="confirm">{{ '安心保障解約へ'|trans }}</button>
-                                <button type="button" class="btn btn-modal" name="mode" data-target="cancelPlan"  disabled
-                                        value="confirm">{{ 'プラン解約へ'|trans }}</button>
-                            </div>
-                        {% endif %}
-                    </form>
+                                <tr>
+                                    <td>{{ Order.order_no }}</td>
+                                    <td>{{ Order.order_date|date_sec }}</td>
+                                    <td>
+                                        {% for shipping in Order.shippings %}
+                                            {% set idx = loop.index0 %}
+                                            {% set isShowReducedTaxMess = false %}
+
+                                            {% for orderItem in shipping.productOrderItems %}
+                                                <dl>
+                                                    <dt>{{ orderItem.productName }}</dt>
+                                                    <dd>¥ 4,800</dd>
+                                                </dl>
+                                                <dl>
+                                                    <dt>オプション</dt>
+                                                    <dd>
+                                                        {% if orderItem.productClass.classCategory1 == 'フリー補償' %}
+                                                            ¥ 550
+                                                        {% elseif orderItem.productClass.classCategory1 == 'ライト補償' %}
+                                                            ¥ 275
+                                                        {% endif %}
+                                                    </dd>
+                                                </dl>
+                                                <dl>
+                                                    <dt>初月費用</dt>
+                                                    <dd>¥ 3,300</dd>
+                                                </dl>
+                                            {% endfor %}
+
+                                        {% endfor %}
+
+                                    </td>
+                                    <td class="withdraw_btn" style="text-align : center;">
+                                        {% if (WithdrawPlan) %}
+                                            プラン解約申請中
+                                        {% else %}
+                                            <button type="button" class="btn btn-modal" name="mode" data-target="confirmModal" value="confirm"  data-order="{{ Order.id }}">{{ '各種解約手続きに進む'|trans }}</button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="ec-pagerRole">
+                            {% include "pager.twig" with {'pages': pagination.paginationData} %}
+                        </div>
+                    {% else %}
+                        <p class="ec-para-normal">{{ 'ご注文履歴はありません。'|trans }}</p>
+                    {% endif %}
 
                 </div>
             </section>
         </main>
     </div>
 
-    <div id="cancelGuarantee" class="modal js-modal modalfix" style="display: none;">
+    <div id="confirmModal" class="modal js-modal modalfix" style="display: none;">
         <div class="modal-bg modal-close"></div>
         <div class="modal-content">
-            <h3>{% if isSecretWithdraw %}解約取消に関する注意事項{% else %}解約に関する注意事項{% endif %}</h3>
-            <p>
-                {% if isSecretWithdraw %}
-                    こちらでは安心補償解約の取消を行います。<br />解約いただいた月の15日までは、解約を取り消していただくことが可能です。
-                {% else %}
-                    こちらでは安心保障解約を行います。<br>「解約する」を選択いただくと、自動で解約手続きが完了いたします。
-                {% endif %}
+            <h3>解約手続きの前にご確認ください</h3>
+            <p style="text-align:center;">
+                ※当月解約の締切日は毎月15日となります。<br />
+                16日以降のご解約申請に関しては<br />
+                翌月末の解約となりますので予めご了承ください。<br />
+                ※安心補償オプションにご加入されているお客様は、<br />
+                「安心補償オプションの取消」のご申請は必要ございません。
             </p>
             <ul class="btn-wrap">
-                <li><a href="" class="border-btn modal-btn">戻る</a></li>
+                <button type="button" class="btn btn-modal" name="mode" data-target="optionModal" value="confirm">{{ '手続きへ進む'|trans }}</button>
+            </ul>
+        </div>
+    </div>
+    <div id="optionModal" class="modal js-modal modalfix" style="display: none;">
+        <div class="modal-bg modal-close"></div>
+        <div class="modal-content">
+            <h3>解約手続き</h3>
+            <p style="text-align:center;">
+                安心補償解約の際は「安心補償取消へ」、<br />
+                プラン解約の際は「プラン解約へ」をご選択ください。
+            </p>
+            <ul class="btn-wrap">
                 <li>
-                    <button class="btn btn-modal" data-action="withraw" data-type="secret" data-remove={% if isSecretWithdraw %} '0' {% else %} '1' {% endif %} data-target="cancel1">
-                    {% if isSecretWithdraw %}解約を取り消す{% else %}解約する{% endif %}
-                    </button>
+                    <button type="button" class="btn btn-modal" name="mode" data-target="secretModal" value="confirm" data-action="withraw" data-type="secret">{{ '安心補償取消へ'|trans }}</button>
+                </li>
+                <li>
+                    <button type="button" class="btn btn-modal" name="mode" data-target="planModal" value="confirm" data-action="withraw" data-type="plan">{{ 'プラン解約へ'|trans }}</button>
                 </li>
             </ul>
         </div>
     </div>
-    <div id="cancel1" class="modal js-modal modalfix">
+    <div id="secretModal" class="modal js-modal modalfix" style="display: none;">
         <div class="modal-bg modal-close"></div>
         <div class="modal-content">
-            <h3>{% if isSecretWithdraw %}安心補償解約の取消について{% else %}安心保障解約について{% endif %}</h3>
-            <p>
-                {% if isSecretWithdraw %}
-                    安心補償解約の取消を承りました。<br />引き続き弊社をご愛顧賜りますようお願い申し上げます。
-                {% else %}
-                    安心保障解約を承りました。<br>引き続き弊社をご愛顧賜りますようお願い申し上げます。
-                {% endif %}
+            <h3>安心補償取消について</h3>
+            <p style="text-align:center;">
+                安心補償解約の取消を承りました。<br />
+                <br />
+                引き続き弊社をご愛顧賜りますようお願い申し上げます。
             </p>
             <ul class="btn-wrap">
-                <li><a href="{{ url('mypage') }}" class="btn border-btn">マイページへ</a></li>
-            </ul>
-        </div>
-    </div>
-
-    <div id="cancelPlan" class="modal js-modal modalfix">
-        <div class="modal-bg modal-close"></div>
-        <div class="modal-content">
-            <h3>{% if isPlanWithdraw %}解約取消に関する注意事項{% else %}解約に関する注意事項{% endif %}</h3>
-            <p>
-                {% if isPlanWithdraw %}
-                    こちらではプラン解約の取消を行います。<br />解約いただいた月の15日までは、解約を取り消していただくことが可能です。<br /><br />
-                {% else %}
-                    当月解約の締切日は毎月15日となります。<br />
-                    16日以降のご解約申請に関しては翌月末の解約となりますので予めご了承ください。<br />
-                    ※安心補償オプションにご加入されているお客様は、「安心補償オプションの解約」のご申請は必要ございません。<br />
-                {% endif %}
-            </p>
-            <ul class="btn-wrap">
-                <li><a href="" class="border-btn modal-btn">戻る</a></li>
                 <li>
-                    <button class="btn btn-modal" data-action="withraw" data-type="plan" data-remove={% if isPlanWithdraw %} '0' {% else %} '1' {% endif %} data-target="cancel2">
-                    {% if isPlanWithdraw %}解約を取り消す{% else %}解約する{% endif %}
-                    </button>
+                    <a href="{{ url('mypage') }}" class="btn">マイページへ</a>
                 </li>
             </ul>
         </div>
     </div>
-
-    <div id="cancel2" class="modal js-modal modalfix">
+    <div id="planModal" class="modal js-modal modalfix" style="display: none;">
         <div class="modal-bg modal-close"></div>
         <div class="modal-content">
-            <h3>{% if isPlanWithdraw %}プラン解約の取消について{% else %}プラン解約について{% endif %}</h3>
-            <p>
-                {% if isPlanWithdraw %}
-                    プラン解約の取消を承りました。<br />引き続き弊社をご愛顧賜りますようお願い申し上げます。
-                {% else %}
-                    プラン解約を承りました。<br>弊社サービスをご利用いただきありがとうございました。<br>またのご利用をお待ちしております。
-                {% endif %}
-
+            <h3>プラン解約について</h3>
+            <p style="text-align:center;">
+                弊社サービスをご利用いただきありがとうございました。<br />
+                <br />
+                またのご利用お待ちしております。
             </p>
             <ul class="btn-wrap">
-                <li><a href="{{ url('mypage') }}" class="btn border-btn">マイページへ</a></li>
+                <li>
+                    <a href="{{ url('mypage') }}" class="btn">マイページへ</a>
+                </li>
             </ul>
         </div>
     </div>
-
-
 {% endblock %}

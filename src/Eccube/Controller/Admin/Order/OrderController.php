@@ -19,6 +19,7 @@ use Eccube\Entity\ExportCsvRow;
 use Eccube\Entity\Master\CsvType;
 use Eccube\Entity\Master\OrderStatus;
 use Eccube\Entity\OrderPdf;
+use Eccube\Entity\Order;
 use Eccube\Entity\Shipping;
 use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
@@ -414,7 +415,6 @@ class OrderController extends AbstractController
         // sql loggerを無効にする.
         $em = $this->entityManager;
         $em->getConfiguration()->setSQLLogger(null);
-
         $response = new StreamedResponse();
         $response->setCallback(function () use ($request, $csvTypeId) {
             // CSV種別を元に初期化.
@@ -884,4 +884,57 @@ class OrderController extends AbstractController
             return new Response('NG',404);
         }
     }
+    /**
+     * Update to OrderIMEI.
+     *
+     * @Route("/%eccube_admin_route%/order/{id}/imei", requirements={"id" = "\d+"}, name="admin_order_update_imei", methods={"PUT"})
+     *
+     * @param Request $request
+     * @param Order $order
+     *
+     * @return Response
+     */
+    public function updateOrderImei(Request $request, Order $order)
+    {
+        if (!($request->isXmlHttpRequest() && $this->isTokenValid())) {
+            return $this->json(['status' => 'NG'], 400);
+        }
+
+        $orderImei = mb_convert_kana($request->get('order_imei'), 'a', 'utf-8');
+        /** @var \Symfony\Component\Validator\ConstraintViolationListInterface $errors */
+        $errors = $this->validator->validate(
+            $orderImei,
+            [
+                new Assert\Length(['max' => 15, 'min' => 15]),
+                new Assert\Regex(
+                    ['pattern' => '/^[0-9a-zA-Z-]+$/u', 'message' => trans('admin.order.tracking_number_error')]
+                ),
+            ]
+        );
+
+        if ($errors->count() != 0) {
+            log_info('IMEI入力チェックエラー');
+            $messages = [];
+            /** @var \Symfony\Component\Validator\ConstraintViolationInterface $error */
+            foreach ($errors as $error) {
+                $messages[] = $error->getMessage();
+            }
+            return $this->json(['status' => 'NG', 'messages' => $messages], 400);
+        }
+
+        try {
+            $order->setImei($orderImei);
+            $this->entityManager->persist($order);
+            $this->entityManager->flush();
+            log_info('IMEI変更処理完了', [$order->getId()]);
+            $message = ['status' => 'OK', 'order_id' => $order->getId(), 'imei' => $orderImei];
+
+            return $this->json($message);
+        } catch (\Exception $e) {
+            log_error('予期しないエラー', [$e->getMessage()]);
+
+            return $this->json(['status' => 'NG'], 500);
+        }
+    }
+
 }

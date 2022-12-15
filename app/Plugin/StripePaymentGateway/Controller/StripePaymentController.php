@@ -28,7 +28,7 @@ use Stripe\Customer as StripeLibCustomer;
 class StripePaymentController extends AbstractController {
 
     protected $container;
-    private $stripe_config;
+    private $stripe_config;    
     protected $util_service;
     protected $entityManager;
     protected $orderHelper;
@@ -40,7 +40,7 @@ class StripePaymentController extends AbstractController {
         OrderHelper $orderHelper
     ) {
         $this->container = $container;
-        $this->entityManager = $container->get('doctrine.orm.entity_manager');
+        $this->entityManager = $container->get('doctrine.orm.entity_manager'); 
         $this->stripe_config = $this->entityManager->getRepository(StripeConfig::class)->get();
         $this->util_service = $this->container->get("plg_stripe_payment.service.util");
         $this->orderHelper = $orderHelper;
@@ -64,44 +64,44 @@ class StripePaymentController extends AbstractController {
         $Order = $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
         if (!$Order) {
             log_info('[注文処理] 購入処理中の受注が存在しません.', [$preOrderId]);
-
+            
             return $this->redirectToRoute('shopping_error');
         }
         $StripeConfig = $this->entityManager->getRepository(StripeConfig::class)->getConfigByOrder($Order);
-
+        
         $Customer = $Order->getCustomer();
         // フォームの生成.
         $form = $this->createForm(OrderType::class, $Order,[
             'skip_add_form' => true,
         ]);
         $form->handleRequest($request);
-
+        
         //if ($form->isSubmitted() && $form->isValid()) {
-        if($this->isGranted('ROLE_USER')){
-            $stripePaymentMethodObj = $this->checkSaveCardOn($Customer, $StripeConfig);
-            if($stripePaymentMethodObj){
-                $exp = \sprintf("%02d/%d", $stripePaymentMethodObj->card->exp_month, $stripePaymentMethodObj->card->exp_year);
+            if($this->isGranted('ROLE_USER')){
+                $stripePaymentMethodObj = $this->checkSaveCardOn($Customer, $StripeConfig);
+                if($stripePaymentMethodObj){
+                    $exp = \sprintf("%02d/%d", $stripePaymentMethodObj->card->exp_month, $stripePaymentMethodObj->card->exp_year);
+                }else{
+                    $exp = "";
+                }
             }else{
+                $stripePaymentMethodObj = false;
                 $exp = "";
             }
-        }else{
-            $stripePaymentMethodObj = false;
-            $exp = "";
-        }
 
-        $nonmem = false;
-        if (!$this->getUser() && $this->orderHelper->getNonMember()) {
-            $nonmem = true;
-        }
+            $nonmem = false;
+            if (!$this->getUser() && $this->orderHelper->getNonMember()) {
+                $nonmem = true;
+            }
 
-        return [
-            'stripeConfig'  =>  $StripeConfig,
-            'Order'         =>  $Order,
-            'stripePaymentMethodObj'    =>  $stripePaymentMethodObj,
-            'exp'       =>  $exp,
-            'nonmem'    =>  $nonmem,
-            'form'      =>  $form->createView(),
-        ];
+            return [
+                'stripeConfig'  =>  $StripeConfig,
+                'Order'         =>  $Order,
+                'stripePaymentMethodObj'    =>  $stripePaymentMethodObj,
+                'exp'       =>  $exp,
+                'nonmem'    =>  $nonmem,
+                'form'      =>  $form->createView(),
+            ];
         //}
         return $this->redirectToRoute('shopping');
     }
@@ -133,7 +133,7 @@ class StripePaymentController extends AbstractController {
             'error'     =>  "そのような済みはありません"
         ]);
     }
-
+    
 
     /**
      * @Route("/plugin/stripe_payment_gateway/payment_intent", name="plugin_stripe_payment_gateway_payment")
@@ -145,9 +145,9 @@ class StripePaymentController extends AbstractController {
         if (!$Order) {
             return $this->json(['error' => 'true', 'message' => trans('stripe_payment_gateway.admin.order.invalid_request')]);
         }
-
+        
         $StripeConfig = $this->entityManager->getRepository(StripeConfig::class)->getConfigByOrder($Order);
-
+        
         $stripeClient = new StripeClient($StripeConfig->secret_key);
         $paymentMethodId = $request->request->get('payment_method_id');
         $isSaveCardOn = $request->request->get('is_save_on') === "true" ? true : false;
@@ -160,7 +160,7 @@ class StripePaymentController extends AbstractController {
 
         return $this->json($this->genPaymentResponse($paymentIntent));
     }
-
+    
     // public function coupon_check(Request $request){
     //     $coupon_id = $request->request->get('coupon_id');
     //     if(empty($coupon_id)){
@@ -170,7 +170,7 @@ class StripePaymentController extends AbstractController {
     //         $coupon_service = $this->container->get('plg_stripe_payment.coupon_service');
     //         $coupon_service->setConfig($StripeConfig);
     //         $coupon_data = $coupon_service->retrieveCoupon($coupon_id);
-
+            
     //         if($coupon_data){
     //             if($coupon_service->couponValidCheck($coupon_data) === true){
     //                 $Order = $this->getOrder();
@@ -313,10 +313,10 @@ class StripePaymentController extends AbstractController {
     }
 
     private function getOrder(){
-        // BOC validation checking
-        $preOrderId = $this->cartService->getPreOrderId();
-        /** @var Order $Order */
-        return $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
+         // BOC validation checking
+         $preOrderId = $this->cartService->getPreOrderId();
+         /** @var Order $Order */
+         return $this->orderHelper->getPurchaseProcessingOrder($preOrderId);
     }
     /**
      * PaymentMethodをコンテナから取得する.
@@ -337,7 +337,7 @@ class StripePaymentController extends AbstractController {
     private function checkSaveCardOn($Customer, $StripeConfig){
         $isStripeCustomer = false;
         $StripeCustomer=$this->entityManager->getRepository(StripeCustomer::class)->findOneBy(array('Customer'=>$Customer));
-        $stripeClient = new StripeClient($StripeConfig->secret_key);
+        $stripeClient = new StripeClient($StripeConfig->secret_key);    
         if($StripeCustomer instanceof StripeCustomer){
             $stripLibCustomer = $stripeClient->retrieveCustomer($StripeCustomer->getStripeCustomerId());
             if(is_array($stripLibCustomer) || isset($stripLibCustomer['error'])) {
@@ -350,8 +350,8 @@ class StripePaymentController extends AbstractController {
         }
         if(!$isStripeCustomer) return false;
         if($StripeCustomer->getIsSaveCardOn()){
-            $stripePaymentMethodObj = $stripeClient->retrieveLastPaymentMethodByCustomer($StripeCustomer->getStripeCustomerId());
-            if( !($stripePaymentMethodObj instanceof PaymentMethod) || !$stripeClient->isPaymentMethodId($stripePaymentMethodObj->id) ) {
+           $stripePaymentMethodObj = $stripeClient->retrieveLastPaymentMethodByCustomer($StripeCustomer->getStripeCustomerId());
+           if( !($stripePaymentMethodObj instanceof PaymentMethod) || !$stripeClient->isPaymentMethodId($stripePaymentMethodObj->id) ) {
                 return false;
             }else{
                 return $stripePaymentMethodObj;
@@ -368,11 +368,11 @@ class StripePaymentController extends AbstractController {
     public function updateCard(Request $request){
         $Customer = $this->getUser();
 
-        $StripeConfig = $this->entityManager->getRepository(StripeConfig::class)->getConfigByOrder(null);
+        $StripeConfig = $this->entityManager->getRepository(StripeConfig::class)->getConfigByOrder(null);        
         $stripeClient = new StripeClient($StripeConfig->secret_key);
 
         $StripeCustomer = $this->entityManager->getRepository(StripeCustomer::class)->findOneBy(['Customer'=>$Customer]);
-
+        
         if (empty($StripeCustomer)){
             $StripeCustomer = new StripeCustomer();
 
@@ -407,11 +407,11 @@ class StripePaymentController extends AbstractController {
 
         $this->entityManager->persist($StripeCustomer);
         $this->entityManager->flush();
-
+        
         return $this->json([
             'done' => true,
             'messages' => "success",
         ]);
     }
-
+    
 }

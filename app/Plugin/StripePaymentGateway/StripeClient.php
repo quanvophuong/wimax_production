@@ -245,7 +245,7 @@ class StripeClient
                 'payment_method' => $paymentMethodId,
                 'confirmation_method' => 'automatic',
                 'capture_method' => 'manual',
-                'confirm' => false,
+                'confirm' => true,
                 'metadata' => array(
                     'order' => $orderId
                 ),
