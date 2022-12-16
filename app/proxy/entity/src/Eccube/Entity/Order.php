@@ -41,7 +41,7 @@ use Eccube\Service\PurchaseFlow\ItemCollection;
      */
     class Order extends \Eccube\Entity\AbstractEntity implements PurchaseInterface, ItemHolderInterface
     {
-        use NameTrait, \Plugin\StripePaymentGateway\Entity\OrderTrait, \Plugin\StripeRec\Entity\OrderTrait;
+        use NameTrait, \Plugin\StripePaymentGateway\Entity\OrderTrait, \Plugin\StripeRec\Entity\OrderTrait, \Customize\Entity\OrderTrait;
         use PointTrait;
 
         /**

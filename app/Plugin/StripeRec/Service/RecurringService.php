@@ -346,7 +346,15 @@ class RecurringService{
         $rec_order = $this->rec_order_repo->findOneBy(['schedule_id' => $object->id]);
         if($rec_order){
             $rec_order->setRecStatus(StripeRecOrder::REC_STATUS_SCHEDULED_CANCELED);
+
+            $Order = $rec_order->getOrder();
+            
+            $OrderStatus = $this->em->getRepository(OrderStatus::class)->find(OrderStatus::CANCEL);
+            $Order->setOrderStatus($OrderStatus);
+            
             $this->em->persist($rec_order);
+            $this->em->persist($Order);
+            
             $this->em->flush();
             $this->sendMail($rec_order, 'subscription.canceled');
         }

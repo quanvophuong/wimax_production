@@ -32,12 +32,32 @@ file that was distributed with this source code.
 {% endblock stylesheet %}
 
 {% block javascript %}
-    <script src="{{ asset('assets/js/vendor/moment.min.js', 'admin') }}"></script>
+<script src="{{ asset('assets/js/vendor/moment.min.js', 'admin') }}"></script>
     <script src="{{ asset('assets/js/vendor/moment-with-locales.min.js', 'admin') }}"></script>
     <script src="{{ asset('assets/js/vendor/tempusdominus-bootstrap-4.min.js', 'admin') }}"></script>
 
     <script>
         $(function() {
+
+            $('.btn_stripe').click(function() {
+                var order_id = $(this).attr('data-id');
+                var url = '{{ url('admin_order_update_stripe') }}';
+                 $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: {'order_id': order_id}
+                }).done(function(data, textStatus, jqXHR) {
+                    console.log(data)
+                    if(data == "OK"){
+                        alert('正常に反映されました。');
+                    }
+                    return true;
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                 alert('反映に失敗しました。再度お試しください。');
+                    return false;
+                });
+            });
+
             // datetimepicker で value が消えてしまうので data-value に保持しておく
             $('input.datetimepicker-input').each(function() {
                 $(this).data('value', $(this).val());
@@ -88,6 +108,14 @@ file that was distributed with this source code.
                 $('#form_bulk').attr('target', 'newwin');
                 $('#form_bulk').submit();
                 return false;
+            });
+
+
+            // PDF出力(複数)
+            $('#bulkExportOrderPdf').on('click', function(event) {
+                $('#form_bulk').attr('action', "{{ url('admin_order_pdf_order_download') }}");
+                $('#form_bulk').submit();
+               return false;
             });
 
             // PDF出力(単一)
@@ -169,6 +197,77 @@ file that was distributed with this source code.
         updateTrackingNumber($target.data('shipping_id'), $target.data('url'), tracking_number, callback);
     });
 
+            // IMEI
+            var updateImei = function(id, url, imei, callback) {
+                $.ajax({
+                    type: 'PUT',
+                    url: url,
+                    data: {'order_imei': imei}
+                }).done(function(data, textStatus, jqXHR) {
+                    if (data['status'] == 'OK') {
+                        $('#imei_' + id).val(data['imei']);
+                        if (typeof callback == 'function') {
+                            callback();
+                        }
+                    } else {
+                        alert('Update failed.');
+                    }
+                    return true;
+                }).fail(function(jqXHR, textStatus, errorThrown) {
+                    var response = JSON.parse(jqXHR.responseText);
+                    var messages = '';
+                    for (var i = 0; i < response.messages.length; i++) {
+                        messages += response.messages[i] + "\n";
+                    }
+                    alert(messages);
+                    return false;
+                });
+            };
+
+            $('button.update_order_imei').prop('disabled', true);
+            // フォームに変更があったら更新ボタンを有効にする
+            $('input.update_order_imei').on('keyup', function(event) {
+                var $imei = $(this);
+                var $button = $("button[data-target='#" + $imei.attr('id') + "']");
+                $button.prop('disabled', false);
+                $button.children('i')
+                    .removeClass('text-secondary')
+                    .addClass('text-success');
+            });
+            // enter キーで更新し、次のフォームへフォーカスを移動する
+            $('input.update_order_imei').on('keypress', function(event) {
+                var $imei = $(this);
+                var $button = $("button[data-target='#" + $imei.attr('id') + "']");
+
+                var code = event.which ? event.which : event.keyCode;
+
+                if (code == 13) { // on press to enter
+                    var index = $('input.update_order_imei').index(this);
+                    var callback = function() {
+                        $button.prop('disabled', true);
+                        $button.children('i')
+                            .removeClass('text-success')
+                            .addClass('text-secondary');
+                        $('input.update_order_imei:gt(' + index + '):first').focus();
+                    };
+                    updateImei($imei.data('order_id'), $imei.data('url'), $imei.val(), callback);
+                    event.preventDefault();
+                }
+            });
+            // 更新ボタンの制御
+            $('button.update_order_imei').on('click', function(event) {
+                event.preventDefault();
+                var $button = $(this);
+                var $target = $($(this).data('target'));
+                var $imei = $target.val();
+                var callback = function() {
+                    $button.prop('disabled', true);
+                    $button.children('i')
+                        .removeClass('text-success')
+                        .addClass('text-secondary');
+                };
+                updateImei($target.data('order_id'), $target.data('url'), $imei, callback);
+            });
     // 完了ボタン
     $('#bulkChangeComplete').on('click', function() {
         location.href = '{{ url('admin_order', { 'resume': 1 }) }}';
@@ -207,9 +306,7 @@ file that was distributed with this source code.
                                                    class="form-check-input"
                                                    value="{{ child.vars.value }}"{{ child.vars.checked ? ' checked="checked"' }}>
                                             <label class="form-check-label" for="{{ child.vars.id }}">{{ child.vars.label }}</label>
-                                            {%- if statusForm.vars.order_count[status_id].display -%}
-                                                (<a href="{{ url('admin_order', { 'order_status_id': status_id }) }}">{{ statusForm.vars.order_count[status_id].count }}</a>)
-                                            {%- endif %}
+                                            (<a href="{{ url('admin_order', { 'order_status_id': status_id }) }}">{{ statusForm.vars.order_count[status_id].count }}</a>)
                                         </div>
                                     {% endfor %}
                                 </div>
@@ -442,6 +539,7 @@ file that was distributed with this source code.
                                             {{ 'admin.order.send_mail'|trans }}
                                         </button>
                                         <button type="button" id="bulkExportPdf" class="btn btn-ec-regular mr-2">{{ 'admin.order.output_delivery_note_short'|trans }}</button>
+                                        <button type="button" id="bulkExportOrderPdf" class="btn btn-ec-regular mr-2">注文書出力</button>
                                         {# TODO 削除処理は将来バージョンで対応 <button type="button" class="btn btn-ec-delete" data-toggle="modal" data-target="#bulkDeleteModal">{{ 'admin.common.delete'|trans }}</button> #}
                                     </div>
                                     <div class="col d-none btn-bulk-wrapper">
@@ -512,14 +610,18 @@ file that was distributed with this source code.
                                         <th class="border-top-0 pt-2 pb-2 text-center pl-3">
                                             <input type="checkbox" id="toggle_check_all" name="filter" value="open">
                                         </th>
-                                        <th class="border-top-0 pt-2 pb-2 text-center">{{ 'admin.order.orderer'|trans }}<a href="#" class="js-listSort" data-sortkey="orderer"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
-                                        <th class="border-top-0 pt-2 pb-2 text-center text-nowrap">{{ 'admin.common.payment_method'|trans }}<a href="#" class="js-listSort" data-sortkey="payment_method"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
-                                        <th class="border-top-0 pt-2 pb-2 text-center">{{ 'admin.order.order_status'|trans }}<a href="#" class="js-listSort" data-sortkey="order_status"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
-                                        <th class="border-top-0 pt-2 pb-2 text-center">{{ 'admin.order.purchase_price'|trans }}<a href="#" class="js-listSort" data-sortkey="purchase_price"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
-                                        <th class="border-top-0 pt-2 pb-2 text-center">{{ 'admin.order.message_short'|trans }}</th>
-                                        <th class="border-top-0 pt-2 pb-2 text-center text-nowrap">{{ 'admin.order.shipping_status'|trans }}<a href="#" class="js-listSort" data-sortkey="shipping_status"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
-                                        <th class="border-top-0 pt-2 pb-2 text-center">{{ 'admin.order.tracking_number'|trans }}<a href="#" class="js-listSort" data-sortkey="tracking_number"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
-                                        <th class="border-top-0 pt-2 pb-2 text-center">{{ 'admin.order.delivery'|trans }}<a href="#" class="js-listSort" data-sortkey="delivery"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">注文番号<a href="#" class="js-listSort" data-sortkey="orderer"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center text-nowrap">氏名<a href="#" class="js-listSort" data-sortkey="payment_method"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">対応状況<a href="#" class="js-listSort" data-sortkey="order_status"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">購入商品名<a href="#" class="js-listSort" data-sortkey="purchase_price"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">安心補償オプション<a href="#" class="js-listSort" data-sortkey="class_category1"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">USB ACアダプター<a href="#" class="js-listSort" data-sortkey="class_category2"><i class="fa fa-arrow-up" aria-hidden="true"></i></a></th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">購入金額</th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">お問い合わせ</th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">出荷状況</th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">IMEI</th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">お問い合わせ番号</th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">配送方法</th>
                                         <th class="border-top-0 pt-2 pb-2 text-center pr-3"></th>
                                     </tr>
                                     </thead>
@@ -535,28 +637,58 @@ file that was distributed with this source code.
                                                     />
                                                 </td>
                                                 <td class="align-middle text-left">
-                                                    <a class="action-edit" href="{{ url('admin_order_edit', { id : Order.id }) }}">{{ Order.order_no }}<br>{{ Order.name01 ~ Order.name02 }}<br>{{ Order.order_date|date_min }}</a>
+                                                    <a class="action-edit" href="{{ url('admin_order_edit', { id : Order.id }) }}">{{ Order.order_no }}</a>
                                                 </td>
                                                 <td class="align-middle text-center">
-                                                    {{ Order.payment_method }}
+                                                    {{ Order.name01 ~ Order.name02 }}
                                                 </td>
                                                 <td class="align-middle text-center">
                                                     <span class="badge badge-ec-blue" style="background-color: #fff; color: {{ Order.OrderStatusColor }}; border-color: {{ Order.OrderStatusColor }}">{{ Order.OrderStatus }}</span>
                                                 </td>
-                                                <td class="align-middle text-right">
-                                                    {{ Order.payment_total|price }}<br>
-                                                    {{ Order.payment_date ? Order.payment_date|date_day : 'admin.order.not_payment'|trans }}
+                                                <td class="align-middle text-center">
+                                                    {% for shipping in Order.shippings %}
+                                                        {% set idx = loop.index0 %}
+                                                        {% set isShowReducedTaxMess = false %}
+                                                        {% for orderItem in shipping.productOrderItems %}
+                                                            {{ orderItem.productName }}
+                                                        {% endfor %}
+                                                    {% endfor %}
                                                 </td>
                                                 <td class="align-middle text-center">
-                                                    {% if Order.message is not empty %}
-                                                        <a class="btn btn-ec-actionIcon" href="{{ url('admin_order_edit', { id : Order.id }) }}#order_message" data-tooltip="true" data-placement="top" title="" data-original-title="{{ Order.message }}" aria-describedby="tooltip819464">
-                                                            <i class="fa fa-commenting fa-lg text-secondary" aria-hidden="true"></i>
-                                                        </a>
-                                                    {% elseif Order.note is not empty %}
-                                                        <a class="btn btn-ec-actionIcon" href="{{ url('admin_order_edit', { id : Order.id }) }}#order_note" data-tooltip="true" data-placement="top" title="" data-original-title="{{ Order.note }}" aria-describedby="tooltip819464">
-                                                            <i class="fa fa-commenting fa-lg text-secondary" aria-hidden="true"></i>
-                                                        </a>
-                                                    {% endif %}
+                                                    {% for shipping in Order.shippings %}
+                                                        {% set idx = loop.index0 %}
+                                                        {% set isShowReducedTaxMess = false %}
+
+                                                        {% for orderItem in shipping.productOrderItems %}
+                                                            <dl>
+                                                                <dd>
+                                                                    {{ orderItem.productClass.classCategory1 }}
+                                                                </dd>
+                                                            </dl>
+                                                        {% endfor %}
+
+                                                    {% endfor %}
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    {% for shipping in Order.shippings %}
+                                                        {% set idx = loop.index0 %}
+                                                        {% set isShowReducedTaxMess = false %}
+
+                                                        {% for orderItem in shipping.productOrderItems %}
+                                                            <dl>
+                                                                <dd>
+                                                                    {{ orderItem.productClass.classCategory2 }}
+                                                                </dd>
+                                                            </dl>
+                                                        {% endfor %}
+
+                                                    {% endfor %}
+                                                </td>
+                                                <td class="align-middle text-right">
+                                                    {{ Order.total|number_format('0', '.', ',') }}
+                                                </td>
+                                                <td class="align-middle text-left">
+                                                    {{ Order.message }}
                                                 </td>
                                                 <td class="align-middle text-center">
                                                     {% if Order.is_multiple %}
@@ -577,6 +709,16 @@ file that was distributed with this source code.
                                                 </td>
                                                 <td class="align-middle text-center">
                                                     <div class="input-group input-group-sm">
+                                                        <input type="text" id="imei_{{ Order.id }}" class="form-control update_order_imei" placeholder="{{ 'IMEI'|trans }}" value="{{ Order.imei }}" data-order_id="{{ Order.id }}" data-url="{{ url('admin_order_update_imei', { id : Order.id }) }}" tabindex="{{ loop.index }}"/>
+                                                        <span class="input-group-btn">
+                                                    <button type="button" class="btn btn-default update_order_imei" data-target="#imei_{{ Order.id }}">
+                                                        <i class="fa fa-check fa-lg text-secondary" aria-hidden="true"></i>
+                                                    </button>
+                                                </span>
+                                                    </div>
+                                                </td>
+                                                <td class="align-middle text-center">
+                                                    <div class="input-group input-group-sm">
                                                         <input type="text" id="tracking_number_{{ Shipping.id }}" class="form-control update_tracking_number" placeholder="{{ 'admin.order.tracking_number'|trans }}" value="{{ Shipping.trackingNumber }}" data-shipping_id="{{ Shipping.id }}" data-url="{{ url('admin_shipping_update_tracking_number', { id : Shipping.id }) }}" tabindex="{{ loop.index }}"/>
                                                         <span class="input-group-btn">
                                                     <button type="button" class="btn btn-default update_tracking_number" data-target="#tracking_number_{{ Shipping.id }}">
@@ -586,8 +728,7 @@ file that was distributed with this source code.
                                                     </div>
                                                 </td>
                                                 <td class="align-middle text-center">
-                                                    {{ Shipping.name01 ~ Shipping.name02 }}<br>
-                                                    {{ Shipping.Pref.name }}
+                                                    {{ Shipping.shipping_delivery_name }}
                                                 </td>
                                                 <td class="align-middle pr-3">
                                                     <div class="text-right">
@@ -613,6 +754,11 @@ file that was distributed with this source code.
                                                                data-preview-notify-mail-url="{{ url('admin_shipping_preview_notify_mail', { id: Shipping.id}) }}"
                                                                data-tooltip="true" data-placement="top" title data-original-title="{{ 'admin.order.to_shipped'|trans }}">
                                                                 <i class="fa fa-check fa-lg text-secondary" aria-hidden="true"></i>
+                                                            </a>
+                                                        </div>
+                                                        <div class="px-1 d-inline-block">
+                                                            <a class="btn btn-ec-actionIcon btn_stripe" id="btn_stripe" data-id="{{ Order.id }}" data-tooltip="true" data-placement="top" title="Stripeに注文番号反映">
+                                                                <i class="fa fa-cc-stripe fa-lg text-secondary" aria-hidden="true"></i>
                                                             </a>
                                                         </div>
                                                     </div>
