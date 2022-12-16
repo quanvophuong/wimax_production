@@ -390,10 +390,10 @@ class StripePaymentController extends AbstractController {
         $stripeCard = PaymentMethod::create([
             'type' => 'card',
             'card' => [
-                'number' => $request->get('card_number'),
-                'exp_month' => $request->get('card_month'),
-                'exp_year' => $request->get('card_year'),
-                'cvc' =>  $request->get('card_cvc'),
+                'number' => $request->get('cardNumber'),
+                'exp_month' => $request->get('cardMonth'),
+                'exp_year' => $request->get('cardYear'),
+                'cvc' =>  $request->get('cardCvv'),
             ]
         ]);
 

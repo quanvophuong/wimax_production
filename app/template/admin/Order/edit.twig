@@ -734,21 +734,11 @@ file that was distributed with this source code.
                                             </div>
                                         </div>
                                         
-                                    {% set isSecretWithdraw = false %}
-                                    {% set isPlanWithdraw = false %}
-                                    {% for orderItemForm in form.OrderItems %}
-                                        {% set OrderItem = orderItemForm.vars.data %}
-                                        {% if OrderItem.isProduct %}
-                                            {% set isSecretWithdraw = OrderItem.isSecretWithraw %}
-                                            {% set isPlanWithdraw = OrderItem.isPlanWithraw %}
-                                        {% endif %}
-                                    {% endfor %}
-
-                                    {% if isSecretWithdraw and (now|date('d'))<16 %}
+                                    {% if WithdrawSecret %}
                                         <a class="btn btn-ec-regular mr-2 btn-withdraw-cancel" data-type="secret" >安心補償解約を取り消す</a>
                                     {% endif %}
                                     
-                                    {% if isPlanWithdraw and (now|date('d'))<16 %}
+                                    {% if WithdrawPlan %}
                                         <a class="btn btn-ec-regular mr-2 btn-withdraw-cancel" data-type="plan"  >プラン解約を取り消す</a>
                                     {% endif %}
                                         {{ form_errors(form.OrderItemsErrors) }}
