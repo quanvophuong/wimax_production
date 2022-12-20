@@ -35,6 +35,7 @@
     <script>
         $(function() {
             $('#change_credit').click(function(e){
+                loadingOverlay("show");     
                 e.preventDefault();
                 var form = $('#shopping-form');
                 if(form.valid()){
@@ -45,8 +46,10 @@
                         data: form.serialize(),
                         dataType: 'json',
                     }).done(function(data) {
+                        loadingOverlay("hide");    
                         alert('カード情報を変更しました。')
                     }).fail(function(data) {
+                        loadingOverlay("hide");    
                         alert('{{ 'カード情報変更に失敗しました。'|trans }}');
                     })
                 }

@@ -164,7 +164,7 @@ class RecurringService{
             $order = $rec_order->getOrder();
             if($order){
                 if (!$this->hasOverlappedPaidOrder($rec_order)) {
-                    //$Order = $this->updateOrder($rec_order, OrderStatus::PAID);
+                    $Order = $this->updateOrder($rec_order, OrderStatus::PAID);
                     // $this->dispatcher->dispatch(StripeRecEvent::REC_ORDER_SUBSCRIPTION_PAID, new EventArgs([
                     //     'rec_order' =>  $rec_order,
                     // ]));
@@ -301,9 +301,18 @@ class RecurringService{
             }
         }
         foreach($subscriptions as $sub_id => $rec_order){
-            if($rec_order->getOrder()){
+            $order = $rec_order->getOrder();
+            if($order->getOrder()){
+                if (!$this->hasOverlappedPaidOrder($rec_order)) {
+                    $Order = $this->updateOrder($rec_order, OrderStatus::FAILED);
+                    // $this->dispatcher->dispatch(StripeRecEvent::REC_ORDER_SUBSCRIPTION_PAID, new EventArgs([
+                    //     'rec_order' =>  $rec_order,
+                    // ]));
+                }
+
                 $this->sendMail($rec_order, "invoice.failed");
             }
+
             $rec_order = $this->checkScheduledStatus($rec_order, StripeRecOrder::REC_STATUS_ACTIVE);
             $this->em->persist($rec_order);
             $this->em->flush();
@@ -653,5 +662,27 @@ class RecurringService{
         }
 
         return compact('bundle_order_items', 'initial_amount', 'recurring_amount', 'initial_discount', 'recurring_discount');
+    }
+
+    public function paymentMethodAttached($object){
+
+        $stripe_customer_id = $object->customer;
+        
+        $stripe_customer = $this->em->getRepository(StripeCustomer::class)->findOneBy(['stripe_customer_id' => $stripe_customer_id]);
+        if($stripe_customer){
+            $customer = $stripe_customer->getCustomer();
+            if($customer){
+                $this->mail_service->sendPaymentMethodAttached($customer);
+            }
+        }
+        
+        // foreach($subscriptions as $sub_id => $rec_order){
+        //     if($rec_order->getOrder()){
+        //         $this->sendMail($rec_order, "invoice.failed");
+        //     }
+        //     $rec_order = $this->checkScheduledStatus($rec_order, StripeRecOrder::REC_STATUS_ACTIVE);
+        //     $this->em->persist($rec_order);
+        //     $this->em->flush();
+        // }
     }
 }

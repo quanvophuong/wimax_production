@@ -158,6 +158,10 @@ class RecurringHookController extends AbstractController{
                 log_info('🔔 ' . $type . ' Webhook received! ' . $object);
                 $this->rec_service->subscriptionScheduleCanceled($object);
             break;
+            case 'payment_method.attached':
+                log_info('🔔 ' . $type . ' Webhook received! ' . $object);
+                $this->rec_service->paymentMethodAttached($object);
+            break;
             default:
               // Unhandled event type
           }

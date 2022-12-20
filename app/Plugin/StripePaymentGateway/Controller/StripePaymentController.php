@@ -407,7 +407,13 @@ class StripePaymentController extends AbstractController {
 
         $this->entityManager->persist($StripeCustomer);
         $this->entityManager->flush();
-        
+
+        $stripe = new \Stripe\StripeClient($StripeConfig->secret_key);
+        $stripe_customer = $stripe->customers->update(
+            $StripeCustomer->getStripeCustomerId(),
+            ['invoice_settings' => ['default_payment_method' => $payment_method['id']]]
+        );
+
         return $this->json([
             'done' => true,
             'messages' => "success",
