@@ -193,9 +193,9 @@ file that was distributed with this source code.
                 }
             });
 
-            
-            $('.btn-withdraw-cancel').click(function() {
 
+            {% if (Order.id) %}            
+            $('.btn-withdraw-cancel').click(function() {
                 $.ajax({
                     url: '{{ url('admin_order_withdraw') }}',
                     type: 'POST',
@@ -210,6 +210,7 @@ file that was distributed with this source code.
                     alert('{{ '失敗しました。'|trans }}');
                 });
             });
+            {% endif %}
         });
 
         {# ポイント機能が有効かつ会員の場合のみポイントの割引金額を変更する #}

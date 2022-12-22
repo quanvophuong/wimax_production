@@ -37,7 +37,7 @@ if (!class_exists(OrderStatus::class, false)) {
         const PROCESSING = 8;
         const PENDING = 7;
         const RETURNED = 9;
-        const SUBSCRIPTION = 12;
+        const FAILED = 12;
 
         /**
          * 受注一覧画面で, ステータスごとの受注件数を表示するかどうか

@@ -109,6 +109,7 @@ class CsvImportController extends AbstractCsvImportController
             return $value['required'];
         }));
         $csvColumns = $csv->getColumnHeaders();
+
         if (count(array_diff($requiredColumns, $csvColumns)) > 0) {
             $errors[] = trans('admin.common.csv_invalid_format');
 
@@ -180,6 +181,11 @@ class CsvImportController extends AbstractCsvImportController
                     ]);
                 }
             }
+            
+            if (isset($row[$columnNames['imei']])) {
+                $Order->setImei($row[$columnNames['imei']]);
+            }
+
         }
     }
 
@@ -212,6 +218,11 @@ class CsvImportController extends AbstractCsvImportController
                 'name' => trans('admin.order.shipping_csv.shipping_date_col'),
                 'description' => trans('admin.order.shipping_csv.shipping_date_description'),
                 'required' => true,
+            ],
+            'imei' => [
+                'name' => 'IMEI',
+                'description' => 'IMEI',
+                'required' => false,
             ],
         ];
     }

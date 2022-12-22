@@ -31,6 +31,7 @@ class ConfigService{
     const PAY_UPCOMING = "Stripe 定期支払い待機メール";
     const REC_CANCELED = "Stripe サブスク停止メール";
     const REC_ORDER_THANKS = '定期支払いご注文ありがとうございます';
+    const PAYMENTMETHOD_ATTACHED = 'クレジットカード情報変更完了のお知らせ';
 
     //===========================
 
