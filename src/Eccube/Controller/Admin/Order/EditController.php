@@ -54,6 +54,7 @@ use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Eccube\Repository\ProductClassRepository;
 use Eccube\Repository\ClassCategoryRepository;
+use Customize\Repository\WithdrawRepository;
 
 class EditController extends AbstractController
 {
@@ -129,6 +130,7 @@ class EditController extends AbstractController
 
     private $productClassRepository;
     private $classCategoryRepository;
+    private $withdrawRepository;
 
     /**
      * EditController constructor.
@@ -164,7 +166,8 @@ class EditController extends AbstractController
         OrderStateMachine $orderStateMachine,
         OrderHelper $orderHelper,
         ProductClassRepository $productClassRepository,
-        ClassCategoryRepository $classCategoryRepository
+        ClassCategoryRepository $classCategoryRepository,
+        WithdrawRepository $withdrawRepository
     ) {
         $this->taxRuleService = $taxRuleService;
         $this->deviceTypeRepository = $deviceTypeRepository;
@@ -182,6 +185,7 @@ class EditController extends AbstractController
         $this->orderHelper = $orderHelper;
         $this->productClassRepository = $productClassRepository;
         $this->classCategoryRepository = $classCategoryRepository;
+        $this->withdrawRepository = $withdrawRepository;
     }
 
     /**
@@ -403,6 +407,9 @@ class EditController extends AbstractController
             }
         }
 
+        $WithdrawSecret = $this->withdrawRepository->findOneBy(array('Order' => $TargetOrder, 'withdraw_type' => 1, 'visible' => 1));
+        $WithdrawPlan = $this->withdrawRepository->findOneBy(array('Order' => $TargetOrder, 'withdraw_type' => 2, 'visible' => 1));
+
         return [
             'form' => $form->createView(),
             'searchCustomerModalForm' => $searchCustomerModalForm->createView(),
@@ -410,6 +417,8 @@ class EditController extends AbstractController
             'Order' => $TargetOrder,
             'id' => $id,
             'shippingDeliveryTimes' => $this->serializer->serialize($times, 'json'),
+            'WithdrawSecret' => $WithdrawSecret,
+            'WithdrawPlan' => $WithdrawPlan,
         ];
     }
 
@@ -711,40 +720,19 @@ class EditController extends AbstractController
      */
     public function withraw(Request $request)
     {
-        $order_id = $request->get('order_id');
-        $type = $request->get('type');
-        $Order = $this->orderRepository->find($order_id);
+        $orderId = $request->get('order_id');
+        $withdrawType = $request->get('type');
+        $Order = $this->orderRepository->find($orderId);
         //dump($Order);
 
-        foreach($Order->getOrderItems() as $OrderItem){
-            if (!$OrderItem->isProduct()) continue;
-            if ($type=='secret'){
-                $NewClassCategory1 = $this->classCategoryRepository->find($OrderItem->getSecretOption());
-                $NewClassCategory2 = $OrderItem->getProductClass()->getClassCategory2();
-                $OrderItem->setSecretOption(null);
-                $OrderItem->setSecretWithraw(false);
-            }
-            if ($type=='plan'){
-                $NewClassCategory1 = $OrderItem->getProductClass()->getClassCategory1();
-                $NewClassCategory2 = $this->classCategoryRepository->find($OrderItem->getPlanOption());
-                $OrderItem->setPlanOption(null);
-                $OrderItem->setPlanWithraw(false);
-            }
-
-            $ProductClass = $this->productClassRepository->findOneBy([
-                'ClassCategory1' => $NewClassCategory1,
-                'ClassCategory2' => $NewClassCategory2,
-            ]);
-            $OrderItem->setProductClass($ProductClass);
-            $OrderItem->setClassCategoryName1($NewClassCategory1->getName());
-            $OrderItem->setClassCategoryName2($NewClassCategory2->getName());
-            $OrderItem->setPrice($ProductClass->getPrice02());
-            $OrderItem->setTax($ProductClass->getPrice02()*$OrderItem->getTaxRate()/100);
-
-            $this->entityManager->persist($OrderItem);
+        $withdrawType = $withdrawType == 'secret' ? 1 : 2;
+        $Withdraw = $this->withdrawRepository->findOneBy(array('Order' => $Order, 'withdraw_type' => $withdrawType));
+        if (!empty($Withdraw)){
+            $Withdraw->setVisible(false);
+            $Withdraw->setRequestDate(new \DateTime('now'));
+            $this->entityManager->persist($Withdraw);
+            $this->entityManager->flush();
         }
-
-        $this->entityManager->flush();
 
         return $this->json(['done' => true]);
     }

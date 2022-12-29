@@ -390,10 +390,10 @@ class StripePaymentController extends AbstractController {
         $stripeCard = PaymentMethod::create([
             'type' => 'card',
             'card' => [
-                'number' => $request->get('card_number'),
-                'exp_month' => $request->get('card_month'),
-                'exp_year' => $request->get('card_year'),
-                'cvc' =>  $request->get('card_cvc'),
+                'number' => $request->get('cardNumber'),
+                'exp_month' => $request->get('cardMonth'),
+                'exp_year' => $request->get('cardYear'),
+                'cvc' =>  $request->get('cardCvv'),
             ]
         ]);
 
@@ -407,7 +407,13 @@ class StripePaymentController extends AbstractController {
 
         $this->entityManager->persist($StripeCustomer);
         $this->entityManager->flush();
-        
+
+        $stripe = new \Stripe\StripeClient($StripeConfig->secret_key);
+        $stripe_customer = $stripe->customers->update(
+            $StripeCustomer->getStripeCustomerId(),
+            ['invoice_settings' => ['default_payment_method' => $payment_method['id']]]
+        );
+
         return $this->json([
             'done' => true,
             'messages' => "success",

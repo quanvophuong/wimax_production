@@ -306,4 +306,38 @@ class MailExService extends MailService{
             ->setReturnPath($this->BaseInfo->getEmail04());
         return $message;
     }
+    
+    public function sendPaymentMethodAttached($Customer)
+    {
+        $template = $this->em->getRepository(MailTemplate::class)->findOneBy([
+            'name'  =>  ConfigService::PAYMENTMETHOD_ATTACHED
+        ]);
+        $base_info = $this->em->getRepository(BaseInfo::class)->get();
+        $template_path = $template->getFileName();
+
+        $param = ['Customer' =>  $Customer];
+
+        $engine = $this->container->get('twig');
+        $body = $engine->render($template_path, $param, null);
+        $htmlFileName = $this->getHtmlTemplate($template_path);
+
+        $message = (new \Swift_Message())
+            ->setSubject('['.$base_info->getShopName().'] '.$template->getMailSubject())
+            ->setFrom([$base_info->getEmail01() => $base_info->getShopName()])
+            ->setTo([$Customer->getEmail(), 'info@free-max.com'])
+            //->setBcc($this->BaseInfo->getEmail01())
+            ->setReplyTo($base_info->getEmail03())
+            ->setReturnPath($base_info->getEmail04());
+
+        $message->setBody($body);
+        if($htmlFileName){
+            $htmlBody = $this->twig->render($htmlFileName, $param);
+            $message
+                ->setContentType('text/plain; charset=UTF-8')
+                ->setBody($body, 'text/plain')
+                ->addPart($htmlBody, 'text/html');
+        }
+        $count = $this->mailer->send($message);
+        log_info('定期受注Failedメール送信完了', ['count' => $count]);
+    }
 }

@@ -89,58 +89,27 @@
 }
 }
 });
+$('.pay-button').on('click', function(e) {
+        $('#card_error').hide();
+        loadingOverlay("show");
 
-    $('#pay-button').on('click', function(e) {
-    $('#card_error').hide();
-    loadingOverlay("show");
-
-    $.ajax({
-    type: 'POST',
-    data: {
-    'number' : $('#cardNumber').val(),
-    'holder' : $('#cardName').val(),
-    'exp_month' : $('#cardMonth').val(),
-    'exp_year' : $('#cardYear').val(),
-    'cvc' : $('#cardCvv').val()
-},
-    url: '{{ url("plugin_striperec_payment_create") }}',
-    success: function(data){
-    if (data.result == 'success'){
-    do_pay(data.paymentMethod.id);
-}else{
-    showError('error');
-}
-}
-})
-})
-
-    $('.pay-existing-method').on('click', function(e) {
-    $('#card_error').hide();
-    loadingOverlay("show");
-
-    do_pay('{{ stripePaymentMethodObj.id }}');
-})
-
-    function do_pay(payment_method_id){
-    $.ajax({
-        type: 'POST',
-        data: {
-            payment_method_id : payment_method_id
-        },
-        url: '{{ url("plugin_striperec_presubscripe") }}',
-        success: function(data){
-            if(!data['error']){
-                console.log(document.getElementById('checkout_form'));
-                document.getElementById('checkout_form').submit();
-            }else{
-                showError(data['message']);
+        $.ajax({
+            type: 'POST',
+            data: {
+                'number' : $('#cardNumber').val(),
+                'holder' : $('#cardName').val(),
+                'exp_month' : $('#cardMonth').val(),
+                'exp_year' : $('#cardYear').val(),
+                'cvc' : $('#cardCvv').val()
+            },
+            url: '{{ url("plugin_striperec_payment_create") }}',
+            success: function(data){
+                if (data.result == 'success'){
+                    do_pay(data.paymentMethod.id);
+                }else{
+                    showError('error');
+                }
             }
-        }
+        })
     })
-}
-
-    function showError(err){
-    loadingOverlay("hide");
-    $('#card_error').show();
-}
 </script>
