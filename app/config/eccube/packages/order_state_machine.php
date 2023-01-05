@@ -36,7 +36,7 @@ $container->loadFromExtension('framework', [
                 (string) Status::PROCESSING,
                 (string) Status::PENDING,
                 (string) Status::RETURNED,
-                (string) Status::SUBSCRIPTION,
+
             ],
             'transitions' => [
                 'new' => [
@@ -49,7 +49,7 @@ $container->loadFromExtension('framework', [
                         (string) Status::PROCESSING,
                         (string) Status::PENDING,
                         (string) Status::RETURNED,
-                        (string) Status::SUBSCRIPTION,
+
                     ],
                     'to' => (string) Status::NEW,
                 ],
@@ -63,7 +63,7 @@ $container->loadFromExtension('framework', [
                         (string) Status::PROCESSING,
                         (string) Status::PENDING,
                         (string) Status::RETURNED,
-                        (string) Status::SUBSCRIPTION,
+
                     ],
                     'to' => (string) Status::IN_PROGRESS,
                 ],
@@ -77,7 +77,7 @@ $container->loadFromExtension('framework', [
                         (string) Status::PROCESSING,
                         (string) Status::PENDING,
                         (string) Status::RETURNED,
-                        (string) Status::SUBSCRIPTION,
+
                     ],
                     'to' => (string) Status::PICKUP,
                 ],
@@ -91,7 +91,7 @@ $container->loadFromExtension('framework', [
                         (string) Status::PROCESSING,
                         (string) Status::PENDING,
                         (string) Status::RETURNED,
-                        (string) Status::SUBSCRIPTION,
+
                     ],
                     'to' => (string) Status::PAID,
                 ],
@@ -106,7 +106,7 @@ $container->loadFromExtension('framework', [
                         (string) Status::PROCESSING,
                         (string) Status::PENDING,
                         (string) Status::RETURNED,
-                        (string) Status::SUBSCRIPTION,
+
                     ],
                     'to' => (string) Status::CANCEL,
                 ],
@@ -120,7 +120,7 @@ $container->loadFromExtension('framework', [
                         (string) Status::PROCESSING,
                         (string) Status::PENDING,
                         (string) Status::RETURNED,
-                        (string) Status::SUBSCRIPTION,
+
                     ],
                     'to' => (string) Status::DELIVERED,
                 ],
@@ -134,7 +134,7 @@ $container->loadFromExtension('framework', [
                         (string) Status::DELIVERED,
                         (string) Status::PENDING,
                         (string) Status::RETURNED,
-                        (string) Status::SUBSCRIPTION,
+
                     ],
                     'to' => (string) Status::PROCESSING,
                 ],
@@ -148,7 +148,7 @@ $container->loadFromExtension('framework', [
                         (string) Status::DELIVERED,
                         (string) Status::PROCESSING,
                         (string) Status::RETURNED,
-                        (string) Status::SUBSCRIPTION,
+
                     ],
                     'to' => (string) Status::PENDING,
                 ],
@@ -162,24 +162,24 @@ $container->loadFromExtension('framework', [
                         (string) Status::DELIVERED,
                         (string) Status::PROCESSING,
                         (string) Status::PENDING,
-                        (string) Status::SUBSCRIPTION,
+
                     ],
                     'to' => (string) Status::RETURNED,
                 ],
-                'subscription' => [
-                    'from' => [
-                        (string) Status::NEW,
-                        (string) Status::IN_PROGRESS,
-                        (string) Status::PICKUP,
-                        (string) Status::PAID,
-                        (string) Status::CANCEL,
-                        (string) Status::DELIVERED,
-                        (string) Status::PROCESSING,
-                        (string) Status::PENDING,
-                        (string) Status::RETURNED,
-                    ],
-                    'to' => (string) Status::SUBSCRIPTION,
-                ],
+//                'subscription' => [
+//                    'from' => [
+//                        (string) Status::NEW,
+//                        (string) Status::IN_PROGRESS,
+//                        (string) Status::PICKUP,
+//                        (string) Status::PAID,
+//                        (string) Status::CANCEL,
+//                        (string) Status::DELIVERED,
+//                        (string) Status::PROCESSING,
+//                        (string) Status::PENDING,
+//                        (string) Status::RETURNED,
+//                    ],
+//                    'to' => (string) Status::SUBSCRIPTION,
+//                ],
                 // 'packing' => [
                 //     'from' => [(string) Status::NEW, (string) Status::PAID],
                 //     'to' => (string) Status::IN_PROGRESS,

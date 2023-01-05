@@ -481,14 +481,14 @@ file that was distributed with this source code.
                     </div>
                     <div class="formContentBlock">
                         <h3>発送希望日</h3>
-                        <input type="radio" id="short" name="send" value="1" checked>
+                        <input type="radio" id="short" name="send" value="1">
                         {% if(is_use_current_month) %}
                             <label for="short">
                                 <em>最短発送</em>
                                 <span id="current_month">{{ current_delivery_date }}</span>
                             </label>
                         {% endif %}
-                        <input type="radio" id="next" name="send" value="2" >
+                        <input type="radio" id="next" name="send" value="2" checked>
                         <label for="next">
                             <em>翌月</em>
                             <span id="">{{ next_delivery_date }}</span>
