@@ -58,7 +58,7 @@ final class Version20230108000138 extends AbstractMigration implements Container
     					"disp_name"   => "クーポンコード",                // 表示上の項目名
     					"field_name"  => "coupon_cd",             // 項目名
     					"reference_field_name"  => null,
-    					"sort_no"  => 25,             
+    					"sort_no"  => 26,             
     					"enabled"     => true                       // true : 出力する項目, false : 出力しない項目
     			]
     	];
