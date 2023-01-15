@@ -22,7 +22,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Plugin\StripeRec\Entity\StripeCustomer;
 use Plugin\StripeRec\Entity\StripeRecOrder;
 use Plugin\StripeRec\Entity\StripeRecOrderItem;
-use Plugin\StripeRec\Service\RecurringService;
 use Eccube\Entity\Order;
 use Eccube\Entity\Master\OrderStatus;
 use Eccube\Service\MailService;
@@ -215,6 +214,7 @@ class RecurringHookController extends AbstractController{
     				if(count($subscriptions) === 0){
     					$subscriptions[$item->subscription] = [];
     				}
+    				log_info("==============[webhook_invoiceFailed] data foreach subscription exists in ======");
     				
     				$rec_order = $this->createOrUpdateRecOrder(
     						StripeRecOrder::STATUS_PAY_FAILED,
@@ -278,7 +278,7 @@ class RecurringHookController extends AbstractController{
     	$rec_order = $this->rec_order_repo->findOneBy(['subscription_id' => $sub_id, "stripe_customer_id" => $stripe_customer_id]);
     	if(empty($rec_order)){
     		
-    		log_info(RecurringService::LOG_IF . "rec order is empty in webhook");
+    		log_info(__METHOD__ . "rec order is empty in webhook");
     		$rec_order = new StripeRecOrder;
     		$rec_order->setSubscriptionId($sub_id);
     		$rec_order->setStripeCustomerId($stripe_customer_id);
@@ -291,7 +291,7 @@ class RecurringHookController extends AbstractController{
     			}
     		}
     	}
-    	log_info(RecurringService::LOG_IF . "rec order is not empty in");
+    	log_info(__METHOD__ . "rec order is not empty in");
     	
     	$dt = new \DateTime();
     	$dt->setTimestamp($item->period->end);
