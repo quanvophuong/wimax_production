@@ -254,6 +254,7 @@ class RecurringService{
             $this->em->flush();
         }
     }
+    
     public function invoiceFailed($object){
     	log_info("==============" . __METHOD__ . " ======");
         $customer = $object->customer;
