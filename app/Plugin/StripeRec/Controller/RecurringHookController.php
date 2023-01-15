@@ -222,6 +222,7 @@ class RecurringHookController extends AbstractController{
 	    		$this->em->flush();
 	    		
 	    		log_info("sending mail invoice.paid");
+	    		$stripeRecOrder->setInvoiceData($object);
 	    		$this->mail_ex_service->sendFailedMail($stripeRecOrder);
 	    	}
     	}
