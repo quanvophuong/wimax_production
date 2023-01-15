@@ -113,6 +113,7 @@ class RecurringHookController extends AbstractController{
               // failed and to retrieve new card details.
               log_info('🔔 ' . $type . ' Webhook received! ' . $object);
               $this->rec_service->invoiceFailed($object);
+              log_info('🔔 ' . $type . ' Webhook end! ');
               break;
             case 'invoice.upcoming':
                 log_info('🔔 ' . $type . ' Webhook received! ' . $object);

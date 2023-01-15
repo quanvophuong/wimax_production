@@ -301,6 +301,7 @@ class RecurringService{
                 
             }
         }
+        log_info("==============[webhook invoiceFailed] subsctiptions ======" . print_r($subscriptions, true));
         foreach($subscriptions as $sub_id => $rec_order){
             $order = $rec_order->getOrder();
             if($order->getOrder()){
