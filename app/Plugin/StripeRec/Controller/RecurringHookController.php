@@ -215,7 +215,7 @@ class RecurringHookController extends AbstractController{
 	    	if($order){
 	    		log_info("==============[webhook invoiceFailed] exists order ======");
 	    		// ステータス変更
-	    		$OrderStatus = $this->em->getRepository(OrderStatus::class)->find(OrderStatus::PENDING);
+	    		$OrderStatus = $this->em->getRepository(OrderStatus::class)->find(OrderStatus::PROCESSING);
 	    		$order->setOrderStatus($OrderStatus);
 	    		
 	    		$this->em->persist($order);
