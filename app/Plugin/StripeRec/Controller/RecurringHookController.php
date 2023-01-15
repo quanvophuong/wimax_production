@@ -273,7 +273,7 @@ class RecurringHookController extends AbstractController{
     
     
     private function createOrUpdateRecOrder($paid_status, $item, $stripe_customer_id, $last_payment_date = null){
-    	log_info(RecurringService::LOG_IF . "createOrUpdateRecOrder");
+    	log_info("==============" . __METHOD__ . " ======");
     	$sub_id = $item->subscription;
     	$rec_order = $this->rec_order_repo->findOneBy(['subscription_id' => $sub_id, "stripe_customer_id" => $stripe_customer_id]);
     	if(empty($rec_order)){
