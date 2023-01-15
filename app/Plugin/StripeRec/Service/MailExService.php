@@ -12,6 +12,7 @@ namespace Plugin\StripeRec\Service;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Plugin\StripeRec\Repository\StripeRecOrderRepository;
+use Eccube\Entity\Customer;
 use Eccube\Entity\Order;
 use Eccube\Entity\BaseInfo;
 use Eccube\Entity\MailTemplate;
@@ -340,4 +341,6 @@ class MailExService extends MailService{
         $count = $this->mailer->send($message);
         log_info('定期受注Failedメール送信完了', ['count' => $count]);
     }
+    
+    
 }

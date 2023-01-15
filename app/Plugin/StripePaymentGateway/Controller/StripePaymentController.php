@@ -17,6 +17,7 @@ use Eccube\Controller\ShoppingController;
 use Plugin\StripePaymentGateway\Entity\StripeConfig;
 use Plugin\StripePaymentGateway\StripeClient;
 use Plugin\StripePaymentGateway\Entity\StripeCustomer;
+use Plugin\StripeRec\Service\MailExService;
 use Eccube\Controller\AbstractController;
 
 include_once(dirname(__FILE__).'/../vendor/stripe/stripe-php/init.php');
@@ -33,11 +34,13 @@ class StripePaymentController extends AbstractController {
     protected $entityManager;
     protected $orderHelper;
     protected $cartService;
+    protected $mailService;
 
     public function __construct(
         ContainerInterface $container,
         CartService $cartService,
-        OrderHelper $orderHelper
+    		OrderHelper $orderHelper,
+    		MailExService $mailService
     ) {
         $this->container = $container;
         $this->entityManager = $container->get('doctrine.orm.entity_manager'); 
@@ -45,6 +48,7 @@ class StripePaymentController extends AbstractController {
         $this->util_service = $this->container->get("plg_stripe_payment.service.util");
         $this->orderHelper = $orderHelper;
         $this->cartService = $cartService;
+        $this->mailService = $mailService;
     }
 
     /**
@@ -413,6 +417,10 @@ class StripePaymentController extends AbstractController {
             $StripeCustomer->getStripeCustomerId(),
             ['invoice_settings' => ['default_payment_method' => $payment_method['id']]]
         );
+        
+        // メールを送信
+        log_info(__METHOD__ . ' メール送信');
+        $this->mailService->sendPaymentMethodAttached($Customer);
 
         return $this->json([
             'done' => true,
