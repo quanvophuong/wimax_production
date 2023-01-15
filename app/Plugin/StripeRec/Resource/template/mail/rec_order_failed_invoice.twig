@@ -1,4 +1,4 @@
-この期間の定期支払いの成功
+この期間の定期支払いが失敗しました
 {% set order = rec_order.Order %}
 
 {{ order.name01 }} {{ order.name02 }} 様
@@ -10,10 +10,8 @@
 ************************************************
 
 ご注文日時：{{ order.OrderDate|date_sec }}
-ご注文番号：{{ rec_order.InvoiceData.number }}
-お支払い合計：{{ rec_order.PaidAmount|price}}
-お支払い方法：{{ 'stripe_recurring.payment_method.name'|trans }}
-請求書    ：
+お支払い合計：{{ rec_order.InvoiceData.total|price }}
+当期：
 
 {{ rec_order.CurrentPeriodStart|date_day }} ~ {{ rec_order.CurrentPeriodEnd|date_day }}
 
