@@ -255,7 +255,7 @@ class RecurringService{
         }
     }
     public function invoiceFailed($object){
-
+    	log_info("==============" . __METHOD__ . " ======");
         $customer = $object->customer;
         $data = $object->lines->data;
 
