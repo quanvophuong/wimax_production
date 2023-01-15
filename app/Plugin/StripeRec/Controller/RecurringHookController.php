@@ -200,138 +200,30 @@ class RecurringHookController extends AbstractController{
     
     private function invoiceFailed($object){
     	log_info("==============" . __METHOD__ . " ======");
-    	$customer = $object->customer;
-    	$data = $object->lines->data;
+    	$subscription = $object->subscription;
     	
-    	$subscriptions = [];
     	log_info("==============[webhook_invoiceFailed] data foreach ======");
-    	foreach($data as $item){
-    		
-    		log_info("==============[webhook_invoiceFailed] data foreach subscription ======");
-    		if(!empty($item->subscription)){
-    			log_info("==============[webhook_invoiceFailed] data foreach subscription exists ======");
-    			if(!in_array($item->subscription, array_keys($subscriptions))){
-    				if(count($subscriptions) === 0){
-    					$subscriptions[$item->subscription] = [];
-    				}
-    				log_info("==============[webhook_invoiceFailed] data foreach subscription exists in ======");
-    				
-    				$rec_order = $this->createOrUpdateRecOrder(
-    						StripeRecOrder::STATUS_PAY_FAILED,
-    						$item,
-    						$customer,
-    						$this->convertDateTime($object->created)
-    						);
-    				$rec_order->setFailedInvoice($object->id);
-    				$this->em->persist($rec_order);
-    				$this->em->flush();
-    				
-    				$subscriptions[$item->subscription] = $rec_order;
-    				
-    				if(!empty($object->charge) && $object->charge != $rec_order->getLastChargeId()){
-    					$rec_order->setLastChargeId($object->charge);
-    					$rec_order->setLastPaymentDate(new \DateTime());
-    					$this->em->persist($rec_order);
-    				}
-    				$rec_order->setInvoiceData($object);
-    			}else{
-    				$rec_order = $this->rec_order_repo->findOneBy([
-    						'subscription_id' => $item->subscription,
-    						'stripe_customer_id' => $customer]);
-    			}
-    			$rec_item = $this->em->getRepository(StripeRecOrderItem::class)->getByOrderAndPriceId($rec_order, $item->price->id);
-    			if(!empty($rec_item)){
-    				$rec_item->setPaidStatus(StripeRecOrder::STATUS_PAY_FAILED);
-    				$this->em->persist($rec_item);
-    			}
-    			$this->em->flush();
-    			$rec_order->addInvoiceItem($item);
-    			
-    			log_info("==============[webhook_invoiceFailed] data foreach subscription end ======");
-    		}
+    	
+    	$stripeRecOrderRepo = $this->entityManager->getRepository(StripeRecOrder::class);
+    	$stripeRecOrder = $stripeRecOrderRepo->findOneBy(['subscription_id'=>$subscription]);
+    	
+    	if($stripeRecOrder){
+	    	log_info("==============[webhook invoiceFailed] stripeRecOrder ======");
+	    	$order = $stripeRecOrder->getOrder();
+	    	if($order){
+	    		log_info("==============[webhook invoiceFailed] exists order ======");
+	    		// ステータス変更
+	    		$OrderStatus = $this->em->getRepository(OrderStatus::class)->find(OrderStatus::FAILED);
+	    		$order->setOrderStatus($OrderStatus);
+	    		
+	    		$this->em->persist($order);
+	    		$this->em->flush();
+	    		
+	    		log_info("sending mail invoice.paid");
+	    		$this->mail_service->sendFailedMail($stripeRecOrder);
+	    	}
     	}
-    	log_info("==============[webhook invoiceFailed] subsctiptions ======" . print_r($subscriptions, true));
-    	foreach($subscriptions as $sub_id => $rec_order){
-    		$order = $rec_order->getOrder();
-    		if($order->getOrder()){
-    			if (!$this->hasOverlappedPaidOrder($rec_order)) {
-    				log_info("==============[webhook invoiceFailed] OrderStatus::FAILED ======");
-    				$Order = $this->updateOrder($rec_order, OrderStatus::FAILED);
-    				// $this->dispatcher->dispatch(StripeRecEvent::REC_ORDER_SUBSCRIPTION_PAID, new EventArgs([
-    				//     'rec_order' =>  $rec_order,
-    				// ]));
-    			}
-    			
-    			$this->sendMail($rec_order, "invoice.failed");
-    		}
-    		
-    		$rec_order = $this->checkScheduledStatus($rec_order, StripeRecOrder::REC_STATUS_ACTIVE);
-    		$this->em->persist($rec_order);
-    		$this->em->flush();
-    	}
+    	
     }
     
-    
-    private function createOrUpdateRecOrder($paid_status, $item, $stripe_customer_id, $last_payment_date = null){
-    	log_info("==============" . __METHOD__ . " ======");
-    	$sub_id = $item->subscription;
-    	$rec_order = $this->rec_order_repo->findOneBy(['subscription_id' => $sub_id, "stripe_customer_id" => $stripe_customer_id]);
-    	if(empty($rec_order)){
-    		
-    		log_info(__METHOD__ . "rec order is empty in webhook");
-    		$rec_order = new StripeRecOrder;
-    		$rec_order->setSubscriptionId($sub_id);
-    		$rec_order->setStripeCustomerId($stripe_customer_id);
-    		
-    		$stripe_customer = $this->em->getRepository(StripeCustomer::class)->findOneBy(['stripe_customer_id' => $stripe_customer_id]);
-    		if($stripe_customer){
-    			$customer = $stripe_customer->getCustomer();
-    			if($customer){
-    				$rec_order->setCustomer($customer);
-    			}
-    		}
-    	}
-    	log_info(__METHOD__ . "rec order is not empty in");
-    	
-    	$dt = new \DateTime();
-    	$dt->setTimestamp($item->period->end);
-    	$dt->modify('first day of this month');
-    	
-    	$rec_order->setCurrentPeriodStart($this->convertDateTime($item->period->start));
-    	$rec_order->setCurrentPeriodEnd($this->convertDateTime($dt->getTimestamp()));
-    	
-    	$rec_order->setPaidStatus($paid_status);
-    	if(!empty($last_payment_date)){
-    		$rec_order->setLastPaymentDate($last_payment_date);
-    	}
-    	if($paid_status == StripeRecOrder::STATUS_PAID){
-    		$rec_order->setInterval($item->plan->interval);
-    	}
-    	
-    	$rec_items = $rec_order->getOrderItems();
-    	if(!empty($rec_items)){
-    		foreach($rec_items as $rec_item){
-    			$rec_item->setPaidStatus(StripeRecOrder::STATUS_PAY_UNDEFINED);
-    		}
-    	}
-    	$this->em->persist($rec_order);
-    	$this->em->flush();
-    	$this->em->commit();
-    	
-    	$order = $rec_order->getOrder();
-    	log_info("Recurring---orderDate---" );
-    	if($order){
-    		$Today = new \DateTime();
-    		// $order->setOrderDate($this->convertDateTime($Today->getTimestamp()));
-    		if(empty($order->getRecOrder())){
-    			$order->setRecOrder($rec_order);
-    			log_info("Recurring---orderDate---" );
-    			log_info($order->getOrderDate());
-    			$this->em->persist($order);
-    			$this->em->commit();
-    		}
-    	}
-    	
-    	return $rec_order;
-    }
 }
