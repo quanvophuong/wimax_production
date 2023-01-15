@@ -63,6 +63,7 @@ class RecurringHookController extends AbstractController{
      * @Route("/plugin/StripeRec/webhook", name="plugin_stripe_rec_webhook")
      */
     public function webhook(Request $request){
+    	log_info("==============[webhook strart] ======");
         $signature = $this->config_service->getSignature();
         if($signature){
             try{
