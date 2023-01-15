@@ -39,6 +39,7 @@ class RecurringHookController extends AbstractController{
 
     private $config_service;
     private $mail_service;
+    private $mail_ex_service;
     private $rec_service;
     private $stripe_service;
     private $invoice_stamp_dir;
@@ -55,6 +56,7 @@ class RecurringHookController extends AbstractController{
         $this->mail_service = $mail_service;
         $this->rec_service = $container->get("plg_stripe_rec.service.recurring_service");
         $this->stripe_service = $container->get("plg_stripe_rec.service.stripe_service");
+        $this->mail_ex_service = $this->container->get("plg_stripe_rec.service.email.service");
 
         $this->eccubeConfig = $eccubeConfig;
         $this->invoice_stamp_dir = $this->eccubeConfig->get('kernel.project_dir') . "/var/invoice_stamp";
@@ -220,10 +222,9 @@ class RecurringHookController extends AbstractController{
 	    		$this->em->flush();
 	    		
 	    		log_info("sending mail invoice.paid");
-	    		$this->mail_service->sendFailedMail($stripeRecOrder);
+	    		$this->mail_ex_service->sendFailedMail($stripeRecOrder);
 	    	}
     	}
-    	
     }
     
 }
