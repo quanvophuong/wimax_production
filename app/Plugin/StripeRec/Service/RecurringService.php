@@ -163,7 +163,7 @@ class RecurringService{
             $this->em->commit();
             $order = $rec_order->getOrder();
             if($order){
-                if (!$this->hasOverlappedPaidOrder($rec_order)) {
+            	if (!$this->hasOverlappedPaidOrder($rec_order)) {
                     $Order = $this->updateOrder($rec_order, OrderStatus::PAID);
                     // $this->dispatcher->dispatch(StripeRecEvent::REC_ORDER_SUBSCRIPTION_PAID, new EventArgs([
                     //     'rec_order' =>  $rec_order,
@@ -298,12 +298,14 @@ class RecurringService{
                 }
                 $this->em->flush();
                 $rec_order->addInvoiceItem($item);
+                
             }
         }
         foreach($subscriptions as $sub_id => $rec_order){
             $order = $rec_order->getOrder();
             if($order->getOrder()){
-                if (!$this->hasOverlappedPaidOrder($rec_order)) {
+            	if (!$this->hasOverlappedPaidOrder($rec_order)) {
+            		log_info("==============[webhook invoiceFailed] OrderStatus::FAILED ======");
                     $Order = $this->updateOrder($rec_order, OrderStatus::FAILED);
                     // $this->dispatcher->dispatch(StripeRecEvent::REC_ORDER_SUBSCRIPTION_PAID, new EventArgs([
                     //     'rec_order' =>  $rec_order,
