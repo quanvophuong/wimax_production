@@ -260,9 +260,12 @@ class RecurringService{
         $data = $object->lines->data;
 
         $subscriptions = [];
+        log_info("==============[webhook_invoiceFailed] data foreach ======");
         foreach($data as $item){
-
-            if(!empty($item->subscription)){
+        	
+        	log_info("==============[webhook_invoiceFailed] data foreach subscription ======");
+        	if(!empty($item->subscription)){
+        		log_info("==============[webhook_invoiceFailed] data foreach subscription exists ======");
                 if(!in_array($item->subscription, array_keys($subscriptions))){
                     if(count($subscriptions) === 0){
                         $subscriptions[$item->subscription] = [];
@@ -299,6 +302,7 @@ class RecurringService{
                 $this->em->flush();
                 $rec_order->addInvoiceItem($item);
                 
+                log_info("==============[webhook_invoiceFailed] data foreach subscription end ======");
             }
         }
         log_info("==============[webhook invoiceFailed] subsctiptions ======" . print_r($subscriptions, true));
