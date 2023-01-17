@@ -532,7 +532,7 @@ class RecurringService{
         $Order->setPaymentDate($Today);
         
         // 2回目の支払から入金ステータスは変更する
-        if( ( $paid_status_id === OrderStatus::PAID && $Order->getCount()>1 ) || $paid_status_id !== OrderStatus::PAID ){
+        if( ( $paid_status_id === OrderStatus::PAID && $rec_order->getCount()>1 ) || $paid_status_id !== OrderStatus::PAID ){
 	        $OrderStatus = $this->em->getRepository(OrderStatus::class)->find($paid_status_id);
 	        $Order->setOrderStatus($OrderStatus);
         }
