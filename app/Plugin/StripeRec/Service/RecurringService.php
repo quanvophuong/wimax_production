@@ -451,6 +451,13 @@ class RecurringService{
                 }
                 $this->em->persist($order);
                 $this->em->commit();
+            }else if($count>1){
+            	// 2回目の支払から入金ステータスは変更する
+            	log_info("Recurring---changeStatus---" );
+            	$OrderStatus = $this->em->getRepository(OrderStatus::class)->find(OrderStatus::PAID);
+            	$order->setOrderStatus($OrderStatus);
+            	$this->em->persist($order);
+            	$this->em->commit();
             }
         }
 
