@@ -443,7 +443,8 @@ class RecurringService{
                 log_info("Recurring---orderDate---" );
                 log_info($order->getOrderDate());
                 // 2回目の支払から入金ステータスは変更する
-                if( $rec_order->getCount()>1 ){
+                log_info("Recurring---getCount---" . $count );
+                if( $count>1 ){
                 	log_info("Recurring---changeStatus---" );
                 	$OrderStatus = $this->em->getRepository(OrderStatus::class)->find(OrderStatus::PAID);
                 	$order->setOrderStatus($OrderStatus);
