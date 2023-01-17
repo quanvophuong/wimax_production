@@ -385,7 +385,7 @@ class RecurringService{
 
             log_info(RecurringService::LOG_IF . "rec order is empty in webhook");
             $rec_order = new StripeRecOrder;
-            $count = 1;
+            $count = 0;
             $rec_order->setCount($count);
             $rec_order->setSubscriptionId($sub_id);
             $rec_order->setStripeCustomerId($stripe_customer_id);
