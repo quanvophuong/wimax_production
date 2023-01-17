@@ -400,8 +400,8 @@ class RecurringService{
         }else{
         	// updateの時は支払が何回目かを修正する
         	$count = $rec_order->getCount();
-        	if($count < 1 || $count === null){
-        		$count = 1;
+        	if($count < 0 || $count === null){
+        		$count = 0;
         	}
         	$count++;
         	$rec_order->setCount($count);
