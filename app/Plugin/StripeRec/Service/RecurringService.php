@@ -380,10 +380,13 @@ class RecurringService{
         log_info(RecurringService::LOG_IF . "createOrUpdateRecOrder");
         $sub_id = $item->subscription;
         $rec_order = $this->rec_order_repo->findOneBy(['subscription_id' => $sub_id, "stripe_customer_id" => $stripe_customer_id]);
+        $count = null;
         if(empty($rec_order)){
 
             log_info(RecurringService::LOG_IF . "rec order is empty in webhook");
             $rec_order = new StripeRecOrder;
+            $count = 1;
+            $rec_order->setCount($count);
             $rec_order->setSubscriptionId($sub_id);
             $rec_order->setStripeCustomerId($stripe_customer_id);
 
@@ -394,6 +397,14 @@ class RecurringService{
                     $rec_order->setCustomer($customer);
                 }
             }
+        }else{
+        	// updateの時は支払が何回目かを修正する
+        	$count = $rec_order->getCount();
+        	if($count < 1 || $count === null){
+        		$count = 1;
+        	}
+        	$count++;
+        	$rec_order->setCount($count);
         }
         log_info(RecurringService::LOG_IF . "rec order is not empty in");
 
@@ -515,11 +526,16 @@ class RecurringService{
     {
         log_info("create new order");
         $Order = $rec_order->getOrder();
-
+        
+        
         $Today = new \DateTime();
         $Order->setPaymentDate($Today);
-        $OrderStatus = $this->em->getRepository(OrderStatus::class)->find($paid_status_id);
-        $Order->setOrderStatus($OrderStatus);
+        
+        // 2回目の支払から入金ステータスは変更する
+        if( ( $paid_status_id === OrderStatus::PAID && $Order->getCount()>1 ) || $paid_status_id !== OrderStatus::PAID ){
+	        $OrderStatus = $this->em->getRepository(OrderStatus::class)->find($paid_status_id);
+	        $Order->setOrderStatus($OrderStatus);
+        }
         $Order->setRecorder($rec_order);
 
         if ($rec_order->getInvoiceData()) {
