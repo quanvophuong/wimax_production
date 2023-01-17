@@ -24,7 +24,7 @@ trait OrderTrait
      * トークンを保持するカラム.
      * 永続化は行わず, 注文確認画面で表示する.
      *
-     *
+     * @ORM\Column(name="stripe_payment_intent_id", type="string", length=255, nullable=true)
      * @var string
      */
     private $stripe_payment_intent_id;
