@@ -230,6 +230,13 @@ class StripeRecOrder{
     
     // temporary 
     private $current_payment_total;
+    
+    /**
+     * @var int
+     *
+     * @ORM\Column(name="count", type="integer", length=11, nullable=true)
+     */
+    private $count;
 
     
 
@@ -592,5 +599,14 @@ class StripeRecOrder{
     {
         $this->order_item_id = $order_item_id;
         return $this;
+    }
+    public function getCount()
+    {
+    	return $this->count;
+    }
+    public function setCount($count)
+    {
+    	$this->count = $count;
+    	return $this;
     }
 }

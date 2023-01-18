@@ -163,7 +163,7 @@ class RecurringService{
             $this->em->commit();
             $order = $rec_order->getOrder();
             if($order){
-                if (!$this->hasOverlappedPaidOrder($rec_order)) {
+            	if (!$this->hasOverlappedPaidOrder($rec_order)) {
                     $Order = $this->updateOrder($rec_order, OrderStatus::PAID);
                     // $this->dispatcher->dispatch(StripeRecEvent::REC_ORDER_SUBSCRIPTION_PAID, new EventArgs([
                     //     'rec_order' =>  $rec_order,
@@ -254,15 +254,19 @@ class RecurringService{
             $this->em->flush();
         }
     }
+    
     public function invoiceFailed($object){
-
+    	log_info("==============" . __METHOD__ . " ======");
         $customer = $object->customer;
         $data = $object->lines->data;
 
         $subscriptions = [];
+        log_info("==============[webhook_invoiceFailed] data foreach ======");
         foreach($data as $item){
-
-            if(!empty($item->subscription)){
+        	
+        	log_info("==============[webhook_invoiceFailed] data foreach subscription ======");
+        	if(!empty($item->subscription)){
+        		log_info("==============[webhook_invoiceFailed] data foreach subscription exists ======");
                 if(!in_array($item->subscription, array_keys($subscriptions))){
                     if(count($subscriptions) === 0){
                         $subscriptions[$item->subscription] = [];
@@ -298,12 +302,16 @@ class RecurringService{
                 }
                 $this->em->flush();
                 $rec_order->addInvoiceItem($item);
+                
+                log_info("==============[webhook_invoiceFailed] data foreach subscription end ======");
             }
         }
+        log_info("==============[webhook invoiceFailed] subsctiptions ======" . print_r($subscriptions, true));
         foreach($subscriptions as $sub_id => $rec_order){
             $order = $rec_order->getOrder();
             if($order->getOrder()){
-                if (!$this->hasOverlappedPaidOrder($rec_order)) {
+            	if (!$this->hasOverlappedPaidOrder($rec_order)) {
+            		log_info("==============[webhook invoiceFailed] OrderStatus::FAILED ======");
                     $Order = $this->updateOrder($rec_order, OrderStatus::FAILED);
                     // $this->dispatcher->dispatch(StripeRecEvent::REC_ORDER_SUBSCRIPTION_PAID, new EventArgs([
                     //     'rec_order' =>  $rec_order,
@@ -372,10 +380,13 @@ class RecurringService{
         log_info(RecurringService::LOG_IF . "createOrUpdateRecOrder");
         $sub_id = $item->subscription;
         $rec_order = $this->rec_order_repo->findOneBy(['subscription_id' => $sub_id, "stripe_customer_id" => $stripe_customer_id]);
+        $count = null;
         if(empty($rec_order)){
 
             log_info(RecurringService::LOG_IF . "rec order is empty in webhook");
             $rec_order = new StripeRecOrder;
+            $count = 0;
+            $rec_order->setCount($count);
             $rec_order->setSubscriptionId($sub_id);
             $rec_order->setStripeCustomerId($stripe_customer_id);
 
@@ -386,6 +397,14 @@ class RecurringService{
                     $rec_order->setCustomer($customer);
                 }
             }
+        }else{
+        	// updateの時は支払が何回目かを修正する
+        	$count = $rec_order->getCount();
+        	if($count < 0 || $count === null){
+        		$count = 0;
+        	}
+        	$count++;
+        	$rec_order->setCount($count);
         }
         log_info(RecurringService::LOG_IF . "rec order is not empty in");
 
@@ -423,8 +442,22 @@ class RecurringService{
                 $order->setRecOrder($rec_order);
                 log_info("Recurring---orderDate---" );
                 log_info($order->getOrderDate());
+                // 2回目の支払から入金ステータスは変更する
+                log_info("Recurring---getCount---" . $count );
+                if( $count>1 ){
+                	log_info("Recurring---changeStatus---" );
+                	$OrderStatus = $this->em->getRepository(OrderStatus::class)->find(OrderStatus::PAID);
+                	$order->setOrderStatus($OrderStatus);
+                }
                 $this->em->persist($order);
                 $this->em->commit();
+            }else if($count>1){
+            	// 2回目の支払から入金ステータスは変更する
+            	log_info("Recurring---changeStatus---" );
+            	$OrderStatus = $this->em->getRepository(OrderStatus::class)->find(OrderStatus::PAID);
+            	$order->setOrderStatus($OrderStatus);
+            	$this->em->persist($order);
+            	$this->em->commit();
             }
         }
 
@@ -507,11 +540,16 @@ class RecurringService{
     {
         log_info("create new order");
         $Order = $rec_order->getOrder();
-
+        
+        
         $Today = new \DateTime();
         $Order->setPaymentDate($Today);
-        $OrderStatus = $this->em->getRepository(OrderStatus::class)->find($paid_status_id);
-        $Order->setOrderStatus($OrderStatus);
+        
+        // 2回目の支払から入金ステータスは変更する
+        if( ( $paid_status_id === OrderStatus::PAID && $rec_order->getCount()>1 ) || $paid_status_id !== OrderStatus::PAID ){
+	        $OrderStatus = $this->em->getRepository(OrderStatus::class)->find($paid_status_id);
+	        $Order->setOrderStatus($OrderStatus);
+        }
         $Order->setRecorder($rec_order);
 
         if ($rec_order->getInvoiceData()) {

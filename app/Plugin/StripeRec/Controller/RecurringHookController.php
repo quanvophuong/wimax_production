@@ -19,8 +19,11 @@ use Eccube\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Plugin\StripeRec\Entity\StripeCustomer;
 use Plugin\StripeRec\Entity\StripeRecOrder;
+use Plugin\StripeRec\Entity\StripeRecOrderItem;
 use Eccube\Entity\Order;
+use Eccube\Entity\Master\OrderStatus;
 use Eccube\Service\MailService;
 use Eccube\Common\EccubeConfig;
 
@@ -36,6 +39,7 @@ class RecurringHookController extends AbstractController{
 
     private $config_service;
     private $mail_service;
+    private $mail_ex_service;
     private $rec_service;
     private $stripe_service;
     private $invoice_stamp_dir;
@@ -52,6 +56,7 @@ class RecurringHookController extends AbstractController{
         $this->mail_service = $mail_service;
         $this->rec_service = $container->get("plg_stripe_rec.service.recurring_service");
         $this->stripe_service = $container->get("plg_stripe_rec.service.stripe_service");
+        $this->mail_ex_service = $this->container->get("plg_stripe_rec.service.email.service");
 
         $this->eccubeConfig = $eccubeConfig;
         $this->invoice_stamp_dir = $this->eccubeConfig->get('kernel.project_dir') . "/var/invoice_stamp";
@@ -63,6 +68,7 @@ class RecurringHookController extends AbstractController{
      * @Route("/plugin/StripeRec/webhook", name="plugin_stripe_rec_webhook")
      */
     public function webhook(Request $request){
+    	log_info("==============[webhook strart] ======");
         $signature = $this->config_service->getSignature();
         if($signature){
             try{
@@ -112,7 +118,9 @@ class RecurringHookController extends AbstractController{
               // Use this webhook to notify your user that their payment has
               // failed and to retrieve new card details.
               log_info('🔔 ' . $type . ' Webhook received! ' . $object);
-              $this->rec_service->invoiceFailed($object);
+//               $this->rec_service->invoiceFailed($object);
+              $this->invoiceFailed($object);
+              log_info('🔔 ' . $type . ' Webhook end! ');
               break;
             case 'invoice.upcoming':
                 log_info('🔔 ' . $type . ' Webhook received! ' . $object);
@@ -157,7 +165,11 @@ class RecurringHookController extends AbstractController{
             case 'subscription_schedule.canceled':
                 log_info('🔔 ' . $type . ' Webhook received! ' . $object);
                 $this->rec_service->subscriptionScheduleCanceled($object);
-            break;
+                break;
+            case 'payment_intent.canceled':
+            	log_info('🔔 ' . $type . ' Webhook received! ' . $object);
+//             	$this->rec_service->subscriptionScheduleCanceled($object);
+            	break;
             case 'payment_method.attached':
                 log_info('🔔 ' . $type . ' Webhook received! ' . $object);
                 $this->rec_service->paymentMethodAttached($object);
@@ -186,4 +198,34 @@ class RecurringHookController extends AbstractController{
       \file_put_contents($file, $now);
       return $res;
     }
+    
+    
+    private function invoiceFailed($object){
+    	log_info("==============" . __METHOD__ . " ======");
+    	$subscription = $object->subscription;
+    	
+    	log_info("==============[webhook_invoiceFailed] data foreach ======");
+    	
+    	$stripeRecOrderRepo = $this->entityManager->getRepository(StripeRecOrder::class);
+    	$stripeRecOrder = $stripeRecOrderRepo->findOneBy(['subscription_id'=>$subscription]);
+    	
+    	if($stripeRecOrder){
+	    	log_info("==============[webhook invoiceFailed] stripeRecOrder ======");
+	    	$order = $stripeRecOrder->getOrder();
+	    	if($order){
+	    		log_info("==============[webhook invoiceFailed] exists order ======");
+	    		// ステータス変更
+	    		$OrderStatus = $this->em->getRepository(OrderStatus::class)->find(OrderStatus::PROCESSING);
+	    		$order->setOrderStatus($OrderStatus);
+	    		
+	    		$this->em->persist($order);
+	    		$this->em->flush();
+	    		
+	    		log_info("sending mail invoice.paid");
+	    		$stripeRecOrder->setInvoiceData($object);
+	    		$this->mail_ex_service->sendFailedMail($stripeRecOrder);
+	    	}
+    	}
+    }
+    
 }

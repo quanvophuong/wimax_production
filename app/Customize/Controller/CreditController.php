@@ -24,6 +24,7 @@ use Stripe\Stripe;
 use Plugin\StripePaymentGateway\StripeClient;
 use Plugin\StripePaymentGateway\Repository\StripeConfigRepository;
 use Plugin\StripePaymentGateway\Entity\StripeCustomer as EccubeStripeCustomer;
+use Plugin\StripeRec\Service\MailExService;
 
 class CreditController extends AbstractController{
     /**
@@ -41,17 +42,20 @@ class CreditController extends AbstractController{
      */
     protected $encoderFactory;
     protected $stripeConfigRepository;
+    private $mailService;
 
     public function __construct(
         CustomerRepository $customerRepository,
         EncoderFactoryInterface $encoderFactory,
         TokenStorageInterface $tokenStorage,
-        StripeConfigRepository $stripeConfigRepository
+        StripeConfigRepository $stripeConfigRepository,
+    		MailExService $mailService
     ) {
         $this->customerRepository = $customerRepository;
         $this->encoderFactory = $encoderFactory;
         $this->tokenStorage = $tokenStorage;
         $this->stripeConfigRepository = $stripeConfigRepository;
+        $this->mailService = $mailService;
     }
 
     /**
@@ -194,7 +198,8 @@ class CreditController extends AbstractController{
      *
      * @Route("/creditcard/change", name="card_change", methods={"POST"})
      */
-     public function changeCard(Request $request){
+    public function changeCard(Request $request){
+    	log_info(__METHOD__ . ' start');
         $Customer = $this->getUser();
 
         
@@ -202,11 +207,8 @@ class CreditController extends AbstractController{
         $stripeClient = new StripeClient($StripeConfig->secret_key);
 
 
-        // $StripeCustomer = $this->entityManager->getRepository(EccubeStripeCustomer::class)->findOneBy(['Customer'=>$Customer]);
-        dump($StripeCustomer);die();
-
-
-
+        $StripeCustomer = $this->entityManager->getRepository(EccubeStripeCustomer::class)->findOneBy(['Customer'=>$Customer]);
+//         dump($StripeCustomer);die();
 
         $LoginCustomer = clone $Customer;
         $this->entityManager->detach($LoginCustomer);
@@ -265,6 +267,7 @@ class CreditController extends AbstractController{
      * @Route("/user_data/my_credit", name="my_credit", methods={"GET"})
      */
      public function myCredit(Request $request){
+     	log_info(__METHOD__ . ' start');
          $Customer = $this->getUser();
          return [
                      'Customer' => $Customer,
