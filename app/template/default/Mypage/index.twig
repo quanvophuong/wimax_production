@@ -82,7 +82,8 @@ file that was distributed with this source code.
                                             {% for orderItem in Order.MergedProductOrderItems %}
                                                 {% if not orderItem.isPlanWithraw %}
                                                     <div class="nextTotal">
-                                                        <span class="date">{{ 'now'|date_modify("+#{1} months")|date("Y年m月1日") }}</span>
+														{% set next_date_temp = "now" | date ( "Y-m-01")%}
+                                                        <span class="date">{{ next_date_temp|date_modify("+#{1} months")|date("Y年m月1日") }}</span>
                                                         <span class="price">
 
                                                         {% if orderItem.productClass.classCategory1 == 'フリー補償' %}
