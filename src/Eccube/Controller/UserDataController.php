@@ -80,9 +80,9 @@ class UserDataController extends AbstractController
         );
         $this->eventDispatcher->dispatch(EccubeEvents::FRONT_USER_DATA_INDEX_INITIALIZE, $event);
         if($route == 'shop'){
-            $next_month = new \DateTime('now');
-            date_add($next_month, new \DateInterval('P1M'));
-            $next_month_day = $next_month->format('Y-m-01');
+        	$next_month = new \DateTime(date('Y-m-01'));
+        	date_add($next_month, new \DateInterval('P1M'));
+        	$next_month_day = $next_month->format('Y-m-01');
             $next_date = new \DateTime($next_month_day);
 
             $current_month = new \DateTime('now');

@@ -87,7 +87,8 @@ file that was distributed with this source code.
                             ご案内：こちらの商品は月額レンタル商品です。<br/>
                             本取引では{{ (Order.MergedProductOrderItems[0].initPrice - Order.discount)|number_format }}円を課金し、以下の内容で自動継続課金の登録を行いました。<br/>
                             ・月額料金：{{ Order.MergedProductOrderItems[0].nextPrice|number_format }}円<br/>
-                            ・次回お支払日：{{ 'now'|date_modify("+#{1} months")|date("Y年m月1日") }}<br/>
+                            {% set next_date_temp = "now" | date ( "Y-m-01")%}
+                            ・次回お支払日：{{ next_date_temp|date_modify("+#{1} months")|date("Y年m月1日") }}<br/>
                             ・課金間隔：1ヵ月ごと<br/>
                             <br/>
                             <hr style="border-top: 3px double #8c8b8b;">

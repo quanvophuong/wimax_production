@@ -108,7 +108,8 @@ function setDataClassByAllData( class_all_data, class2_zero_id ) {
                         {% endif %}
                     {% endfor %}
                     円税込<br>
-                    　　　　　・次回課金日：{{ 'now'|date_modify("+#{1} months")|date("Y年m月1日") }}<br>
+                    {% set next_date_temp = "now" | date ( "Y-m-01")%}
+                    　　　　　・次回課金日：{{ next_date_temp|date_modify("+#{1} months")|date("Y年m月1日") }}<br>
                     　　　　　・課金間隔：毎月1日<br>
                 </div>
                 <div class="btn-wrap">
