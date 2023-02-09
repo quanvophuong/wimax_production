@@ -282,6 +282,13 @@ if (!class_exists('\Eccube\Entity\Customer')) {
         private $Pref;
 
         /**
+         * @var integer|null
+         *
+         * @ORM\Column(name="url_flg", type="smallint", nullable=true)
+         */
+        private $url_flg;
+
+        /**
          * Constructor
          */
         public function __construct()
@@ -1190,6 +1197,30 @@ if (!class_exists('\Eccube\Entity\Customer')) {
                 $this->email,
                 $this->password,
                 $this->salt) = unserialize($serialized);
+        }
+
+        /**
+         * Set url_flg.
+         *
+         * @param integer $url_flg
+         *
+         * @return Customer
+         */
+        public function setUrlFlg($url_flg)
+        {
+            $this->url_flg = $url_flg;
+
+            return $this;
+        }
+
+        /**
+         * Get url_flg.
+         *
+         * @return integer
+         */
+        public function getUrlFlg()
+        {
+            return $this->url_flg;
         }
     }
 }
