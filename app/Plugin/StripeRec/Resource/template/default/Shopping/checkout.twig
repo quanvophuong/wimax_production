@@ -156,7 +156,7 @@ file that was distributed with this source code.
                                     </label>
                                     <div class="card-item__content">
                                         <label for="cardName" class="card-item__info" ref="cardName">
-                                            <div class="card-item__holder">Card Holder</div>
+                                            <div class="card-item__holder">Card Name</div>
                                             <transition name="slide-fade-up">
                                                 <div class="card-item__name" v-if="cardName.length" key="1">
                                                     <transition-group name="slide-fade-right">
@@ -167,7 +167,7 @@ file that was distributed with this source code.
                                             </transition>
                                         </label>
                                         <div class="card-item__date" ref="cardDate">
-                                            <label for="cardMonth" class="card-item__dateTitle">Expires</label>
+                                            <label for="cardMonth" class="card-item__dateTitle">有効期限</label>
                                             <label for="cardMonth" class="card-item__dateItem">
                                                 <transition name="slide-fade-up">
                                                     <span v-if="cardMonth" v-bind:key="cardMonth">${cardMonth}</span>
@@ -191,7 +191,7 @@ file that was distributed with this source code.
                                 </div>
                                 <div class="card-item__band"></div>
                                 <div class="card-item__cvv">
-                                    <div class="card-item__cvvTitle">CVV</div>
+                                    <div class="card-item__cvvTitle">セキュリティコード</div>
                                     <div class="card-item__cvvBand">
                             <span v-for="(n, $index) in cardCvv" :key="$index">
                                 *
