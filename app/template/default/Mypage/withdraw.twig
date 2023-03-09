@@ -62,7 +62,12 @@ file that was distributed with this source code.
     $('.modal-close').on('click', function () {
         $('form').submit();
     });
-
+    $('#confirmModal .close-btn').on('click', function () {
+		$("#confirmModal").hide();
+    });
+    $('#optionModal .close-btn').on('click', function () {
+		$("#optionModal").hide();
+    });
 
 });
 </script>
@@ -101,7 +106,7 @@ file that was distributed with this source code.
                         <table>
                             <thead>
                             <tr>
-                                <th>注文<br class="sp">番号</th>
+                                <th>注文<br class="sp">番号<br>（端末番号）</th>
                                 <th>契約日</th>
                                 <th>契約<br class="sp">内容</th>
                                 <th></th>
@@ -112,7 +117,7 @@ file that was distributed with this source code.
                                 {% set WithdrawPlan = repository('Customize\\Entity\\Withdraw').getWithdrawPlan(Order) %}
 
                                 <tr>
-                                    <td>{{ Order.order_no }}</td>
+                                    <td>{{ Order.order_no }}<br>{% if (Order.imei) %}({{ Order.imei }}){% endif %}</td>
                                     <td>{{ Order.order_date|date_sec }}</td>
                                     <td>
                                         {% for shipping in Order.shippings %}
@@ -169,6 +174,7 @@ file that was distributed with this source code.
     <div id="confirmModal" class="modal js-modal modalfix" style="display: none;">
         <div class="modal-bg modal-close"></div>
         <div class="modal-content">
+        	<div class="close-btn">X</div>
             <h3>解約手続きの前にご確認ください</h3>
             <p style="text-align:center;">
                 ※当月解約の締切日は毎月15日となります。<br />
@@ -185,6 +191,7 @@ file that was distributed with this source code.
     <div id="optionModal" class="modal js-modal modalfix" style="display: none;">
         <div class="modal-bg modal-close"></div>
         <div class="modal-content">
+        	<div class="close-btn">X</div>
             <h3>解約手続き</h3>
             <p style="text-align:center;">
                 安心補償解約の際は「安心補償取消へ」、<br />
@@ -192,7 +199,7 @@ file that was distributed with this source code.
             </p>
             <ul class="btn-wrap">
                 <li>
-                	<a class="btn" href="/form/op-kaiyaku/">{{ '安心補償取消へ'|trans }}</a>
+                	<a class="btn" href="/form/op-kaiyaku/">{{ '安心補償のみ解約へ'|trans }}</a>
                     <!-- 
                     <button type="button" class="btn btn-modal" name="mode" data-target="secretModal" value="confirm" data-action="withraw" data-type="secret">{{ '安心補償取消へ'|trans }}</button>
                 	-->

@@ -26,7 +26,9 @@ if (!class_exists('\Eccube\Entity\OrderPdf')) {
      */
     class OrderPdf extends AbstractEntity
     {
-        public $ids;
+    	public $ids;
+    	
+    	public $product_name;
 
         public $issue_date;
 
@@ -333,5 +335,6 @@ if (!class_exists('\Eccube\Entity\OrderPdf')) {
         {
             return $this->visible;
         }
+        
     }
 }

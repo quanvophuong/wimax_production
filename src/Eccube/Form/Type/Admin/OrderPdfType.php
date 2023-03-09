@@ -66,6 +66,14 @@ class OrderPdfType extends AbstractType
                     new Assert\NotBlank(),
                 ],
             ])
+            ->add('product_name', TextType::class, [
+            		'required' => false,
+            		'attr' => ['maxlength' => $config['eccube_order_pdf_message_len']],
+            		'constraints' => [
+            				new Assert\Length(['max' => $config['eccube_order_pdf_message_len']]),
+            		],
+            		'trim' => false,
+            ])
             ->add('issue_date', DateType::class, [
                 'widget' => 'single_text',
                 'input' => 'datetime',

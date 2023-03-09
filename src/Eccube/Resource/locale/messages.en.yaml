@@ -919,6 +919,7 @@ admin.order.skip_change_status: '%name%: Status change has been skipped'
 
 # Shipping CSV Templates
 admin.order.shipping_csv.shipping_id_col: Shipping ID
+admin.order.shipping_csv.order_id_col: Order ID
 admin.order.shipping_csv.shipping_id_description: ''
 admin.order.shipping_csv.tracking_number_col: Tracking No.
 admin.order.shipping_csv.tracking_number_description: ''

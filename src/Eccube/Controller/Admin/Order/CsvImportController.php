@@ -17,6 +17,7 @@ use Eccube\Controller\Admin\AbstractCsvImportController;
 use Eccube\Entity\Master\OrderStatus;
 use Eccube\Entity\Shipping;
 use Eccube\Form\Type\Admin\CsvImportType;
+use Eccube\Repository\OrderRepository;
 use Eccube\Repository\ShippingRepository;
 use Eccube\Service\CsvImportService;
 use Eccube\Service\OrderStateMachine;
@@ -38,10 +39,12 @@ class CsvImportController extends AbstractCsvImportController
 
     public function __construct(
         ShippingRepository $shippingRepository,
-        OrderStateMachine $orderStateMachine
+    		OrderStateMachine $orderStateMachine,
+    		OrderRepository $orderRepository
     ) {
         $this->shippingRepository = $shippingRepository;
         $this->orderStateMachine = $orderStateMachine;
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -132,9 +135,26 @@ class CsvImportController extends AbstractCsvImportController
                 $errors[] = trans('admin.common.csv_invalid_required', ['%line%' => $line + 1, '%name%' => $columnNames['id']]);
                 continue;
             }
-
+            
+            /* Orderを取得 */
+            $Orders = $row[$columnNames['id']] ? $this->orderRepository->findBy(array("order_no"=>$row[$columnNames['id']])) : null;
+            
+            $Order = null;
+            if(!empty($Orders)){
+            	$Order = $Orders[0];
+            }
+            // 存在しない出荷IDはエラー
+            if (empty($Order)) {
+            	$errors[] = trans('admin.common.csv_invalid_not_found', ['%line%' => $line + 1, '%name%' => $columnNames['id']]);
+            }
+            
             /* @var Shipping $Shipping */
-            $Shipping = is_numeric($row[$columnNames['id']]) ? $this->shippingRepository->find($row[$columnNames['id']]) : null;
+            //$Shipping = is_numeric($row[$columnNames['id']]) ? $this->shippingRepository->find($row[$columnNames['id']]) : null;
+            $Shippings = $Order->getShippings();
+            $Shipping = null;
+            if(!empty($Shippings)){
+            	$Shipping = $Shippings[0];
+            }
 
             // 存在しない出荷IDはエラー
             if (is_null($Shipping)) {
@@ -205,7 +225,7 @@ class CsvImportController extends AbstractCsvImportController
     {
         return [
             'id' => [
-                'name' => trans('admin.order.shipping_csv.shipping_id_col'),
+                'name' => trans('admin.order.shipping_csv.order_id_col'),
                 'description' => trans('admin.order.shipping_csv.shipping_id_description'),
                 'required' => true,
             ],

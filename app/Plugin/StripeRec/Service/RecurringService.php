@@ -11,6 +11,9 @@
 namespace Plugin\StripeRec\Service;
 
 use Plugin\StripePaymentGateway\StripeClient;
+use Stripe\Invoice;
+use Stripe\PaymentIntent;
+use Stripe\Subscription;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Plugin\StripeRec\Entity\StripeRecOrder;
 use Plugin\StripeRec\Entity\StripeRecOrderItem;
@@ -168,6 +171,21 @@ class RecurringService{
                     // $this->dispatcher->dispatch(StripeRecEvent::REC_ORDER_SUBSCRIPTION_PAID, new EventArgs([
                     //     'rec_order' =>  $rec_order,
                     // ]));
+                    
+                    if(!empty($Order)){
+		                // 備考に注文番号をセットする
+		                $subscription_id = $sub_id;
+		                $subscription = Subscription::retrieve($subscription_id);
+		                $latest_invoice = $subscription->latest_invoice;
+		                $invoice = Invoice::retrieve($latest_invoice);
+		                
+		                $payment_intent_id = $invoice->payment_intent;
+		                
+		                // update payment intent description
+		                $update_pi_desc = PaymentIntent::update($payment_intent_id,[
+		                		'description' => $Order->getOrderNo()
+		                ]);
+                    }
                 }
 
                 if($rec_order->getLastChargeId() !== $object->charge){
@@ -178,6 +196,7 @@ class RecurringService{
                     $this->em->commit();
                     $this->sendMail($rec_order, "invoice.paid");
                 }
+                
             }
         }
     }
@@ -366,11 +385,12 @@ class RecurringService{
 
             $Order = $rec_order->getOrder();
             
-            $OrderStatus = $this->em->getRepository(OrderStatus::class)->find(OrderStatus::CANCEL);
-            $Order->setOrderStatus($OrderStatus);
+            // CANCELには変更しない
+//             $OrderStatus = $this->em->getRepository(OrderStatus::class)->find(OrderStatus::CANCEL);
+//             $Order->setOrderStatus($OrderStatus);
             
             $this->em->persist($rec_order);
-            $this->em->persist($Order);
+//             $this->em->persist($Order);
             
             $this->em->flush();
             $this->sendMail($rec_order, 'subscription.canceled');

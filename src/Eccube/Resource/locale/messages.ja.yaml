@@ -919,6 +919,7 @@ admin.order.skip_change_status: '%name%: ステータス変更をスキップし
 
 # 出荷CSV雛形
 admin.order.shipping_csv.shipping_id_col: 出荷ID
+admin.order.shipping_csv.order_id_col: 注文番号
 admin.order.shipping_csv.shipping_id_description: ''
 admin.order.shipping_csv.tracking_number_col: お問い合わせ番号
 admin.order.shipping_csv.tracking_number_description: ''

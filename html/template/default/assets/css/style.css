@@ -8132,3 +8132,11 @@ Styleguide 22.1
         top: 20px;
     }
 }
+
+.close-btn{
+	position:absolute;
+	top:0.5rem;
+	right:1rem;
+	font-size:2rem;
+	cursor:pointer;
+}

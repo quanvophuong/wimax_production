@@ -65,7 +65,7 @@ file that was distributed with this source code.
 
             $('input.datetimepicker-input').datetimepicker({
                 locale: '{{ eccube_config.locale }}',
-                format: 'YYYY-MM-DD HH:mm:ss',
+                format: 'YYYY-MM-DD',
                 useCurrent: false,
                 buttons: {
                     showToday: true,
@@ -195,7 +195,20 @@ file that was distributed with this source code.
                 };
 
         updateTrackingNumber($target.data('shipping_id'), $target.data('url'), tracking_number, callback);
+
     });
+
+        	// 一括操作をチェックした時
+    		$(".check_ids").on("click",function(){
+				var value = $(this).val();
+				if($(this).prop("checked")){
+					// checkした
+					$(this).parent().parent().find(".products").prop("disabled", false);
+				}else{
+					// check外した
+					$(this).parent().parent().find(".products").prop("disabled", true);
+				}
+    		})
 
             // IMEI
             var updateImei = function(id, url, imei, callback) {
@@ -634,6 +647,7 @@ file that was distributed with this source code.
                                                            data-preview-notify-mail-url="{{ url('admin_shipping_preview_notify_mail', { id: Shipping.id}) }}"
                                                            data-notify-mail-url="{{ url('admin_shipping_notify_mail', { id: Shipping.id}) }}"
                                                            data-update-status-url="{{ url('admin_shipping_update_order_status', { id: Shipping.id}) }}"
+                                                           class="check_ids"
                                                     />
                                                 </td>
                                                 <td class="align-middle text-left">
@@ -651,6 +665,7 @@ file that was distributed with this source code.
                                                         {% set isShowReducedTaxMess = false %}
                                                         {% for orderItem in shipping.productOrderItems %}
                                                             {{ orderItem.productName }}
+                                                            <input type="hidden" class="products" name="products[]" value="{{ orderItem.productName }}" disabled>
                                                         {% endfor %}
                                                     {% endfor %}
                                                 </td>

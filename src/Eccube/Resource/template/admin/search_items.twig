@@ -23,9 +23,9 @@ file that was distributed with this source code.
                     {{ not loop.last ? ',&nbsp;' }}
                 {%- endfor -%}
             {%- elseif php_is_a(child.vars.data, '\DateTime') -%}
-                {# DateTimeType の時は分まで表示 #}
+                {# DateTimeType の時は分まで表示 しない #}
                 {% if 'datetime' in child.vars.id %}
-                    {{ child.vars.data|date_sec }}
+                    {{ child.vars.data|date_day }}
                 {% else %}
                     {{ child.vars.data|date_day }}
                 {% endif %}

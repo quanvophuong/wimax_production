@@ -35,7 +35,7 @@ file that was distributed with this source code.
                                 <th>注文<br class="sp">番号</th>
                                 <th>契約日</th>
                                 <th>契約<br class="sp">内容</th>
-                                <th>次回課金日/<br class="sp">課金額</th>
+                                <th><!-- 次回課金日/<br class="sp"> -->課金額</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -83,7 +83,7 @@ file that was distributed with this source code.
                                                 {% if not orderItem.isPlanWithraw %}
                                                     <div class="nextTotal">
 														{% set next_date_temp = "now" | date ( "Y-m-01")%}
-                                                        <span class="date">{{ next_date_temp|date_modify("+#{1} months")|date("Y年m月1日") }}</span>
+                                                        <!-- <span class="date">{{ next_date_temp|date_modify("+#{1} months")|date("Y年m月1日") }}</span> -->
                                                         <span class="price">
 
                                                         {% if orderItem.productClass.classCategory1 == 'フリー補償' %}
@@ -95,7 +95,7 @@ file that was distributed with this source code.
                                                         {% endif %}
                                                 </span>
                                                     </div>
-                                        <div class="deviceNo">端末番号：{{ Order.order_no }}</div>
+                                        <div class="deviceNo">端末番号：{{ Order.imei }}</div>
                                                 {% endif %}
                                             {% endfor %}
                                         {% endif %}
