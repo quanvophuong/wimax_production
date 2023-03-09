@@ -154,7 +154,28 @@ class ShoppingController extends AbstractShoppingController
         }
 
         $form = $this->createForm(OrderType::class, $Order);
-
+        
+        $shippings = $Order->getShippings();
+        foreach($shippings as $shipping){
+        	$orderitems = $shipping->getProductOrderItems();
+        	$num = count($orderitems);
+        	log_info('[TEST LOG] num' . $num, [$flowResult->getErrors()]);
+        	foreach ($orderitems as $key => $orderitem){
+        		log_info('[TEST LOG] ' . $orderitem->getId() . $orderitem->getProductName());
+        		if($key>0){
+        			// 2個以上ある場合は最後のデータ以外は削除
+        			$shipping->removeOrderItem($orderitem);
+        			$this->entityManager->remove($orderitem);
+        			$this->entityManager->flush();
+        		}else if($orderitem->getQuantity() > 1){
+        			// 数量が1以上の場合は修正
+        			$orderitem->setQuantity(1);
+        			$this->entityManager->persist($orderitem);
+        			$this->entityManager->flush();
+        		}
+        	}
+        }
+        
         if ($CouponOrder){
             $form->get('coupon_cd')->setData($CouponOrder->getCouponCd());
         }

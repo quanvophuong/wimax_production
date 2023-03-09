@@ -194,15 +194,15 @@ class CartService
 
         $CartItems = [];
 
-        // 永続化されたカートとセッションのカートが同一の場合はマージしない #4574
-        $cartKeys = $this->session->get('cart_keys', []);
-        if ((count($persistedCarts) > 0) && !in_array($persistedCarts[0]->getCartKey(), $cartKeys, true)) {
-            foreach ($persistedCarts as $Cart) {
-                $CartItems = $this->mergeCartItems($Cart->getCartItems(), $CartItems);
-            }
-        }
+        // 永続化されたカートとセッションのカートが同一の場合はマージしない #4574 →　永続化されたカートは取得しない
+//         $cartKeys = $this->session->get('cart_keys', []);
+//         if ((count($persistedCarts) > 0) && !in_array($persistedCarts[0]->getCartKey(), $cartKeys, true)) {
+//             foreach ($persistedCarts as $Cart) {
+//                 $CartItems = $this->mergeCartItems($Cart->getCartItems(), $CartItems);
+//             }
+//         }
 
-        // セッションにある非会員カートとDBから取得した会員カートをマージする.
+        // セッションにある非会員カートとDBから取得した会員カートをマージする. →　マージしない
         foreach ($sessionCarts as $Cart) {
             $CartItems = $this->mergeCartItems($Cart->getCartItems(), $CartItems);
         }
