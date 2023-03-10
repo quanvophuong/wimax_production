@@ -992,7 +992,7 @@ class OrderPdfService extends TcpdfFpdi
         $this->lfText(25, 232, $Shipping->getShippingDeliveryTime(), 10);
         
         $this->lfText(20, 241, "【お問い合わせ】", 10);
-        $this->lfText(20, 246, $Shipping->getNote(), 10);
+        $this->lfText(20, 246, $Order->getMessage(), 10);
         
 //         $this->lfText(25, 153, $Order->getName01().' '.$Order->getName02(), 10);
 //         $this->lfText(25, 162, $Order->getKana01().' '.$Order->getKana02(), 10);
