@@ -988,7 +988,11 @@ class OrderPdfService extends TcpdfFpdi
         $this->lfText(25, 213, $Shipping->getCompanyName(), 10);
         
         $this->lfText(20, 222, "【配送方法】", 10);
-        $this->lfText(25, 227, $Shipping->getShippingDeliveryName(), 10);
+        $delivery_name = $Shipping->getShippingDeliveryName();
+        if($delivery_name === "ヤマト運輸" || $delivery_name === "佐川急便"){
+        	$delivery_name = "宅配便";
+        }
+        $this->lfText(25, 227, $delivery_name, 10);
         $this->lfText(25, 232, $Shipping->getShippingDeliveryTime(), 10);
         
         $this->lfText(20, 241, "【お問い合わせ】", 10);
