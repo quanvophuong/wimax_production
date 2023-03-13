@@ -2255,6 +2255,10 @@ section .rellax.pos3 {
   border: 2px solid #4DA4FD;
 }
 
+#wrap main .formContent form .color_block input[type=radio]:checked+label {
+  border: 2px solid #FF0000;
+}
+
 #wrap main .formContent form .formContentBlock label {
   display: -webkit-box;
   display: -ms-flexbox;
