@@ -14,15 +14,17 @@ file that was distributed with this source code.
 
 {% block stylesheet %}
     <style>
-        .ec-layoutRole__contents{
+        .ec-layoutRole__contents {
             max-width: 100% !important;
         }
-        @media screen and (max-width: 640px){
+
+        @media screen and (max-width: 640px) {
             #wrap main {
                 width: 100% !important;
 
             }
-            #wrap main .formContent{
+
+            #wrap main .formContent {
                 width: 92% !important;
             }
         }
@@ -101,24 +103,25 @@ file that was distributed with this source code.
             height: 0;
         }
 
-        #page_homepage .ec-layoutRole__contents{
+        #page_homepage .ec-layoutRole__contents {
             max-width: none !important;
             display: flex;
             justify-content: space-between;
         }
+
         #select #wrap {
             width: calc(100% - 300px);
         }
 
-        .secret-group label em{
+        .secret-group label em {
             width: 100px;
         }
 
-        .secret-group label p{
+        .secret-group label p {
             width: 50%;
         }
 
-        .secret-group label span{
+        .secret-group label span {
             width: 140px;
         }
     </style>
@@ -233,9 +236,13 @@ file that was distributed with this source code.
     var classcategory_id1 = parseInt($('input[name=option]:checked').val());
     var classcategory_id2 = parseInt($('input[name=usb]:checked').val());
     var ship = parseInt($('input[name=send]:checked').val());
+    var url_flg = parseInt($('input[name=temp_url_flg]:checked').val());
+
     $('#product_id').val(product_id);
 
     $('#ship').val(ship);
+
+    $('#url_flg').val(url_flg);
 
     if(classcategory_id1 == 550){
     classcategory_id1 = 7;
@@ -415,12 +422,14 @@ file that was distributed with this source code.
                     </div>
                     <div class="formContentBlock secret-group">
                         <h3>安心補償オプションを選択</h3>
-                        <div class="formContentBlock__text">端末の故障・破損・水濡れ・紛失・盗難・バッテリーの劣化など、様々な原因のトラブルに適用される万が一の時も「あんしん」できる端末補償サービスです。</div>
+                        <div class="formContentBlock__text">
+                            端末の故障・破損・水濡れ・紛失・盗難・バッテリーの劣化など、様々な原因のトラブルに適用される万が一の時も「あんしん」できる端末補償サービスです。
+                        </div>
                         <input type="radio" id="free" name="option" value="550" checked>
                         <label for="free">
                             <em>フリー補償</em>
                             <p>
-                                すべてのトラブルに適用し<br />全額補償
+                                すべてのトラブルに適用し<br/>全額補償
                             </p>
                             <span>＋550円(税込)／月</span>
                         </label>
@@ -428,7 +437,7 @@ file that was distributed with this source code.
                         <label for="light">
                             <em>ライト補償</em>
                             <p>
-                                破損/故障/水漏れは全額補償<br />補償外：紛失・盗難・バッテリーの劣化が発生した場合、端末代金として11,000円(税込)のご負担
+                                破損/故障/水漏れは全額補償<br/>補償外：紛失・盗難・バッテリーの劣化が発生した場合、端末代金として11,000円(税込)のご負担
                             </p>
                             <span>＋275円(税込)／月</span>
                         </label>
@@ -447,8 +456,8 @@ file that was distributed with this source code.
                     </div>
                     <div class="formContentBlock" id="usb_part">
                         <h3>USB ACアダプター</h3>
-                        {#                        <div class="formContentBlock__text">Anker PowerPort mini：2A 12W 2ポート USB急速充電器<br>#}
-                        {#                            【折りたたみ式プラグ/PowerIQ/超コンパクトサイズ 】iPhone iPad Android各種対応</div>#}
+                        {#                        <div class="formContentBlock__text">Anker PowerPort mini：2A 12W 2ポート USB急速充電器<br> #}
+                        {#                            【折りたたみ式プラグ/PowerIQ/超コンパクトサイズ 】iPhone iPad Android各種対応</div> #}
                         <div class="formContentBlock__text">ケーブル一体型充電器　Type-C</div>
                         <input type="radio" id="buyUsb" name="usb" value="1540" checked>
                         <label for="buyUsb">
@@ -460,10 +469,10 @@ file that was distributed with this source code.
                             <em>購入しない</em>
                         </label>
                         <ul>
-                            {#                            <li>✔3000万人以上が支持する充電製品No.1ブランドを是非お試しください｡</li>#}
-                            {#                            <li>✔Anker独自のPowerIQにより、フルスピード充電が可能です。</li>#}
-                            {#                            <li>※USBケーブルは付属しておりますが、ACアダプターは付属しておりません。</li>#}
-                            {#                            <li>※2AのACアダプターを推奨しております。</li>#}
+                            {#                            <li>✔3000万人以上が支持する充電製品No.1ブランドを是非お試しください｡</li> #}
+                            {#                            <li>✔Anker独自のPowerIQにより、フルスピード充電が可能です。</li> #}
+                            {#                            <li>※USBケーブルは付属しておりますが、ACアダプターは付属しておりません。</li> #}
+                            {#                            <li>※2AのACアダプターを推奨しております。</li> #}
                             <li>※レンタル商品に充電用アダプター、ケーブルは付属しておりません。</li>
                         </ul>
                     </div>
@@ -472,8 +481,8 @@ file that was distributed with this source code.
                         <input type="radio" id="creditcard" name="payment" value="" checked>
                         <label for="creditcard">
                             <div>クレジットカード</div>
-                            {#                            <span>※3Dセキュアサービス導入のクレジットカードはご利用できません。</span>#}
-                            <div>※デビットカード、プリペイドカードはご利用できません。<br />ご利用可能なクレジットカードは以下の通りです。<br />
+                            {#                            <span>※3Dセキュアサービス導入のクレジットカードはご利用できません。</span> #}
+                            <div>※デビットカード、プリペイドカードはご利用できません。<br/>ご利用可能なクレジットカードは以下の通りです。<br/>
                                 <img src="/html/user_data/assets/img/common/card_brand.png">
                             </div>
 
@@ -500,10 +509,38 @@ file that was distributed with this source code.
                         </ul>
                     </div>
                 </form>
+                <div class="ec-borderedDefs">
+                    <dl>
+                        <dt style="display:flex;align-items: center;font-weight: bold;">
+                            <div>事務手数料無料<br>キャンペーン</div>
+                            <span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <div class="form-group form-inline">
+                                <div class="ec-radio">
+                                    <div id="entry_url_flg">
+                                        <input type="radio" id="entry_url_flg_0"
+                                               name="temp_url_flg" required="required"
+                                               value="1" checked>
+                                        <label for="entry_url_flg_0">
+                                            <span>申し込む</span>
+                                        </label>
+                                        <input type="radio" id="entry_url_flg_1" name="temp_url_flg"
+                                               required="required" value="0">
+                                        <label for="entry_url_flg_1">
+                                            <span>申し込まない</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </dd>
+                    </dl>
+                </div>
                 <form id="productForm" name="form" method="post">
                     <input type="hidden" id="classcategory_id1" name="classcategory_id1" value="9">
                     <input type="hidden" id="classcategory_id2" name="classcategory_id2" value="11">
                     <input type="hidden" id="product_id" name="product_id" value="3">
+                    <input type="hidden" id="url_flg" name="url_flg" value="1">
                     <input type="hidden" id="ProductClass" name="ProductClass" value="14">
                     <input type="hidden" id="quantity" name="quantity" value="1">
                     <input type="hidden" id="ship" name="ship" value="1">
@@ -516,11 +553,11 @@ file that was distributed with this source code.
         </main>
     </div>
 
-    {#    <div class="ec-sliderRole">#}
-    {#        <div class="main_visual">#}
-    {#            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc01.jpg') }}"></div>#}
-    {#            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc02.jpg') }}"></div>#}
-    {#            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc03.jpg') }}"></div>#}
-    {#        </div>#}
-    {#    </div>#}
+    {#    <div class="ec-sliderRole"> #}
+    {#        <div class="main_visual"> #}
+    {#            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc01.jpg') }}"></div> #}
+    {#            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc02.jpg') }}"></div> #}
+    {#            <div class="item slick-slide"><img src="{{ asset('assets/img/top/img_hero_pc03.jpg') }}"></div> #}
+    {#        </div> #}
+    {#    </div> #}
 {% endblock %}

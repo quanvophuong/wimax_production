@@ -130,17 +130,17 @@ file that was distributed with this source code.
                             </dd>
                         </dl>
 
-                        <dl>
-                            <dt style="align-items: center;font-weight: bold;display: flex;">事務手数料無料<br>キャンペーン<span class="ec-required">必須</span></dt>
-                            <dd>
-                                {% set url_text = "申し込む"  %}
-                                {% if(form.url_flg.vars.data == "0") %}
-                                    {% set url_text = "申し込まない" %}
-                                {% endif %}
-                                {{ url_text }}
-                                {{ form_widget(form.url_flg, { type: 'hidden'}) }}
-                            </dd>
-                        </dl>
+{#                        <dl>#}
+{#                            <dt style="align-items: center;font-weight: bold;display: flex;">事務手数料無料<br>キャンペーン<span class="ec-required">必須</span></dt>#}
+{#                            <dd>#}
+{#                                {% set url_text = "申し込む"  %}#}
+{#                                {% if(form.url_flg.vars.data == "0") %}#}
+{#                                    {% set url_text = "申し込まない" %}#}
+{#                                {% endif %}#}
+{#                                {{ url_text }}#}
+{#                                {{ form_widget(form.url_flg, { type: 'hidden'}) }}#}
+{#                            </dd>#}
+{#                        </dl>#}
 
                         {{ form_widget(form.user_policy_check, { type: 'hidden'}) }}
 
