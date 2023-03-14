@@ -103,19 +103,19 @@ class EntryType extends AbstractType
             ->add('sex', SexType::class, [
                 'required' => false,
             ])
-            ->add('url_flg', ChoiceType::class, [
-                'choices' => [
-                    '申し込む' => '1',
-                    '申し込まない' => '0',
-                ],
-                'expanded' => true,
-                'multiple' => false,
-                'required' => true,
-                'constraints' => [
-                    new Assert\NotBlank(),
-                ],
-                'mapped' => true,
-            ])
+//            ->add('url_flg', ChoiceType::class, [
+//                'choices' => [
+//                    '申し込む' => '1',
+//                    '申し込まない' => '0',
+//                ],
+//                'expanded' => true,
+//                'multiple' => false,
+//                'required' => true,
+//                'constraints' => [
+//                    new Assert\NotBlank(),
+//                ],
+//                'mapped' => true,
+//            ])
             ->add('job', JobType::class, [
                 'required' => false,
             ]);
