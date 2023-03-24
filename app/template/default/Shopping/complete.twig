@@ -1,80 +1,83 @@
 {% extends 'default_frame.twig' %}
 
 {% block stylesheet %}
-<script>
-// GTM ADD DATALAYER
-// GET ITEM DATA
-let order_ecommerce_items = [];
-var order_event = "purchase";
-{% for orderItem in Order.OrderItems %}
-    {% if orderItem.productClass is not null and orderItem.productClass.classCategory1 %}
+    <script>
+        // GTM ADD DATALAYER
+        // GET ITEM DATA
+        let order_ecommerce_items = [];
+        var order_event = "purchase";
+        {% for orderItem in Order.OrderItems %}
+        {% if orderItem.productClass is not null and orderItem.productClass.classCategory1 %}
         item_data = {
             item_name: "{{ orderItem.productClass.classCategory1.className.name }}：{{ orderItem.productClass.classCategory1 }}",
             item_id: "{{ orderItem.productClass.classCategory1.id }}",
             price: '{{ orderItem.getPriceIncTax }}',
-            quantity: "{{orderItem.quantity}}"
+            quantity: "{{ orderItem.quantity }}"
         };
         order_ecommerce_items.push(item_data);
-    {% endif %}
-    {% if orderItem.productClass is not null and orderItem.productClass.classCategory2 %}
+        {% endif %}
+        {% if orderItem.productClass is not null and orderItem.productClass.classCategory2 %}
         item_data = {
             item_name: "{{ orderItem.productClass.classCategory2.className.name }}：{{ orderItem.productClass.classCategory2 }}",
-            item_id: "{{orderItem.productClass.classCategory2.id}}",
+            item_id: "{{ orderItem.productClass.classCategory2.id }}",
             price: '0',
-            quantity: "{{orderItem.quantity}}"
+            quantity: "{{ orderItem.quantity }}"
         };
         order_ecommerce_items.push(item_data);
-    {% endif %}
-{% endfor %}
-var order_ecommerce_data = {
-    transaction_id: "{{ Order.id }}",
-    value: "{{ Order.subtotal }}",
-    currency: "JPY",
-    items: order_ecommerce_items
-};
-console.log(order_ecommerce_data);
-window.dataLayer = window.dataLayer || [];
-dataLayer.push({ ecommerce: null });
-dataLayer.push({
-        event: order_event,
-        ecommerce: order_ecommerce_data
-});
+        {% endif %}
+        {% endfor %}
+        var order_ecommerce_data = {
+            transaction_id: "{{ Order.id }}",
+            value: "{{ Order.subtotal }}",
+            currency: "JPY",
+            items: order_ecommerce_items
+        };
+        console.log(order_ecommerce_data);
+        window.dataLayer = window.dataLayer || [];
+        dataLayer.push({ecommerce: null});
+        dataLayer.push({
+            event: order_event,
+            ecommerce: order_ecommerce_data
+        });
 
-// FUNCTIONS
-function getValueStatic( data, key ) {
-    if( data && key ) {
-        if( data[key] ) {
-            return data[key];
+        // FUNCTIONS
+        function getValueStatic(data, key) {
+            if (data && key) {
+                if (data[key]) {
+                    return data[key];
+                }
+                for (const data_key in data) {
+                    return data[data_key];
+                }
+            }
+            return 0;
         }
-        for (const data_key in data) {
-            return data[data_key];
+
+        function priceToNumber(price) {
+            if (price.length <= 0) return 0;
+            return price.replace(',', '');
         }
-    }
-    return 0;
-}
-function priceToNumber( price ) {
-    if( price.length <= 0 ) return 0;
-    return price.replace(',', '');
-}
-function setDataClassByAllData( class_all_data, class2_zero_id ) {
-    if( class_all_data.length <= 0 || class2_zero_id.length <= 0 ) return {};
-    let data_res = {};
-    for (const key in class_all_data) {
-        if( key.indexOf('__') < 0 ) {
-            let data_item = (class_all_data[key]['#'+class2_zero_id]) ? class_all_data[key]['#'+class2_zero_id] : class_all_data[key]['#'];
-            data_res[key] = data_item.price02;
+
+        function setDataClassByAllData(class_all_data, class2_zero_id) {
+            if (class_all_data.length <= 0 || class2_zero_id.length <= 0) return {};
+            let data_res = {};
+            for (const key in class_all_data) {
+                if (key.indexOf('__') < 0) {
+                    let data_item = (class_all_data[key]['#' + class2_zero_id]) ? class_all_data[key]['#' + class2_zero_id] : class_all_data[key]['#'];
+                    data_res[key] = data_item.price02;
+                }
+            }
+            return data_res;
         }
-    }
-    return data_res;
-} 
-</script>
+    </script>
 {% endblock %}
 
 {% block main %}
     <style>
-        .ec-layoutRole .ec-layoutRole__contents{
+        .ec-layoutRole .ec-layoutRole__contents {
             max-width: none;
         }
+
         .select-css {
             padding: 0 10px !important;
             height: 40px !important;
@@ -108,10 +111,42 @@ function setDataClassByAllData( class_all_data, class2_zero_id ) {
                         {% endif %}
                     {% endfor %}
                     円税込<br>
-                    {% set next_date_temp = "now" | date ( "Y-m-01")%}
+                    {% set next_date_temp = "now" | date ( "Y-m-01") %}
                     　　　　　・次回課金日：{{ next_date_temp|date_modify("+#{1} months")|date("Y年m月1日") }}<br>
                     　　　　　・課金間隔：毎月1日<br>
                 </div>
+                {% if(url_flg == "1") %}
+
+                        <form method="post" action="https://cloud-option.com/wimax/">
+
+                            {% if Order.Customer.company_name is empty %}
+                                <input type="hidden" name="pracontact" value="2">
+                            {% else %}
+                                <input type="hidden" name="pracontact" value="1">
+                            {% endif %}
+                            <input type="hidden" name="pracompany" value="{{ Order.Customer.company_name }}">
+                            <input type="hidden" name="praname1" value="{{ Order.Customer.name01 }}">
+                            <input type="hidden" name="praname2" value="{{ Order.Customer.name02 }}">
+                            <input type="hidden" name="pranameread1" value="{{ Order.Customer.kana01 }}">
+                            <input type="hidden" name="pranameread2" value="{{ Order.Customer.kana02 }}">
+                            <input type="hidden" name="pramail" value="{{ Order.Customer.email }}">
+                            <input type="hidden" name="praphone" value="{{ Order.Customer.phone_number }}">
+                            <input type="hidden" name="prapostal" value="{{ Order.Customer.postal_code }}">
+                            <input type="hidden" name="pratodofuken" value="{{ Order.Customer.Pref.name }}">
+                            <input type="hidden" name="praaddress"
+                                   value="{{ Order.Customer.addr01 }} {{ Order.Customer.addr02 }}">
+                            <input type="hidden" name="praordernumber" value="{{ Order.orderNo }}">
+
+                            <div class="ec-registerRole__actions" style="padding: 20px 60px;">
+                                <div class="ec-off4Grid">
+                                    <div class="ec-off4Grid__cell">
+                                        <button class="ec-blockBtn--action" type="submit">オプション申し込みへ</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                {% endif %}
                 <div class="btn-wrap">
                     <a href="{{ url("homepage") }}" class="btn">トップページへ</a>
                 </div>
@@ -122,62 +157,71 @@ function setDataClassByAllData( class_all_data, class2_zero_id ) {
         </footer>
     </div>
 
-<!--Mfro-->
-<script>
-    (function(){
-        var uqid   = "5dae53Dceda2XD48";
-        var cid    = "576";
-        var uid   = "{{ Order.orderNo }}";
-        var uid2   = "";
-        var af   = "";
-        var pid    = "";
-        var amount = "";
-        var a=document.createElement("script");
-        a.src="//ad.mtrf.net/ac/action_js.php";
-        a.id="afadaction-"+Date.now();
-        a.addEventListener("load",function(){(new fpcAction(a.id)).action(cid, af, [uid, uid2], pid, amount, uqid)});
-        document.body.appendChild(a)})();
-</script>
-<!--adtown-->
-<div id="atown-conversion-tag" data-atown-conversion-tag="https://ad.atown.jp/adserver/ap.af?aid=10225&u1=＜{{ Order.orderNo }}＞" style="display: none;"></div>
-<script type="text/javascript" src="https://ad.atown.jp/adserver/js/lib/clickaction/action.js"></script>
-<!--rentracks-->
-<script type="text/javascript">
-    (function(){
-    function loadScriptRTCV(callback){
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = 'https://www.rentracks.jp/js/itp/rt.track.js?t=' + (new Date()).getTime();
-    if ( script.readyState ) {
-    script.onreadystatechange = function() {
-    if ( script.readyState === 'loaded' || script.readyState === 'complete' ) {
-    script.onreadystatechange = null;
-    callback();
-    };
-    };
-    } else {
-    script.onload = function() {
-    callback();
-    };
-    };
-    document.getElementsByTagName('head')[0].appendChild(script);
-    }
-    loadScriptRTCV(function(){
-    _rt.sid = 3848;
-    _rt.pid = 10852;
-    _rt.price = 0;
-    _rt.reward = -1;
-    _rt.cname = '';
-    _rt.ctel = '';
-    _rt.cemail = '';
-    _rt.cinfo = '{{ Order.orderNo }}';
-    rt_tracktag();
-    });
-    }(function(){}));
-</script>
+    <!--Mfro-->
+    <script>
+        (function () {
+            var uqid = "5dae53Dceda2XD48";
+            var cid = "576";
+            var uid = "{{ Order.orderNo }}";
+            var uid2 = "";
+            var af = "";
+            var pid = "";
+            var amount = "";
+            var a = document.createElement("script");
+            a.src = "//ad.mtrf.net/ac/action_js.php";
+            a.id = "afadaction-" + Date.now();
+            a.addEventListener("load", function () {
+                (new fpcAction(a.id)).action(cid, af, [uid, uid2], pid, amount, uqid)
+            });
+            document.body.appendChild(a)
+        })();
+    </script>
+    <!--adtown-->
+    <div id="atown-conversion-tag"
+         data-atown-conversion-tag="https://ad.atown.jp/adserver/ap.af?aid=10225&u1=＜{{ Order.orderNo }}＞"
+         style="display: none;"></div>
+    <script type="text/javascript" src="https://ad.atown.jp/adserver/js/lib/clickaction/action.js"></script>
+    <!--rentracks-->
+    <script type="text/javascript">
+        (function () {
+            function loadScriptRTCV(callback) {
+                var script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = 'https://www.rentracks.jp/js/itp/rt.track.js?t=' + (new Date()).getTime();
+                if (script.readyState) {
+                    script.onreadystatechange = function () {
+                        if (script.readyState === 'loaded' || script.readyState === 'complete') {
+                            script.onreadystatechange = null;
+                            callback();
+                        }
+                        ;
+                    };
+                } else {
+                    script.onload = function () {
+                        callback();
+                    };
+                }
+                ;
+                document.getElementsByTagName('head')[0].appendChild(script);
+            }
 
-<!--a8-->
-<span id="a8sales"></span>
+            loadScriptRTCV(function () {
+                _rt.sid = 3848;
+                _rt.pid = 10852;
+                _rt.price = 0;
+                _rt.reward = -1;
+                _rt.cname = '';
+                _rt.ctel = '';
+                _rt.cemail = '';
+                _rt.cinfo = '{{ Order.orderNo }}';
+                rt_tracktag();
+            });
+        }(function () {
+        }));
+    </script>
+
+    <!--a8-->
+    <span id="a8sales"></span>
     <script src="//statics.a8.net/a8sales/a8sales.js"></script>
     <script>
         a8sales({
@@ -193,17 +237,38 @@ function setDataClassByAllData( class_all_data, class2_zero_id ) {
             ],
             "total_price": 3000,
         });
-</script>
-<!--sphere-->
-<script>
-(function acsTrack(){
-var PV = "ph6d2hqi9xa9";
-var _ARGSV = "{{ Order.orderNo }}";
-var KEYS = {cid : ["CL_", "ACT_", "cid_auth_get_type"], plid : ["PL_", "APT_", "plid_auth_get_type"]};
-var turl = "https://sphere.ntg-lab.com/track.php?p=" + PV + "&args=" + _ARGSV;
-var cks = document.cookie.split("; ").reduce(function(ret, s){ var kv = s.split("="); if(kv[0] && kv[1]) ret[kv[0]] = kv[1]; return ret; }, []);
-turl = Object.keys(KEYS).reduce(function(url, k){ var vk = KEYS[k][0] + PV; var tk = KEYS[k][1] + PV; var v = "", t = ""; if(cks[vk]){ v = cks[vk]; if(cks[tk]) t = cks[tk]; }else if(localStorage.getItem(vk)){ v = localStorage.getItem(vk); t = "ls"; } if(v) url += "&" + k + "=" + v; if(t) url += "&" + KEYS[k][2] + "=" + t; return url; }, turl);
-var xhr = new XMLHttpRequest(); xhr.open("GET", turl); xhr.send(); })();
-</script>
+    </script>
+    <!--sphere-->
+    <script>
+        (function acsTrack() {
+            var PV = "ph6d2hqi9xa9";
+            var _ARGSV = "{{ Order.orderNo }}";
+            var KEYS = {cid: ["CL_", "ACT_", "cid_auth_get_type"], plid: ["PL_", "APT_", "plid_auth_get_type"]};
+            var turl = "https://sphere.ntg-lab.com/track.php?p=" + PV + "&args=" + _ARGSV;
+            var cks = document.cookie.split("; ").reduce(function (ret, s) {
+                var kv = s.split("=");
+                if (kv[0] && kv[1]) ret[kv[0]] = kv[1];
+                return ret;
+            }, []);
+            turl = Object.keys(KEYS).reduce(function (url, k) {
+                var vk = KEYS[k][0] + PV;
+                var tk = KEYS[k][1] + PV;
+                var v = "", t = "";
+                if (cks[vk]) {
+                    v = cks[vk];
+                    if (cks[tk]) t = cks[tk];
+                } else if (localStorage.getItem(vk)) {
+                    v = localStorage.getItem(vk);
+                    t = "ls";
+                }
+                if (v) url += "&" + k + "=" + v;
+                if (t) url += "&" + KEYS[k][2] + "=" + t;
+                return url;
+            }, turl);
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", turl);
+            xhr.send();
+        })();
+    </script>
 
 {% endblock %}
