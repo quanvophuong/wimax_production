@@ -115,43 +115,38 @@
                     　　　　　・次回課金日：{{ next_date_temp|date_modify("+#{1} months")|date("Y年m月1日") }}<br>
                     　　　　　・課金間隔：毎月1日<br>
                 </div>
-                {% if(url_flg == "1") %}
+{#                {% if(url_flg == "1") %}#}
 
-                        <form method="post" action="https://cloud-option.com/wimax/">
+{#                        <form method="post" action="https://cloud-option.com/wimax/">#}
 
-                            {% if Order.Customer.company_name is empty %}
-                                <input type="hidden" name="pracontact" value="2">
-                            {% else %}
-                                <input type="hidden" name="pracontact" value="1">
-                            {% endif %}
-                            <input type="hidden" name="pracompany" value="{{ Order.Customer.company_name }}">
-                            <input type="hidden" name="praname1" value="{{ Order.Customer.name01 }}">
-                            <input type="hidden" name="praname2" value="{{ Order.Customer.name02 }}">
-                            <input type="hidden" name="pranameread1" value="{{ Order.Customer.kana01 }}">
-                            <input type="hidden" name="pranameread2" value="{{ Order.Customer.kana02 }}">
-                            <input type="hidden" name="pramail" value="{{ Order.Customer.email }}">
-                            <input type="hidden" name="praphone" value="{{ Order.Customer.phone_number }}">
-                            <input type="hidden" name="prapostal" value="{{ Order.Customer.postal_code }}">
-                            <input type="hidden" name="pratodofuken" value="{{ Order.Customer.Pref.name }}">
-                            <input type="hidden" name="praaddress"
-                                   value="{{ Order.Customer.addr01 }} {{ Order.Customer.addr02 }}">
-                            <input type="hidden" name="praordernumber" value="{{ Order.orderNo }}">
-                            {% for OrderItem in Order.MergedProductOrderItems %}
-                            	{% if OrderItem.product and OrderItem.ship %}
-                            		<input type="hidden" name="prapreferreddate" value="{{ OrderItem.ship }}">
-                            	{% endif %}
-                            {% endfor %}
+{#                            {% if Order.Customer.company_name is empty %}#}
+{#                                <input type="hidden" name="pracontact" value="2">#}
+{#                            {% else %}#}
+{#                                <input type="hidden" name="pracontact" value="1">#}
+{#                            {% endif %}#}
+{#                            <input type="hidden" name="pracompany" value="{{ Order.Customer.company_name }}">#}
+{#                            <input type="hidden" name="praname1" value="{{ Order.Customer.name01 }}">#}
+{#                            <input type="hidden" name="praname2" value="{{ Order.Customer.name02 }}">#}
+{#                            <input type="hidden" name="pranameread1" value="{{ Order.Customer.kana01 }}">#}
+{#                            <input type="hidden" name="pranameread2" value="{{ Order.Customer.kana02 }}">#}
+{#                            <input type="hidden" name="pramail" value="{{ Order.Customer.email }}">#}
+{#                            <input type="hidden" name="praphone" value="{{ Order.Customer.phone_number }}">#}
+{#                            <input type="hidden" name="prapostal" value="{{ Order.Customer.postal_code }}">#}
+{#                            <input type="hidden" name="pratodofuken" value="{{ Order.Customer.Pref.name }}">#}
+{#                            <input type="hidden" name="praaddress"#}
+{#                                   value="{{ Order.Customer.addr01 }} {{ Order.Customer.addr02 }}">#}
+{#                            <input type="hidden" name="praordernumber" value="{{ Order.orderNo }}">#}
 
-                            <div class="ec-registerRole__actions" style="padding: 20px 60px;">
-                                <div class="ec-off4Grid">
-                                    <div class="ec-off4Grid__cell">
-                                        <button class="ec-blockBtn--action" type="submit">オプション申し込みへ</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
+{#                            <div class="ec-registerRole__actions" style="padding: 20px 60px;">#}
+{#                                <div class="ec-off4Grid">#}
+{#                                    <div class="ec-off4Grid__cell">#}
+{#                                        <button class="ec-blockBtn--action" type="submit">オプション申し込みへ</button>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </form>#}
 
-                {% endif %}
+{#                {% endif %}#}
                 <div class="btn-wrap">
                     <a href="{{ url("homepage") }}" class="btn">トップページへ</a>
                 </div>
