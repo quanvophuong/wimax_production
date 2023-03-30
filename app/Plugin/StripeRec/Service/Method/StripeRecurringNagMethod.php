@@ -1132,7 +1132,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             }
 
         }
-        $next_payday = new \DateTime($next_payday->format('Y-m-d 08:30:00'));
+        $next_payday = new \DateTime($next_payday->format('Y-m-d 09:30:00'));
         $now = new \DateTime();
         $load_time = new \DateInterval('PT10S');
         $now->add($load_time);
