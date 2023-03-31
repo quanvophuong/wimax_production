@@ -3083,3 +3083,8 @@ section .rellax.pos3 {
     margin-bottom: 20px;
   }
 }
+@media screen and (min-width: 641px) {
+  .fix-width-card{
+    max-width: 600px !important;
+  }
+}
