@@ -236,13 +236,13 @@ file that was distributed with this source code.
     var classcategory_id1 = parseInt($('input[name=option]:checked').val());
     var classcategory_id2 = parseInt($('input[name=usb]:checked').val());
     var ship = parseInt($('input[name=send]:checked').val());
-    // var url_flg = parseInt($('input[name=temp_url_flg]:checked').val());
+    var url_flg = parseInt($('input[name=temp_url_flg]:checked').val());
 
     $('#product_id').val(product_id);
 
     $('#ship').val(ship);
 
-    // $('#url_flg').val(url_flg);
+    $('#url_flg').val(url_flg);
 
     if(classcategory_id1 == 550){
     classcategory_id1 = 7;
@@ -381,7 +381,7 @@ file that was distributed with this source code.
                         <label class="tab_item" for="design">ホームルーター</label>
                         <div class="tab_content" id="all_content">
                             <div class="boxL">
-                                <img src="/html/user_data/assets/img/common/mobile_img.png" alt="mobile">
+                                <img src="/shop/html/user_data/assets/img/common/mobile_img.png" alt="mobile">
                             </div>
                             <div class="boxR">
                                 <h4>モバイルプラン</h4>
@@ -403,7 +403,7 @@ file that was distributed with this source code.
                         </div>
                         <div class="tab_content" id="design_content">
                             <div class="boxL">
-                                <img src="/html/user_data/assets/img/common/home_img.png" alt="mobile">
+                                <img src="/shop/html/user_data/assets/img/common/home_img.png" alt="mobile">
                             </div>
                             <div class="boxR">
                                 <h4>ホームプラン</h4>
@@ -483,14 +483,14 @@ file that was distributed with this source code.
                             <div>クレジットカード</div>
                             {#                            <span>※3Dセキュアサービス導入のクレジットカードはご利用できません。</span> #}
                             <div>※デビットカード、プリペイドカードはご利用できません。<br/>ご利用可能なクレジットカードは以下の通りです。<br/>
-                                <img src="/html/user_data/assets/img/common/card_brand.png">
+                                <img src="/shop/html/user_data/assets/img/common/card_brand.png">
                             </div>
 
                         </label>
                     </div>
                     <div class="formContentBlock color_block">
-                        <h3>発送希望日を選択<br><span style="color:red;font-size: 26px;">「最短発送」希望のお客様は必ず「最短発送」をご選択ください。</span></h3>
-{#                        <h3>発送希望日を選択<br><span style="color:red;font-size: 25px;">3/30(木)14:00以降の受注分については、3/31(金)の発送となるため、<br>4月利用開始の取り扱いとなります。</span></h3>#}
+{#                        <h3>発送希望日を選択<br><span style="color:red;font-size: 26px;">「最短発送」希望のお客様は必ず「最短発送」をご選択ください。</span></h3>#}
+                        <h3>発送希望日を選択<br><span style="color:red;font-size: 25px;">「最短発送」希望のお客様は必ず「最短発送」をご選択ください。</span></h3>
                         <input type="radio" id="short" name="send" value="1">
                         {% if(is_use_current_month) %}
                             <label for="short">
@@ -510,38 +510,38 @@ file that was distributed with this source code.
                         </ul>
                     </div>
                 </form>
-{#                <div class="ec-borderedDefs">#}
-{#                    <dl>#}
-{#                        <dt style="display:flex;align-items: center;font-weight: bold;">#}
-{#                            <div>キャッシュバック<br>キャンペーン</div>#}
-{#                            <span class="ec-required">必須</span>#}
-{#                        </dt>#}
-{#                        <dd>#}
-{#                            <div class="form-group form-inline">#}
-{#                                <div class="ec-radio">#}
-{#                                    <div id="entry_url_flg">#}
-{#                                        <input type="radio" id="entry_url_flg_0"#}
-{#                                               name="temp_url_flg" required="required"#}
-{#                                               value="1" checked>#}
-{#                                        <label for="entry_url_flg_0">#}
-{#                                            <span>申し込む</span>#}
-{#                                        </label>#}
-{#                                        <input type="radio" id="entry_url_flg_1" name="temp_url_flg"#}
-{#                                               required="required" value="0">#}
-{#                                        <label for="entry_url_flg_1">#}
-{#                                            <span>申し込まない</span>#}
-{#                                        </label>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </dd>#}
-{#                    </dl>#}
-{#                </div>#}
+                <div class="ec-borderedDefs">
+                    <dl>
+                        <dt style="display:flex;align-items: center;font-weight: bold;">
+                            <div>キャッシュバック<br>キャンペーン</div>
+                            <span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <div class="form-group form-inline">
+                                <div class="ec-radio">
+                                    <div id="entry_url_flg">
+                                        <input type="radio" id="entry_url_flg_0"
+                                               name="temp_url_flg" required="required"
+                                               value="1" checked>
+                                        <label for="entry_url_flg_0">
+                                            <span>申し込む</span>
+                                        </label>
+                                        <input type="radio" id="entry_url_flg_1" name="temp_url_flg"
+                                               required="required" value="0">
+                                        <label for="entry_url_flg_1">
+                                            <span>申し込まない</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </dd>
+                    </dl>
+                </div>
                 <form id="productForm" name="form" method="post">
                     <input type="hidden" id="classcategory_id1" name="classcategory_id1" value="9">
                     <input type="hidden" id="classcategory_id2" name="classcategory_id2" value="11">
                     <input type="hidden" id="product_id" name="product_id" value="3">
-{#                    <input type="hidden" id="url_flg" name="url_flg" value="1">#}
+                    <input type="hidden" id="url_flg" name="url_flg" value="1">
                     <input type="hidden" id="ProductClass" name="ProductClass" value="14">
                     <input type="hidden" id="quantity" name="quantity" value="1">
                     <input type="hidden" id="ship" name="ship" value="1">

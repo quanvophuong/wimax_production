@@ -10,21 +10,21 @@
         {% endif %}
         <div class="headerContent">
             <div class="logo">
-                <h1><a href="../"><img src="/html/user_data/logo.png" alt="FreeWimax5G"></a></h1>
+                <h1><a href="/"><img src="/shop/html/user_data/logo.png" alt="FreeWimax5G"></a></h1>
             </div>
             <div class="headerContentBtnWrap">
                 {% if(is_granted('ROLE_USER')) %}
                     <a href="{{ url('mypage') }}" class="headerContentBtnWrap__btn">
-                        <img src="/html/user_data/assets/img/icons/mypage_ico.svg" alt="マイページアイコン">
+                        <img src="/shop/html/user_data/assets/img/icons/mypage_ico.svg" alt="マイページアイコン">
                         マイページ
                     </a>
                 {% endif %}
                 <a href="{{ url }}" data-redirect="{{ data_url }}" id="target_btn" class="headerContentBtnWrap__btn">
-                    <img src="/html/user_data/assets/img/icons/logout_ico.svg" alt="ログイン">
+                    <img src="/shop/html/user_data/assets/img/icons/logout_ico.svg" alt="ログイン">
                     {{ name }}
                 </a>
-                <a href="../user_data/shop" class="headerContentBtnWrap__btn app">
-                    <img src="/html/user_data/assets/img/icons/cart_ico.svg" alt="お申し込みアイコン">
+                <a href="./user_data/shop" class="headerContentBtnWrap__btn app">
+                    <img src="/shop/html/user_data/assets/img/icons/cart_ico.svg" alt="お申し込みアイコン">
                     お申し込み
                 </a>
                 <div class="sp">

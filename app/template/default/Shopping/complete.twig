@@ -115,7 +115,7 @@
                     　　　　　・次回課金日：{{ next_date_temp|date_modify("+#{1} months")|date("Y年m月1日") }}<br>
                     　　　　　・課金間隔：毎月1日<br>
                 </div>
-{#                {% if(url_flg == "1") %}#}
+                {% if(url_flg == "1") %}
 
                         <form method="post" action="https://cloud-option.com/wimax/">
 
@@ -146,7 +146,7 @@
                             </div>
                         </form>
 
-{#                {% endif %}#}
+                {% endif %}
                 <div class="btn-wrap">
                     <a href="{{ url("homepage") }}" class="btn">トップページへ</a>
                 </div>

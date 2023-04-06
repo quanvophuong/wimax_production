@@ -1,0 +1,293 @@
+/* カスタマイズ用CSS */
+a.pc.btnclass {
+    display: inline-block;
+    line-height: 0;
+    max-width: 450px;
+    position: relative;
+    top: -150px;
+    left: 500px;
+    overflow: hidden;
+    border-radius: 50px;
+}
+
+a.btnclass:after {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: -20%;
+    width: 40px;
+    height: 100%;
+    -webkit-transform: scale(2) rotate(20deg);
+    transform: scale(2) rotate(20deg);
+    background-image: linear-gradient(100deg, rgba(255, 255, 255, 0) 10%, rgba(255, 255, 255, 0.5) 100%, rgba(255, 255, 255, 0) 0%);
+    -webkit-animation-name: shiny;
+    animation-name: shiny;
+    -webkit-animation-duration: 3s;
+    animation-duration: 3s;
+    -webkit-animation-timing-function: ease-in-out;
+    animation-timing-function: ease-in-out;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+}
+
+.ec-borderedDefs .ec-errorMessage {
+    margin-bottom: 25px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #DE5D50;
+}
+
+.ec-borderedDefs>dl {
+    padding: 20px 0px;
+}
+
+.ec-borderedDefs>dl>dt {
+    padding: 0px;
+}
+
+.ec-borderedDefs>dl>dd .form-group {
+    margin: 0px;
+}
+
+.modalfix .modal-content {
+    border: 3px solid #0B7AB6;
+    border-radius: 30px;
+    overflow: hidden;
+}
+
+#wrap.default .topDevice .topDeviceContent .topDeviceContentInner .topDeviceContentInnerBlock{
+    height: auto;
+}
+#wrap.default .topDevice .topDeviceContent .topDeviceContentInner .topDeviceContentInnerBlock .topDeviceContentInnerBlock__list{
+    min-height: 232px;
+}
+
+#wrap.default .topDevice .topDeviceContent .topDeviceContentInner .topDeviceContentInnerBlock .topDeviceContentInnerBlock__btn.mt100{
+    margin-top: 0;
+}
+
+#wrap.default .topDevice .topDeviceContent .topDeviceContentInner .topDeviceContentInnerBlock .topDeviceContentInnerBlock__btn{
+    max-width: 300px;
+    width: 100%;
+    background-color: #ff9800;
+}
+
+
+.ec-blockTopBtn{
+    display: none !important;
+}
+.checkout #wrap main .formContent{
+    max-width: 860px;
+}
+
+.front_page #wrap.default{
+    overflow-x: visible;
+}
+@media (max-width: 1400px) {
+    .btnclass {
+        width: 250px;
+        top: auto !important;
+        bottom: 80px;
+        left: 300px !important;
+    }
+}
+
+@media (max-width: 900px) {
+    .btnclass {
+        bottom: 60px;
+        left: 180px !important;
+    }
+    .checkout #wrap main .formContent{
+        width: calc(100% - 60px);
+    }
+}
+
+@media (max-width: 800px) {
+    .checkout #wrap main .formContent{
+        width: calc(100% - 40px);
+        padding: 30px 20px;
+    }
+}
+
+@media(max-width:  768px){
+    .checkout #wrap main .formContent form .tabs .btn_top{
+        display: flex;
+        justify-content: space-between;
+    }
+    .checkout #wrap main .formContent form .tabs .tab_item{
+        margin: 0;
+        width: 49%
+    }
+}
+@media (max-width:  700px){
+    .checkout #wrap main .formContent form .formContentBlock h3{
+        font-size: 25px;
+    }
+    .checkout #wrap main .formContent{
+        width: 100%;
+        padding: 30px 15px;
+    }
+}
+@media (max-width:  700px) and (min-width:  641px){
+    .checkout #sidePrice{
+        width: 285px;
+    }
+}
+@media (max-width: 640px) {
+    .checkout #wrap main .formContent .btn_top{
+        display: flex;
+        justify-content: center;
+    }
+
+    .checkout #wrap main .formContent form .tabs .tab_item{
+        width: 49%;
+    }
+}
+
+
+/*COMMON*/
+#wrap.default header .headerContent .headerContentBtnWrap .headerContentBtnWrap__btn.app {
+    background: #ff9800;
+}
+#wrap.default .topFv .topFvContent h1 .sp a {
+    background: #ff9800;
+}
+@media (min-width: 641px) {
+    #wrap.default header .headerContent .headerContentBtnWrap .headerContentBtnWrap__btn.app {
+        border-radius: 22px;
+        padding: 20px 15px;
+        margin: 5px 0;
+    }
+}
+@media (max-width: 640px) {
+    #wrap.default main {
+        overflow: hidden;
+    }
+}
+#wrap.default header nav .inner .navCta .navCta__btn {
+    background: #ff9800;
+}
+.btn-wrap .btn {
+    background: #ff9800;
+    border-color: #ff9800;
+}
+.btn-wrap .border-btn {
+    border-color: #ff9800;
+    color: #ff9800;
+}
+
+
+/*HOME*/
+@media (max-width: 1000px) and (min-width: 641px) {
+    #wrap.default .topPoint .topPointContent .topPointContentInner .topPointContentInner__block {
+        height: auto;
+    }
+}
+@media (max-width: 970px) and (min-width: 641px) {
+    #wrap.default .topDevice .topDeviceContent .topDeviceContentInner .topDeviceContentInner__img {
+        object-fit: contain;
+    }
+    #wrap.default .topDevice .topDeviceContent .topDeviceContentInner .topDeviceContentInnerBlock {
+        min-height: 794px;
+    }
+    #wrap.default .topDevice .topDeviceContent .topDeviceContentInner .topDeviceContentInnerBlock .topDeviceContentInnerBlock__img {
+        max-width: 100%;
+        height: 200px;
+        object-fit: contain;
+    }
+    #wrap.default .topDevice .topDeviceContent .topDeviceContentInner .topDeviceContentInnerBlock .topDeviceContentInnerBlock__btn {
+        font-size: 18px;
+    }
+
+    #wrap.default .topFlow .topFlowContent .topFlowContentInner .topFlowContentInner__block .topFlowContentInner__block--img {
+        object-fit: contain;
+    }
+}
+/*CTA*/
+#wrap.default .ctaWrap {
+    height: auto;
+    background: #4DA4FD;
+    padding: 45px 0;
+}
+#wrap.default .ctaWrap .ctaWrapContent .ctaWrapContentBoxL .ctaWrapContentBoxL__btn {
+    font-weight: 600;
+    border-radius: 35px;
+    background: #ff9800;
+    box-shadow: 0 0 7px -1px #fff;
+}
+@media screen and (max-width: 640px) {
+    #wrap.default .ctaWrap .ctaWrapContent .ctaWrapContentBoxL {
+        z-index: 8;
+    }
+}
+#wrap.default .footerCtaWrap .footerCtaWrapContent .footerCtaWrapContentBoxL__btn {
+    background-color: #ff9800;
+}
+
+
+/*SHOP*/
+#page_user_data header {
+    background-color: #f7f7f7;
+    z-index: 95;
+}
+#page_user_data #sidePrice {
+    z-index: 98;
+}
+#wrap main .formContent form .formContentBlock label {
+    padding: 10px 25px;
+}
+#wrap main .formContent form .formContentBlock label > span {
+    font-weight: 600;
+}
+#wrap main .formContent form .tabs input[name="tab_item"]:checked+.tab_item {
+    background: #ff9800;
+}
+#sidePrice .sidePriceContent .btn {
+    border-radius: 25px;
+    background: #ff9800;
+    box-shadow: 0 0 7px -1px #ff9800;
+}
+.shopCartBtnWrap {
+    text-align: center;
+    padding: 50px 30px;
+}
+.shopCartBtnWrap .shopCartBtn {
+    width: 170px;
+    background: #ff9800;
+    color: #FFF;
+    border: none;
+    border-radius: 25px;
+    box-shadow: 0 0 7px -1px #ff9800;
+    padding: 9px 5px;
+}
+@media screen and (max-width: 640px) {
+    .shopCartBtnWrap {
+        padding-bottom: 90px;
+    }
+}
+
+
+/*CART*/
+.cartContent .btn-wrap .border-btn {
+    border-radius: 25px;
+}
+.cartContent .btn-wrap .btn {
+    border-radius: 25px;
+    background: #ff9800;
+    border-color: #ff9800;
+}
+
+
+/*SHOPPING*/
+#confirmation .confirmationContent form .confirmationContentBlockR .confirmationContentBlockRInner .btn {
+    background: #ff9800;
+}
+
+
+/*STRIPE PAYMENT*/
+#page_plugin_striperec_checkout_page .ec-cartRole .ec-cartRole__progress {
+    display: none;
+}
+#page_plugin_striperec_checkout_page .stripe_payment_gateway_payment_btn {
+    background: #ff9800 !important;
+}

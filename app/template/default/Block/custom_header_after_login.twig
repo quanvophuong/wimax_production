@@ -11,15 +11,15 @@ file that was distributed with this source code.
 <header class="login" style="width:100%; z-index: 10;">
     <div class="logo">
         <h1>
-            <a href="{{ url('homepage') }}">
-                <img src="/html/user_data/logo.png" alt="FreeWimax5G">
+            <a href="/">
+                <img src="{{ url('homepage') }}html/user_data/logo.png" alt="FreeWimax5G">
             </a>
         </h1>
     </div>
     {% if is_granted('ROLE_USER') %}
         <div class="btnArea">
-            <a href="{{ url('mypage') }}"><img src="/html/user_data/assets/img/icons/mypage_ico.svg" alt="mypage">マイページ</a>
-            <a href="{{ url('logout') }}"><img src="/html/user_data/assets/img/icons/logout_ico.svg" alt="mypage">ログアウト</a>
+            <a href="{{ url('mypage') }}"><img src="/shop/html/user_data/assets/img/icons/mypage_ico.svg" alt="mypage">マイページ</a>
+            <a href="{{ url('logout') }}"><img src="/shop/html/user_data/assets/img/icons/logout_ico.svg" alt="mypage">ログアウト</a>
         </div>
     {% else %}
         <div class="btnArea">

@@ -1,0 +1,37 @@
+<?php 
+return array (
+  'timestamp' => 1679884355,
+  'site_id' => 1,
+  'group' => 'posts',
+  'key' => 380,
+  'type' => 'object',
+  'timeout' => 1681093955,
+  'data' => 
+  (object) array(
+     'ID' => 380,
+     'post_author' => '4',
+     'post_date' => '2023-03-13 18:44:17',
+     'post_date_gmt' => '2023-03-13 09:44:17',
+     'post_content' => '',
+     'post_title' => 'クーポン入力バナー_バナー-',
+     'post_excerpt' => '',
+     'post_status' => 'inherit',
+     'comment_status' => '',
+     'ping_status' => 'closed',
+     'post_password' => '',
+     'post_name' => '%e3%82%af%e3%83%bc%e3%83%9d%e3%83%b3%e5%85%a5%e5%8a%9b%e3%83%90%e3%83%8a%e3%83%bc_%e3%83%90%e3%83%8a%e3%83%bc',
+     'to_ping' => '',
+     'pinged' => '',
+     'post_modified' => '2023-03-13 18:44:17',
+     'post_modified_gmt' => '2023-03-13 09:44:17',
+     'post_content_filtered' => '',
+     'post_parent' => 354,
+     'guid' => 'https://free-max.com/form/wp-content/uploads/2023/03/53b410d03982113f597f5ae1da40c060.jpg',
+     'menu_order' => 0,
+     'post_type' => 'attachment',
+     'post_mime_type' => 'image/jpeg',
+     'comment_count' => '0',
+     'filter' => 'raw',
+  ),
+);
+/*@DOCKET_CACHE_EOF*/

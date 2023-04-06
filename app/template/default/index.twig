@@ -13,7 +13,7 @@ file that was distributed with this source code.
 {% set body_class = 'front_page' %}
 
 {% block stylesheet %}
-    <link rel="stylesheet" href="/html/user_data/assets/css/new/style.css">
+    <link rel="stylesheet" href="{{ url('homepage') }}html/user_data/assets/css/new/style.css">
     <style>
         .topDeviceContentInnerBlock{
             width: auto !important;
@@ -30,8 +30,8 @@ file that was distributed with this source code.
 
 {% block javascript %}
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="/html/user_data/assets/js/common.js"></script>
-<script src="/html/user_data/assets/js/rellax.min.js"></script>
+<script src="{{ url('homepage') }}html/user_data/assets/js/common.js"></script>
+<script src="{{ url('homepage') }}html/user_data/assets/js/rellax.min.js"></script>
 <script>
     // Accepts any class name
     var rellax = new Rellax('.rellax');
@@ -47,13 +47,13 @@ file that was distributed with this source code.
             <section class="topFv">
                 <div class="topFvContent">
                     <h1>
-                        <img class="pc" src="/html/user_data/assets/img/common/FV1.png" alt="FreeMax+5G 月額4800円　端末代金・契約期間の無いWiMAX＋5G・WiFiルーターレンタルサービス!">
-                        <a href="../user_data/shop" class="pc btnclass">
-                            <img src="/html/user_data/assets/img/common/green_button.png" alt="FreeMax+5G 月額4800円　端末代金・契約期間の無いWiMAX＋5G・WiFiルーターレンタルサービス!">
+                        <img class="pc" src="{{ url('homepage') }}html/user_data/assets/img/common/FV1.png" alt="FreeMax+5G 月額4800円　端末代金・契約期間の無いWiMAX＋5G・WiFiルーターレンタルサービス!">
+                        <a href="../shop/user_data/shop" class="pc btnclass">
+                            <img src="{{ url('homepage') }}user_data/assets/img/common/green_button.png" alt="FreeMax+5G 月額4800円　端末代金・契約期間の無いWiMAX＋5G・WiFiルーターレンタルサービス!">
                         </a>
                         <span class="sp">
-                        <img src="/html/user_data/assets/img/common/FV1_sp.png" alt="FreeMax+5G 月額4800円　端末代金・契約期間の無いWiMAX＋5G・WiFiルーターレンタルサービス!">
-                        <a href="../user_data/shop" class="btn">今すぐお申し込み　▶</a>
+                        <img src="{{ url('homepage') }}html/user_data/assets/img/common/FV1_sp.png" alt="FreeMax+5G 月額4800円　端末代金・契約期間の無いWiMAX＋5G・WiFiルーターレンタルサービス!">
+                        <a href="{{ url('homepage') }}user_data/shop" class="btn">今すぐお申し込み　▶</a>
                     </span>
                 </h1>
 {#                <div class="fix-css">#}
@@ -141,7 +141,7 @@ file that was distributed with this source code.
                 <div class="ctaWrapContent">
                     <div class="ctaWrapContentBoxL" id="about">
                         <div class="ctaWrapContentBoxL__text"><span class="win">\</span> WEBからのお申込み24時間受付中！ /</div>
-                        <a href="../user_data/shop" class="ctaWrapContentBoxL__btn">お申し込みはこちら</a>
+                        <a href="../shop/user_data/shop" class="ctaWrapContentBoxL__btn">お申し込みはこちら</a>
                     </div>
                 </div>
             </section>
@@ -194,7 +194,7 @@ file that was distributed with this source code.
                 <div class="ctaWrapContent">
                     <div class="ctaWrapContentBoxL" id="device">
                         <div class="ctaWrapContentBoxL__text"><span class="win">\</span> WEBからのお申込み24時間受付中！ /</div>
-                        <a href="../user_data/shop" class="ctaWrapContentBoxL__btn">お申し込みはこちら</a>
+                        <a href="../shop/user_data/shop" class="ctaWrapContentBoxL__btn">お申し込みはこちら</a>
                     </div>
                 </div>
             </section>
@@ -250,7 +250,7 @@ file that was distributed with this source code.
                                 <li>充電ポート：USB 3.0 Type-C</li>
                                 <li>バッテリー容量：5,000mAh</li>
                             </ul>
-                            <a href="../user_data/shop" class="topDeviceContentInnerBlock__btn">モバイルルーターを申込む</a>
+                            <a href="../shop/user_data/shop" class="topDeviceContentInnerBlock__btn">モバイルルーターを申込む</a>
                         </div>
                     </div>
                     <div class="topDeviceContentInner">
@@ -289,7 +289,7 @@ file that was distributed with this source code.
                                 <li>電源ポート：専用AC</li>
                                 <li>付属品：専用ACアダプター</li>
                             </ul>
-                            <a href="../user_data/shop#design" class="topDeviceContentInnerBlock__btn">ホームルーターを申込む</a>
+                            <a href="../shop/user_data/shop#design" class="topDeviceContentInnerBlock__btn">ホームルーターを申込む</a>
                         </div>
                     </div>
                 </div>
@@ -319,7 +319,7 @@ file that was distributed with this source code.
                 <div class="ctaWrapContent">
                     <div class="ctaWrapContentBoxL" id="price">
                         <div class="ctaWrapContentBoxL__text"><span class="win">\</span> WEBからのお申込み24時間受付中！ /</div>
-                        <a href="../user_data/shop" class="ctaWrapContentBoxL__btn">お申し込みはこちら</a>
+                        <a href="../shop/user_data/shop" class="ctaWrapContentBoxL__btn">お申し込みはこちら</a>
                     </div>
                 </div>
             </section>
@@ -412,7 +412,7 @@ file that was distributed with this source code.
                 <div class="ctaWrapContent">
                     <div class="ctaWrapContentBoxL" id="flow">
                         <div class="ctaWrapContentBoxL__text"><span class="win">\</span> WEBからのお申込み24時間受付中！ /</div>
-                        <a href="../user_data/shop" class="ctaWrapContentBoxL__btn">お申し込みはこちら</a>
+                        <a href="../shop/user_data/shop" class="ctaWrapContentBoxL__btn">お申し込みはこちら</a>
                     </div>
                 </div>
             </section>
@@ -501,7 +501,7 @@ file that was distributed with this source code.
             <section class="footerCtaWrap">
                 <div class="footerCtaWrapContent">
                     <div class="footerCtaWrapContentBoxL__text"><span class="win">\</span> WEBからのお申込み24時間受付中！ /</div>
-                    <a href="../user_data/shop" class="footerCtaWrapContentBoxL__btn">お申し込みはこちら</a>
+                    <a href="../shop/user_data/shop" class="footerCtaWrapContentBoxL__btn">お申し込みはこちら</a>
                 </div>
             </section>
         </main>

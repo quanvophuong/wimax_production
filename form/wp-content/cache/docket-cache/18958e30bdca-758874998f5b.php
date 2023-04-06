@@ -1,0 +1,37 @@
+<?php 
+return array (
+  'timestamp' => 1679878738,
+  'site_id' => 1,
+  'group' => 'posts',
+  'key' => 314,
+  'type' => 'object',
+  'timeout' => 1681088338,
+  'data' => 
+  (object) array(
+     'ID' => 314,
+     'post_author' => '4',
+     'post_date' => '2023-03-10 11:58:30',
+     'post_date_gmt' => '2023-03-10 02:58:30',
+     'post_content' => '',
+     'post_title' => '3分②',
+     'post_excerpt' => '',
+     'post_status' => 'inherit',
+     'comment_status' => '',
+     'ping_status' => 'closed',
+     'post_password' => '',
+     'post_name' => '3%e5%88%86%e2%91%a1',
+     'to_ping' => '',
+     'pinged' => '',
+     'post_modified' => '2023-03-10 11:58:30',
+     'post_modified_gmt' => '2023-03-10 02:58:30',
+     'post_content_filtered' => '',
+     'post_parent' => 264,
+     'guid' => 'https://free-max.com/form/wp-content/uploads/2023/03/864324f438d11b94ff714c1d3561c3c5.png',
+     'menu_order' => 0,
+     'post_type' => 'attachment',
+     'post_mime_type' => 'image/png',
+     'comment_count' => '0',
+     'filter' => 'raw',
+  ),
+);
+/*@DOCKET_CACHE_EOF*/

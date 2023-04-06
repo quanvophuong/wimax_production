@@ -1,0 +1,50 @@
+/* カスタマイズ用CSS */
+a.pc.btnclass {
+    display: inline-block;
+    line-height: 0;
+    max-width: 450px;
+    position: relative;
+    top: -150px;
+    left: 500px;
+    overflow: hidden;
+    border-radius: 50px;
+}
+
+a.btnclass:after {
+    content: '';
+    position: absolute;
+    top: -10%;
+    left: -20%;
+    width: 40px;
+    height: 100%;
+    -webkit-transform: scale(2) rotate(20deg);
+    transform: scale(2) rotate(20deg);
+    background-image: linear-gradient(100deg, rgba(255, 255, 255, 0) 10%, rgba(255, 255, 255, 0.5) 100%, rgba(255, 255, 255, 0) 0%);
+    -webkit-animation-name: shiny;
+    animation-name: shiny;
+    -webkit-animation-duration: 3s;
+    animation-duration: 3s;
+    -webkit-animation-timing-function: ease-in-out;
+    animation-timing-function: ease-in-out;
+    -webkit-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+}
+
+.ec-borderedDefs .ec-errorMessage {
+    margin-bottom: 25px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #DE5D50;
+}
+
+.ec-borderedDefs>dl {
+    padding: 20px 0px;
+}
+
+.ec-borderedDefs>dl>dt {
+    padding: 0px;
+}
+
+.ec-borderedDefs>dl>dd .form-group {
+    margin: 0px;
+}

@@ -1,0 +1,37 @@
+<?php 
+return array (
+  'timestamp' => 1679878738,
+  'site_id' => 1,
+  'group' => 'posts',
+  'key' => 318,
+  'type' => 'object',
+  'timeout' => 1681088338,
+  'data' => 
+  (object) array(
+     'ID' => 318,
+     'post_author' => '4',
+     'post_date' => '2023-03-10 12:09:34',
+     'post_date_gmt' => '2023-03-10 03:09:34',
+     'post_content' => '',
+     'post_title' => 'アンケートフォーム_バナー',
+     'post_excerpt' => '',
+     'post_status' => 'inherit',
+     'comment_status' => '',
+     'ping_status' => 'closed',
+     'post_password' => '',
+     'post_name' => '%e3%82%a2%e3%83%b3%e3%82%b1%e3%83%bc%e3%83%88%e3%83%95%e3%82%a9%e3%83%bc%e3%83%a0_%e3%83%90%e3%83%8a%e3%83%bc',
+     'to_ping' => '',
+     'pinged' => '',
+     'post_modified' => '2023-03-10 12:09:34',
+     'post_modified_gmt' => '2023-03-10 03:09:34',
+     'post_content_filtered' => '',
+     'post_parent' => 264,
+     'guid' => 'https://free-max.com/form/wp-content/uploads/2023/03/0dfc6bbea7f685aa7ec2841948e7141b.jpg',
+     'menu_order' => 0,
+     'post_type' => 'attachment',
+     'post_mime_type' => 'image/jpeg',
+     'comment_count' => '0',
+     'filter' => 'raw',
+  ),
+);
+/*@DOCKET_CACHE_EOF*/
