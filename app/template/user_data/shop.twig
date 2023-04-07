@@ -129,6 +129,10 @@ file that was distributed with this source code.
 
 {% block javascript %}
 <script>
+    $( document ).ready(function() {
+        $('#usb_value').text('0円');
+        $('#total_value').text('3,300円');
+    });
     //sp total toggle
     $(function () {
     $('.displayBtn').click(function () {
