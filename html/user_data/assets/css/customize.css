@@ -291,3 +291,15 @@ a.btnclass:after {
 #page_plugin_striperec_checkout_page .stripe_payment_gateway_payment_btn {
     background: #ff9800 !important;
 }
+
+.custom-price {
+    text-align: right !important;
+    padding-right: 20px;
+}
+
+@media screen and (max-width: 768px) {
+    .custom-price {
+        text-align: right !important;
+        padding-right: 40px;
+    }
+}
