@@ -136,8 +136,13 @@
                             <input type="hidden" name="praaddress"
                                    value="{{ Order.Customer.addr01 }} {{ Order.Customer.addr02 }}">
                             <input type="hidden" name="praordernumber" value="{{ Order.orderNo }}">
+                            {% for OrderItem in Order.MergedProductOrderItems %}
+                                {% if OrderItem.product and OrderItem.ship %}
+                                    <input type="hidden" name="prapreferreddate" value="{{ OrderItem.ship }}">
+                                {% endif %}
+                            {% endfor %}
 
-                            <div class="ec-registerRole__actions" style="padding: 20px 40px;">
+                            <div class="ec-registerRole__actions" style="padding: 20px 60px;">
                                 <div class="ec-off4Grid">
                                     <div class="ec-off4Grid__cell">
                                         <button class="ec-blockBtn--action" type="submit">オプション申し込みへ</button>
