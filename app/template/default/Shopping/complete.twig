@@ -136,6 +136,7 @@
                             <input type="hidden" name="praaddress"
                                    value="{{ Order.Customer.addr01 }} {{ Order.Customer.addr02 }}">
                             <input type="hidden" name="praordernumber" value="{{ Order.orderNo }}">
+                            // fix
                             {% for OrderItem in Order.MergedProductOrderItems %}
                                 {% if OrderItem.product and OrderItem.ship %}
                                     <input type="hidden" name="prapreferreddate" value="{{ OrderItem.ship }}">
