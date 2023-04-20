@@ -236,13 +236,13 @@ file that was distributed with this source code.
     var classcategory_id1 = parseInt($('input[name=option]:checked').val());
     var classcategory_id2 = parseInt($('input[name=usb]:checked').val());
     var ship = parseInt($('input[name=send]:checked').val());
-    // var url_flg = parseInt($('input[name=temp_url_flg]:checked').val());
+    var url_flg = parseInt($('input[name=temp_url_flg]:checked').val());
 
     $('#product_id').val(product_id);
 
     $('#ship').val(ship);
 
-    // $('#url_flg').val(url_flg);
+    $('#url_flg').val(url_flg);
 
     if(classcategory_id1 == 550){
     classcategory_id1 = 7;
@@ -509,38 +509,38 @@ file that was distributed with this source code.
                         </ul>
                     </div>
                 </form>
-{#                <div class="ec-borderedDefs">#}
-{#                    <dl>#}
-{#                        <dt style="display:flex;align-items: center;font-weight: bold;">#}
-{#                            <div>キャッシュバック<br>キャンペーン</div>#}
-{#                            <span class="ec-required">必須</span>#}
-{#                        </dt>#}
-{#                        <dd>#}
-{#                            <div class="form-group form-inline">#}
-{#                                <div class="ec-radio">#}
-{#                                    <div id="entry_url_flg">#}
-{#                                        <input type="radio" id="entry_url_flg_0"#}
-{#                                               name="temp_url_flg" required="required"#}
-{#                                               value="1" checked>#}
-{#                                        <label for="entry_url_flg_0">#}
-{#                                            <span>申し込む</span>#}
-{#                                        </label>#}
-{#                                        <input type="radio" id="entry_url_flg_1" name="temp_url_flg"#}
-{#                                               required="required" value="0">#}
-{#                                        <label for="entry_url_flg_1">#}
-{#                                            <span>申し込まない</span>#}
-{#                                        </label>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </dd>#}
-{#                    </dl>#}
-{#                </div>#}
+                <div class="ec-borderedDefs">
+                    <dl>
+                        <dt style="display:flex;align-items: center;font-weight: bold;">
+                            <div>キャッシュバック<br>キャンペーン</div>
+                            <span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <div class="form-group form-inline">
+                                <div class="ec-radio">
+                                    <div id="entry_url_flg">
+                                        <input type="radio" id="entry_url_flg_0"
+                                               name="temp_url_flg" required="required"
+                                               value="1" checked>
+                                        <label for="entry_url_flg_0">
+                                            <span>申し込む</span>
+                                        </label>
+                                        <input type="radio" id="entry_url_flg_1" name="temp_url_flg"
+                                               required="required" value="0">
+                                        <label for="entry_url_flg_1">
+                                            <span>申し込まない</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </dd>
+                    </dl>
+                </div>
                 <form id="productForm" name="form" method="post">
                     <input type="hidden" id="classcategory_id1" name="classcategory_id1" value="9">
                     <input type="hidden" id="classcategory_id2" name="classcategory_id2" value="11">
                     <input type="hidden" id="product_id" name="product_id" value="3">
-{#                    <input type="hidden" id="url_flg" name="url_flg" value="1">#}
+                    <input type="hidden" id="url_flg" name="url_flg" value="1">
                     <input type="hidden" id="ProductClass" name="ProductClass" value="14">
                     <input type="hidden" id="quantity" name="quantity" value="1">
                     <input type="hidden" id="ship" name="ship" value="1">

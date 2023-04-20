@@ -42,8 +42,8 @@ class WithrawController extends AbstractController
      */
     public function productAddCart(Request $request, Product $product): Response
     {
-//        $session = $request->getSession();
-//        $session->set('url_flg',$request->get('url_flg'));
+        $session = $request->getSession();
+        $session->set('url_flg',$request->get('url_flg'));
 
         if (! $this->isAvailableProduct($product)) {
             throw new NotFoundHttpException();
