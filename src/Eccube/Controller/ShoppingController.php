@@ -559,7 +559,7 @@ class ShoppingController extends AbstractShoppingController
         // 受注IDを取得
         $orderId = $this->session->get(OrderHelper::SESSION_ORDER_ID);
 
-//        $url_flg = $request->getSession()->get('url_flg');
+        $url_flg = $request->getSession()->get('url_flg');
 
         if (empty($orderId)) {
             log_info('[注文完了] 受注IDを取得できないため, トップページへ遷移します.');
@@ -590,8 +590,8 @@ class ShoppingController extends AbstractShoppingController
 
         return [
             'Order' => $Order,
-            'hasNextCart' => $hasNextCart
-//            'url_flg' => $url_flg
+            'hasNextCart' => $hasNextCart,
+            'url_flg' => $url_flg
         ];
     }
 
