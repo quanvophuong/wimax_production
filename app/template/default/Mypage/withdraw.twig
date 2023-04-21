@@ -88,21 +88,12 @@ file that was distributed with this source code.
             text-align: center;
             font-weight: bold;
         }
-        .custom-maintenance{
-            color: red;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        .custom-maintenance span{
-            color: blue;
-        }
     </style>
     <div id="wrap">
         <main id="mypage">
             <section class="mypageContent">
                 <h2>{{ 'マイページ'|trans }}/{{ '解約手続'|trans }}</h2>
                 <div class="mypageContent__name">{{ 'ようこそ%last_name% %first_name%さん'|trans({ '%last_name%': app.user.name01, '%first_name%': app.user.name02 }) }}</div>
-                <p class="custom-maintenance">現在サイトメンテナンスのため、解約手続に遷移できなくなっております。<br>解約手続きをご希望される場合は<span>support@free-max.com</span>にお問い合わせください、順次対応させていただきます。</p>
                 {% include 'Mypage/navi.twig' %}
                 <div class="mypageContentBox">
                     {% if pagination.totalItemCount > 0 %}
