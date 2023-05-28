@@ -24,6 +24,7 @@ use Eccube\Form\Type\Front\ShoppingShippingType;
 use Eccube\Form\Type\Shopping\CustomerAddressType;
 use Eccube\Form\Type\Shopping\OrderType;
 use Eccube\Repository\OrderRepository;
+use Eccube\Repository\CalendarRepository;
 use Eccube\Service\CartService;
 use Eccube\Service\MailService;
 use Eccube\Service\OrderHelper;
@@ -70,6 +71,8 @@ class ShoppingController extends AbstractShoppingController
     private $couponOrderRepository;
     private $couponService;
 
+    protected $calendarRepository;
+
     public function __construct(
         CartService $cartService,
         MailService $mailService,
@@ -77,7 +80,8 @@ class ShoppingController extends AbstractShoppingController
         OrderHelper $orderHelper,
         CouponRepository $couponRepository,
         CouponOrderRepository $couponOrderRepository,
-        CouponService $couponService
+        CouponService $couponService,
+        CalendarRepository $calendarRepository
     ) {
         $this->cartService = $cartService;
         $this->mailService = $mailService;
@@ -86,6 +90,7 @@ class ShoppingController extends AbstractShoppingController
         $this->couponRepository = $couponRepository;
         $this->couponOrderRepository = $couponOrderRepository;
         $this->couponService = $couponService;
+        $this->calendarRepository = $calendarRepository;
     }
 
     /**
@@ -588,10 +593,28 @@ class ShoppingController extends AbstractShoppingController
 
         log_info('[注文完了] 注文完了画面を表示しました. ', [$hasNextCart]);
 
+        $next_month = new \DateTime(date('Y-m-01'));
+        date_add($next_month, new \DateInterval('P1M'));
+        $next_month_day = $next_month->format('Y-m-01');
+        $next_date = new \DateTime($next_month_day);
+
+        $current_month = new \DateTime('now');
+        if($current_month->format('H') > 13) date_add($current_month, new \DateInterval('P1D'));
+        $current_month_day = $current_month->format('Y-m-d');
+        $current_date = new \DateTime($current_month_day);
+        $currnet_conf_date = $this->getAvailableDate($current_date);
+        $next_conf_date = $this->getAvailableDate($next_date);
+
+        $currnet_last_date = clone $currnet_conf_date;
+
+        date_add($currnet_last_date, new \DateInterval('P1D'));
+        $is_use_current = date('n') == $currnet_last_date->format('n');
+
         return [
             'Order' => $Order,
             'hasNextCart' => $hasNextCart,
-            'url_flg' => $url_flg
+            'url_flg' => $url_flg,
+            'is_use_current_month' => $is_use_current,
         ];
     }
 
@@ -915,5 +938,21 @@ class ShoppingController extends AbstractShoppingController
         }
 
         return null;
+    }
+
+    function getAvailableDate($date){
+        while(1){
+            $weeknum = $date->format('N');
+            if ($weeknum < 6){
+                $Calendar = $this->calendarRepository->findOneBy(array('holiday' => $date));
+                $date->setTimezone(new \DateTimeZone('Asia/Tokyo'));
+                if (empty($Calendar)){
+                    return $date;
+                    break;
+                }
+            }
+            date_add($date, new \DateInterval('P1D'));
+        }
+
     }
 }

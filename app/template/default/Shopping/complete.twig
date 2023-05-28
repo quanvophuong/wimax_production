@@ -112,7 +112,13 @@
                     {% endfor %}
                     円税込<br>
                     {% set next_date_temp = "now" | date ( "Y-m-01") %}
+                    {% if(is_use_current_month) %}
                     　　　　　・次回課金日：{{ next_date_temp|date_modify("+#{1} months")|date("Y年m月1日") }}<br>
+
+                    {% else %}
+                            ・次回課金日：{{ next_date_temp|date_modify("+#{2} months")|date("Y年m月1日") }}<br>
+                    {% endif %}
+                    
                     　　　　　・課金間隔：毎月1日<br>
                 </div>
                 {% if(url_flg == "1") %}

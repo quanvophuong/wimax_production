@@ -115,6 +115,7 @@ class StripeService{
         $stripe_prod_id = $prod->getStripeProdId();
         $unit_amount=$this->getAmountToSentInStripe($unit_amount,$currency);
 
+        log_info("StripeService---registar---".$unit_amount);
         $stripe_price = StPrice::create([
             'unit_amount'   =>  $unit_amount,
             'currency'      =>  $currency,

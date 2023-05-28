@@ -21,6 +21,7 @@ use Eccube\Entity\Order;
 use Eccube\Entity\Customer;
 use Eccube\Form\Type\Shopping\OrderType;
 use Eccube\Repository\OrderRepository;
+use Eccube\Repository\CalendarRepository;
 use Eccube\Service\PurchaseFlow\PurchaseContext;
 use Eccube\Service\PurchaseFlow\PurchaseFlow;
 use Eccube\Common\EccubeConfig;
@@ -53,6 +54,7 @@ class ShoppingExController extends ShoppingController
     private $couponRepository;
     private $couponOrderRepository;
     private $couponService;
+    protected $calendarRepository;
 
     public function __construct(
         ContainerInterface $container,
@@ -64,7 +66,8 @@ class ShoppingExController extends ShoppingController
         EccubeConfig $eccubeConfig,
         CouponRepository $couponRepository,
         CouponOrderRepository $couponOrderRepository,
-        CouponService $couponService
+        CouponService $couponService,
+        CalendarRepository $calendarRepository
     ) {
         parent::__construct(
             $cartService,
@@ -73,7 +76,8 @@ class ShoppingExController extends ShoppingController
             $orderHelper,
             $couponRepository,
             $couponOrderRepository,
-            $couponService
+            $couponService,
+            $calendarRepository
         );
         $this->container = $container;
         $this->em = $container->get('doctrine.orm.entity_manager');
@@ -82,6 +86,7 @@ class ShoppingExController extends ShoppingController
         $this->session = $session;
         $this->stripeCustomerRepository = $this->em->getRepository(StripeCustomer::class);
         $this->eccubeConfig = $eccubeConfig;
+        $this->calendarRepository = $calendarRepository;
     }
 
 

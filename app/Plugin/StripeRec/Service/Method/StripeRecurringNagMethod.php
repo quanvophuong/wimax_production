@@ -57,6 +57,7 @@ use Plugin\StripeRec\Entity\StripeRecOrderItem;
 use Plugin\StripeRec\Service\ConfigService;
 use Eccube\Repository\ProductClassRepository;
 use Plugin\Coupon4\Entity\CouponOrder;
+use Eccube\Repository\CalendarRepository;
 
 
 /**
@@ -133,6 +134,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
     protected $dispatcher;
 
     protected $productClassRepository;
+    protected $calendarRepository;
 
     const LOG_IF = "StripeRecurringNagMethod--stripeRecurringNagMethod---";
 
@@ -161,7 +163,8 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         ContainerInterface $containerInterface,
         PurchaseFlow $shoppingPurchaseFlow,
         SessionInterface $session,
-        ProductClassRepository $productClassRepository
+        ProductClassRepository $productClassRepository,
+        CalendarRepository $calendarRepository
     ) {
         $this->eccubeConfig=$eccubeConfig;
         $this->entityManager = $entityManager;
@@ -176,6 +179,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
 
         $this->productClassRepository = $productClassRepository;
         $this->dispatcher = $this->container->get('event_dispatcher');
+        $this->calendarRepository = $calendarRepository;
     }
 
     /**
@@ -262,6 +266,29 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         if($bundle_include_arr){
             $bundle_include_arr = $bundle_include_arr;
             $this->session->set('bundle_include_arr', null);
+        }
+
+        $next_month = new \DateTime(date('Y-m-01'));
+        date_add($next_month, new \DateInterval('P1M'));
+        $next_month_day = $next_month->format('Y-m-01');
+        $next_date = new \DateTime($next_month_day);
+
+        $current_month = new \DateTime('now');
+        if($current_month->format('H') > 13) date_add($current_month, new \DateInterval('P1D'));
+        $current_month_day = $current_month->format('Y-m-d');
+        $current_date = new \DateTime($current_month_day);
+        $currnet_conf_date = $this->getAvailableDate($current_date);
+        $next_conf_date = $this->getAvailableDate($next_date);
+
+        $currnet_last_date = clone $currnet_conf_date;
+
+        date_add($currnet_last_date, new \DateInterval('P1D'));
+        $is_use_current = date('n') == $currnet_last_date->format('n');
+
+        if(!$is_use_current){
+            // 次の次の月にする
+            // date_add($next_month, new \DateInterval('P1M'));
+            // $purchase_point = $next_month->format('Y-m-01');
         }
 
         log_info(self::LOG_IF . "---purchase_point : ". $purchase_point);
@@ -461,10 +488,10 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                 ],
             ];
         }
-
+        log_info("StripeRecurring---start_date---".$purchase_point);
         $schedule_params = $this->paydayOptionProcess([
             'customer'      =>  $customer_id,
-            'start_date'    =>  $purchase_point,
+            'start_date'    => $purchase_point,
             'end_behavior' =>  'release',
             'phases'        =>  $phases,
         ], $initial_price, $order_items[0]->getProduct()->getStripeProdId(), $interval,strtolower($this->Order->getCurrencyCode()));
@@ -1271,5 +1298,21 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             return (int)($amount*100);
         }
         return (int)$amount;
+    }
+
+    function getAvailableDate($date){
+        while(1){
+            $weeknum = $date->format('N');
+            if ($weeknum < 6){
+                $Calendar = $this->calendarRepository->findOneBy(array('holiday' => $date));
+                $date->setTimezone(new \DateTimeZone('Asia/Tokyo'));
+                if (empty($Calendar)){
+                    return $date;
+                    break;
+                }
+            }
+            date_add($date, new \DateInterval('P1D'));
+        }
+
     }
 }
