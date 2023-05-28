@@ -285,12 +285,6 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         date_add($currnet_last_date, new \DateInterval('P1D'));
         $is_use_current = date('n') == $currnet_last_date->format('n');
 
-        if(!$is_use_current){
-            // 次の次の月にする
-            // date_add($next_month, new \DateInterval('P1M'));
-            // $purchase_point = $next_month->format('Y-m-01');
-        }
-
         log_info(self::LOG_IF . "---purchase_point : ". $purchase_point);
         $StripeConfig = $this->stripeConfigRepository->getConfigByOrder($this->Order);
         // $stripeClient = new StripeClient($StripeConfig->secret_key);
@@ -489,12 +483,25 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             ];
         }
         log_info("StripeRecurring---start_date---".$purchase_point);
-        $schedule_params = $this->paydayOptionProcess([
-            'customer'      =>  $customer_id,
-            'start_date'    => $purchase_point,
-            'end_behavior' =>  'release',
-            'phases'        =>  $phases,
-        ], $initial_price, $order_items[0]->getProduct()->getStripeProdId(), $interval,strtolower($this->Order->getCurrencyCode()));
+
+        if($is_use_current){
+            // 通常設定
+	        $schedule_params = $this->paydayOptionProcess([
+	            'customer'      =>  $customer_id,
+	            'start_date'    => $purchase_point,
+	            'end_behavior' =>  'release',
+	            'phases'        =>  $phases,
+	        ], $initial_price, $order_items[0]->getProduct()->getStripeProdId(), $interval,strtolower($this->Order->getCurrencyCode()));
+        }else{
+			// インターバル設定
+	        $schedule_params = $this->paydayOptionProcess([
+	            'customer'      =>  $customer_id,
+	            'trial_end'    => $next_month->format('Y-m-t')->getTimestamp(),
+	            'end_behavior' =>  'release',
+	            'phases'        =>  $phases,
+	        ], $initial_price, $order_items[0]->getProduct()->getStripeProdId(), $interval,strtolower($this->Order->getCurrencyCode()));
+		
+		}
         if($coupon_enable){
             $coupon_id = $_REQUEST['coupon_id'];
             if(!empty($coupon_id)){
