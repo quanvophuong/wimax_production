@@ -184,9 +184,29 @@ class ShoppingController extends AbstractShoppingController
         if ($CouponOrder){
             $form->get('coupon_cd')->setData($CouponOrder->getCouponCd());
         }
+
+        // 課金日検証
+        $next_month = new \DateTime(date('Y-m-01'));
+        date_add($next_month, new \DateInterval('P1M'));
+        $next_month_day = $next_month->format('Y-m-01');
+        $next_date = new \DateTime($next_month_day);
+
+        $current_month = new \DateTime('now');
+        if($current_month->format('H') > 13) date_add($current_month, new \DateInterval('P1D'));
+        $current_month_day = $current_month->format('Y-m-d');
+        $current_date = new \DateTime($current_month_day);
+        $currnet_conf_date = $this->getAvailableDate($current_date);
+        $next_conf_date = $this->getAvailableDate($next_date);
+
+        $currnet_last_date = clone $currnet_conf_date;
+
+        date_add($currnet_last_date, new \DateInterval('P1D'));
+        $is_use_current = date('n') == $currnet_last_date->format('n');
+
         return [
             'form' => $form->createView(),
             'Order' => $Order,
+            'is_use_current_month' => $is_use_current
         ];
     }
 

@@ -494,9 +494,23 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
 	        ], $initial_price, $order_items[0]->getProduct()->getStripeProdId(), $interval,strtolower($this->Order->getCurrencyCode()));
         }else{
 			// インターバル設定
+            
+            $next_month = new \DateTime(date('Y-m-01'));
+            date_add($next_month, new \DateInterval('P1M'));
+            
+            $next_end = new \DateTime($next_month->format('Y-m-t'));
+            
+            $next_next_month = new \DateTime(date('Y-m-01'));
+            date_add($next_next_month, new \DateInterval('P2M'));
+            $next_next_end = new \DateTime($next_next_month->format('Y-m-t'));
+            $phases[0]['trial_end'] =  $next_end->format('U');
+            $phases[1]['trial_end'] =  $next_next_end->format('U');
+            
+            log_info("StripeRecurringNagMethod---interval---trial_end: " . $next_end->format('Y-m-d') . " start_date: " . $next_month->format('Y-m-d'));
+
 	        $schedule_params = $this->paydayOptionProcess([
 	            'customer'      =>  $customer_id,
-	            'trial_end'    => $next_month->format('Y-m-t')->getTimestamp(),
+	            'start_date'    => $next_month->format('U'),
 	            'end_behavior' =>  'release',
 	            'phases'        =>  $phases,
 	        ], $initial_price, $order_items[0]->getProduct()->getStripeProdId(), $interval,strtolower($this->Order->getCurrencyCode()));
@@ -533,6 +547,12 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             ];
             if(!empty($coupon_id)){
                 $subscription_data['coupon'] = $coupon_id;
+            }
+            log_info("StripeRecurringNagMethod---interval---trial_end: " );
+            
+            if(!$is_use_current){
+                $next_end = new \DateTime($next_month->format('Y-m-t'));
+                $subscription_data['trial_end'] =  $next_end->format('U');
             }
             $subscription = Subscription::create($subscription_data);
             $stripeOrder = $this->entityManager->getRepository(StripeRecOrder::class)->findOneBy([
@@ -1031,7 +1051,6 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
 
         $payday_options = $config_service->getPaymentDateOptions();
 
-
         $option_1 = $payday_options[ConfigService::PAYDAY_OPTION_1];
         $option_2 = $payday_options[ConfigService::PAYDAY_OPTION_2];
         $payment_date = $payday_options[ConfigService::PAYMENT_DATE];
@@ -1047,7 +1066,6 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         }
         $next_payday = new \DateTime();
         $next_payday->setTimestamp($start_time->getTimestamp());
-
         if($interval == "week" || $interval == "year" ){
             if(!$option_1){
                 return $schedule_params;
@@ -1162,6 +1180,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                     }
                 }
             }else{
+                log_info(__METHOD__ . ' F-point' . print_r($schedule_params, true));
                 return $schedule_params;
             }
 
@@ -1193,6 +1212,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         $phases[1]['billing_cycle_anchor'] = "phase_start";
         $schedule_params['phases'] = $phases;
         //dump($schedule_params);die();
+                    log_info(__METHOD__ . ' G-point');
         return $schedule_params;
     }
 
