@@ -1213,7 +1213,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         $phases[1]['billing_cycle_anchor'] = "phase_start";
         $schedule_params['phases'] = $phases;
         //dump($schedule_params);die();
-                    log_info(__METHOD__ . ' G-point');
+                    log_info(__METHOD__ . ' G-point' . print_r($schedule_params, true));
         return $schedule_params;
     }
 
