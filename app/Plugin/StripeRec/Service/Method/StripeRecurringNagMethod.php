@@ -504,21 +504,19 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             date_add($next_next_month, new \DateInterval('P2M'));
             $next_next_end = new \DateTime($next_next_month->format('Y-m-t'));
             
-            $schedule_params['phases'][0]['trial_end'] =  $next_end->format('U');
-            $schedule_params['phases'][1]['trial_end'] =  $next_next_end->format('U');
+            // $schedule_params['phases'][0]['trial_end'] =  $next_end->format('U');
             
             log_info("StripeRecurringNagMethod---interval---trial_end:next_end " . $next_end->format('Y-m-d'));
             log_info("StripeRecurringNagMethod---interval---trial_end:next_next_end " . $next_next_end->format('Y-m-d'));
-
+            
 	        $schedule_params = $this->paydayOptionProcess([
-	            'customer'      =>  $customer_id,
-	            'start_date'    => $next_month->format('U'),
+                'customer'      =>  $customer_id,
+	            'start_date'    => $purchase_point,
 	            'end_behavior' =>  'release',
 	            'phases'        =>  $phases,
 	        ], $initial_price, $order_items[0]->getProduct()->getStripeProdId(), $interval,strtolower($this->Order->getCurrencyCode()));
-            if(array_key_exists(2,$schedule_params['phases'])){
-                $schedule_params['phases'] = array_splice($schedule_params['phases'], 1);
-            }
+            
+            $schedule_params['phases'][1]['trial_end'] =  $next_end->format('U');
 		
 		}
         if($coupon_enable){
