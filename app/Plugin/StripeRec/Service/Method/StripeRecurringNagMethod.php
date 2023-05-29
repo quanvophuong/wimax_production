@@ -516,10 +516,10 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
 	            'phases'        =>  $phases,
 	        ], $initial_price, $order_items[0]->getProduct()->getStripeProdId(), $interval,strtolower($this->Order->getCurrencyCode()));
             
-            if(array_key_exists('billing_cycle_anchor', $schedule_params['phases'][0])){
-                unset( $schedule_params['phases'][0]['billing_cycle_anchor']);
+            if(array_key_exists('billing_cycle_anchor', $schedule_params['phases'][1])){
+                unset( $schedule_params['phases'][1]['billing_cycle_anchor']);
             }
-            $schedule_params['phases'][0]['trial_end'] =  $next_end->format('U');
+            $schedule_params['phases'][1]['trial_end'] =  $next_end->format('U');
             log_info("StripeRecurringNagMethod---interval---trial_end:schedule_params " . print_r($schedule_params, true));
 		
 		}
@@ -1219,7 +1219,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         $phases[1]['billing_cycle_anchor'] = "phase_start";
         $schedule_params['phases'] = $phases;
         //dump($schedule_params);die();
-                    log_info(__METHOD__ . ' G-point');
+                    log_info(__METHOD__ . ' G-point' . print_r($schedule_params, true));
         return $schedule_params;
     }
 
