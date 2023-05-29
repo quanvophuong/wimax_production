@@ -506,7 +506,8 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $phases[0]['trial_end'] =  $next_end->format('U');
             $phases[1]['trial_end'] =  $next_next_end->format('U');
             
-            log_info("StripeRecurringNagMethod---interval---trial_end: " . $next_end->format('Y-m-d') . " start_date: " . $next_month->format('Y-m-d'));
+            log_info("StripeRecurringNagMethod---interval---trial_end:next_end " . $next_end->format('Y-m-d'));
+            log_info("StripeRecurringNagMethod---interval---trial_end:next_next_end " . $next_next_end->format('Y-m-d'));
 
 	        $schedule_params = $this->paydayOptionProcess([
 	            'customer'      =>  $customer_id,
