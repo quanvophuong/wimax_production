@@ -139,4 +139,16 @@ class StripeRecOrderRepository extends AbstractRepository{
         return $query->execute();
     }
     
+    public function findRecOrderByCustomerAndOrderId($customer, $orderId)
+    {
+        return $this->createQueryBuilder("ro")
+            ->where("ro.Customer = :customer")
+            ->setParameter("customer", $customer)
+            ->andWhere("ro.Order = :orderId")
+            ->setParameter("orderId", $orderId)
+            ->orderBy("ro.create_date", "DESC")
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+    }
 }

@@ -13,6 +13,7 @@
 
 namespace Eccube\Controller\Mypage;
 
+use Carbon\Carbon;
 use Eccube\Controller\AbstractController;
 use Eccube\Entity\BaseInfo;
 use Eccube\Entity\Customer;
@@ -36,6 +37,9 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Plugin\StripeRec\Repository\StripeRecOrderRepository;
+use Stripe\Subscription;
+use Stripe\Invoice;
 
 class MypageController extends AbstractController
 {
@@ -70,6 +74,11 @@ class MypageController extends AbstractController
     protected $purchaseFlow;
 
     /**
+     * @var StripeRecOrderRepository
+     */    
+    protected $stripeRecOrderRepository;
+
+    /**
      * MypageController constructor.
      *
      * @param OrderRepository $orderRepository
@@ -77,19 +86,22 @@ class MypageController extends AbstractController
      * @param CartService $cartService
      * @param BaseInfoRepository $baseInfoRepository
      * @param PurchaseFlow $purchaseFlow
+     * @param StripeRecOrderRepository $stripeRecOrderRepository
      */
     public function __construct(
         OrderRepository $orderRepository,
         CustomerFavoriteProductRepository $customerFavoriteProductRepository,
         CartService $cartService,
         BaseInfoRepository $baseInfoRepository,
-        PurchaseFlow $purchaseFlow
+        PurchaseFlow $purchaseFlow,
+        StripeRecOrderRepository $stripeRecOrderRepository
     ) {
         $this->orderRepository = $orderRepository;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
         $this->BaseInfo = $baseInfoRepository->get();
         $this->cartService = $cartService;
         $this->purchaseFlow = $purchaseFlow;
+        $this->stripeRecOrderRepository = $stripeRecOrderRepository;
     }
 
     /**
@@ -378,5 +390,42 @@ class MypageController extends AbstractController
         log_info('お気に入り商品削除完了', [$Customer->getId(), $CustomerFavoriteProduct->getId()]);
 
         return $this->redirect($this->generateUrl('mypage_favorite'));
+    }
+
+    /**
+     * my_page_download_pdf_receipt
+     * @Route("/mypage/download-pdf/{id}/receipt", name="my_page_download_pdf_receipt")     
+     */
+    public function downloadPdfReceipt(Request $request, $id = null)
+    {
+        try {
+            $Customer = $this->getUser();
+
+            $recOrder = $this->stripeRecOrderRepository->findRecOrderByCustomerAndOrderId($Customer->getId(), $id);
+
+            if (!empty($recOrder)) {
+                $recOrder = $recOrder[0];
+            }
+
+            if ($recOrder->getSubscriptionId()) {
+                $subscription = Subscription::retrieve($recOrder->getSubscriptionId());
+            
+                $latestInvoice = $subscription->latest_invoice;
+        
+                $invoice = Invoice::retrieve($latestInvoice);
+        
+                $url = $invoice->invoice_pdf;
+
+                if ($url) {
+                    return $this->redirect($url);
+                } else {
+                    return $this->redirect($this->generateUrl('mypage'));
+                }
+            } else {
+                return $this->redirect($this->generateUrl('mypage'));
+            }
+        } catch (\Exception $e) {
+            return $this->redirect($this->generateUrl('mypage'));
+        }
     }
 }

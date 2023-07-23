@@ -73,6 +73,21 @@ file that was distributed with this source code.
                 },
             });
 
+            $('input.datetimepicker-input-temp').datetimepicker({
+                locale: '{{ eccube_config.locale }}',
+                format: 'YYYY-MM-DD 23:59:59',
+                useCurrent: false,
+                buttons: {
+                    showToday: true,
+                    showClose: true
+                },
+            });
+
+            // datetimepicker で value が消えてしまうので更新
+            $('input.datetimepicker-inpu-tempt').each(function() {
+                $(this).val($(this).data('value'));
+            });
+
             // datetimepicker で value が消えてしまうので更新
             $('input.datetimepicker-input').each(function() {
                 $(this).val($(this).data('value'));
