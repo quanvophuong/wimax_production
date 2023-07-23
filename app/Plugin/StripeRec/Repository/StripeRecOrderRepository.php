@@ -8,6 +8,7 @@ use Plugin\StripeRec\Repository\StripeRecOrderItemRepository;
 use Plugin\StripeRec\Entity\StripeRecOrder;
 use Doctrine\Common\Collections\ArrayCollection;
 use Eccube\Util\StringUtil;
+use Carbon\Carbon;
 
 class StripeRecOrderRepository extends AbstractRepository{
     
@@ -71,6 +72,16 @@ class StripeRecOrderRepository extends AbstractRepository{
                 ->andWhere($qb->expr()->in('ro.rec_status', ':rec_status'))
                 ->setParameter('rec_status', $search_data['rec_status']);
         }
+
+        if (isset($search_data['is_pause_subscriptions']) && StringUtil::isNotBlank($search_data['is_pause_subscriptions'])) {
+            $qb
+            ->andWhere('ro.is_pause_subscriptions = true')
+            ->andWhere('ro.rec_status not like :not_canceled')
+            ->setParameter('not_canceled', '%' . StripeRecOrder::REC_STATUS_CANCELED . '%')
+            ->andWhere('ro.date_pause_subscriptions <= :date_check')
+            ->setParameter('date_check', $search_data['dateCheck']);
+        }
+    
         $qb->orderBy('ro.rec_status', 'ASC');
         return $qb->addorderBy('ro.id', 'DESC');
 

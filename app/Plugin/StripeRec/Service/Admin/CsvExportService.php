@@ -31,10 +31,9 @@ class CsvExportService extends ParentService {
         $viewData = $session->get('plugin.striperec.order.search', []);
         $searchData = FormUtil::submitAndGetData($searchForm, $viewData);
 
-        $rec_order_repo = $this->entityManager->getRepository(StripeRecOrder::class);
+        // $rec_order_repo = $this->entityManager->getRepository(StripeRecOrder::class);
         // 受注データのクエリビルダを構築.
-        $qb = $rec_order_repo
-            ->getQueryBuilderBySearchDataForAdmin($searchData);
+        $qb = $this->stripeRecOrderRepository->getQueryBuilderBySearchDataForAdmin($searchData);
         return $qb;
     }
     public function exportHeader()
@@ -62,7 +61,7 @@ class CsvExportService extends ParentService {
                     $row[] = $field_data->getValue();
                     break;
                 case "field":
-                    $Shipping = $OrderItem->getShipping();
+                    // $Shipping = $OrderItem->getShipping();
                     $method_string = $field_data->getField();
                     
                     $entity = $field_data->getEntity();

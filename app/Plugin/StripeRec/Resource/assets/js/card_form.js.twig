@@ -100,7 +100,8 @@ $('.pay-button').on('click', function(e) {
                 'holder' : $('#cardName').val(),
                 'exp_month' : $('#cardMonth').val(),
                 'exp_year' : $('#cardYear').val(),
-                'cvc' : $('#cardCvv').val()
+                'cvc' : $('#cardCvv').val(),
+                'name': $('#cardName').val(),
             },
             url: '{{ url("plugin_striperec_payment_create") }}',
             success: function(data){
