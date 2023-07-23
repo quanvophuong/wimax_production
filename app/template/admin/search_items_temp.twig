@@ -1,0 +1,51 @@
+{#
+This file is part of EC-CUBE
+
+Copyright(c) EC-CUBE CO.,LTD. All Rights Reserved.
+
+http://www.ec-cube.co.jp/
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+#}
+
+{% set keyCheckEndDate = ['order_datetime_end', 'payment_datetime_end', 'update_datetime_end', 'shipping_delivery_datetime_end', 'order_date_end', 'payment_date_end', 'update_date_end', 'shipping_delivery_date_end'] %}
+{% set screenCheckEndDate = 'admin_search_order' %}
+<ul class="list-inline">
+    {% for child in form.children if child.vars.name != '_token' and child.vars.data is not empty %}
+        {% if false == (child.vars.label == 'admin.list.sort.key' or child.vars.label == 'admin.list.sort.type') %}{# ソートの選択結果は表示しない #}
+        <li class="list-inline-item"><span class="font-weight-bold">{{ child.vars.label|trans }}:&nbsp;</span>
+            {%- if child.vars.data is iterable -%}
+                {%- for value in child.vars.value -%}
+                    {# ChoiceType -> multiple:true #}
+                    {%- for choice in child.vars.choices -%}
+                        {%- if choice is selectedchoice(value) -%}
+                            {{ choice.label|trans }}
+                        {%- endif %}
+                    {%- endfor -%}
+                    {{ not loop.last ? ',&nbsp;' }}
+                {%- endfor -%}
+            {%- elseif (child.vars.name in keyCheckEndDate) and (form.vars.id == screenCheckEndDate) -%}
+                {{ child.vars.data|date_day }} 23:59:59
+            {%- elseif php_is_a(child.vars.data, '\DateTime') -%}
+                {%- if 'datetime' in child.vars.id %}
+                    {{ child.vars.data|date_sec }}
+                {% else %}
+                    {{ child.vars.data|date_day }}
+                {% endif %}
+            {%- else -%}
+                {# ChoiceType -> multiple:false #}
+                {%- if child.vars.choices is defined and child.vars.choices is not empty -%}
+                    {%- for choice in child.vars.choices -%}
+                        {%- if choice is selectedchoice(child.vars.value) -%}
+                            {{ choice.label|trans }}
+                        {%- endif %}
+                    {%- endfor -%}
+                {%- else -%}
+                    {{ child.vars.data }}
+                {%- endif-%}
+            {%- endif -%}
+        </li>
+        {% endif %}
+    {% endfor %}
+</ul>

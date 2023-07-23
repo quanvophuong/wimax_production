@@ -42,6 +42,8 @@ use Plugin\StripeRec\Entity\RecCsv;
 use Plugin\StripeRec\Form\Type\Admin\RecCsvType;
 use Plugin\StripeRec\Form\Type\Admin\RecOrderType;
 use Plugin\StripeRec\StripeRecEvent;
+use Customize\Repository\OrderRepository;
+use Stripe\Subscription;
 
 class StripeRecOrderController extends AbstractController
 {
@@ -59,16 +61,23 @@ class StripeRecOrderController extends AbstractController
     protected $em;
     protected $rec_service;
 
+    /**
+     * @var OrderRepository
+     */    
+    protected $orderRepository;
+
     public function __construct(
         ContainerInterface $container,
         PageMaxRepository $pageMaxRepository,
-        StripeRecOrderRepository $stripe_rec_repo
+        StripeRecOrderRepository $stripe_rec_repo,
+        OrderRepository $orderRepository
     ){
         $this->container = $container;
         $this->pageMaxRepository = $pageMaxRepository;
         $this->stripe_rec_repo = $stripe_rec_repo;
         $this->em = $container->get('doctrine.orm.entity_manager');
         $this->rec_service = $container->get("plg_stripe_rec.service.recurring_service");
+        $this->orderRepository = $orderRepository;
     }
 
     /**
@@ -522,6 +531,13 @@ class StripeRecOrderController extends AbstractController
                 $rec_order = $entity;
                 if (!$rec_order) return null;
                 $rec_order_items = $rec_order->getOrderItems();
+
+                if (!is_null($rec_order->getOrder()) && !is_null($rec_order->getOrder()->getCustomer()) ) {
+                    $orderOfCustomer = $this->orderRepository->findLastOrderOfCustomer($rec_order->getOrder()->getCustomer()->getId());
+                    if (isset($orderOfCustomer[0]) && !empty($orderOfCustomer[0])) {
+                        $rec_order->setFirstOrderDate($orderOfCustomer[0]->getCreateDate());
+                    }
+                }
                 
                 // $export_service->fputcsv($export_service->getData(null, $rec_order));
                 $Order = $rec_order->getOrder();
@@ -529,10 +545,10 @@ class StripeRecOrderController extends AbstractController
                 $OrderItems = $Order->getOrderItems();
                 $prices = $bundle_service->getPriceSum($rec_order);
                 extract($prices);
-                foreach ($OrderItems as $OrderItem) {
-                    $row_data = $export_service->getRecData($rec_order, $Order, $OrderItem, $initial_amount, $recurring_amount);
+                // foreach ($OrderItems as $OrderItem) {
+                    $row_data = $export_service->getRecData($rec_order, $Order, $rec_order_items, $initial_amount, $recurring_amount);
                     $export_service->fputcsv($row_data);
-                }
+                // }
             });
         });
 
@@ -543,5 +559,46 @@ class StripeRecOrderController extends AbstractController
 
         return $response;
     }
-    
+
+    /**
+     * Admin rec_order_history
+     * @Route("/%eccube_admin_route%/plugin/striperec/order/{id}/pause", name="admin_striperec_order_pause")     
+     */
+    public function pauseSubscription(Request $request, $id = null)
+    {
+        $rec_order = $this->stripe_rec_repo->find($id);
+        Subscription::update($rec_order->getSubscriptionId(), [
+            'pause_collection' => [
+                'behavior' => 'keep_as_draft'
+            ]
+        ]);
+
+        $rec_order->setPauseSubscriptions(true);
+        $rec_order->setDatePauseSubscriptions(new \DateTime());
+
+        $this->entityManager->persist($rec_order);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute("stripe_rec_admin_recorder");
+    }
+
+    /**
+     * Admin rec_order_history
+     * @Route("/%eccube_admin_route%/plugin/striperec/order/{id}/re-open", name="admin_striperec_order_re_open")     
+     */
+    public function reOpenSubscription(Request $request, $id = null)
+    {
+        $rec_order = $this->stripe_rec_repo->find($id);
+        Subscription::update($rec_order->getSubscriptionId(), [
+            'pause_collection' => ''
+        ]);
+
+        $rec_order->setPauseSubscriptions(false);
+        $rec_order->setDatePauseSubscriptions(null);
+
+        $this->entityManager->persist($rec_order);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute("stripe_rec_admin_recorder");
+    }
 }

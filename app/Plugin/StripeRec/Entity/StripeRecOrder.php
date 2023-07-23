@@ -17,6 +17,10 @@ use Eccube\Entity\Customer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Eccube\Entity\Order;
+use Stripe\Customer as StripeCustomer;
+use Stripe\Subscription as StripeSubscription;
+use Stripe\Invoice;
+use Carbon\Carbon;
 
 /**
  * StripeRecOrder
@@ -238,11 +242,43 @@ class StripeRecOrder{
      */
     private $count;
 
-    
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_pause_subscriptions", type="boolean", options={"default":false})
+     */
+    private $is_pause_subscriptions = false;
+
+    /**
+     * @var string
+     * @ORM\Column(name="date_pause_subscriptions", type="datetimetz", nullable=true)
+     */
+    private $date_pause_subscriptions;
 
     public function __construct()
     {
         $this->Orders = new ArrayCollection();
+    }
+
+    public function setPauseSubscriptions($is_pause_subscriptions)
+    {
+        $this->is_pause_subscriptions = $is_pause_subscriptions;
+        return $this;
+    }
+
+    public function isPauseSubscriptions(){
+        return $this->is_pause_subscriptions;
+    }
+
+    public function getDatePauseSubscriptions()
+    {
+        return $this->date_pause_subscriptions;
+    }
+
+    public function setDatePauseSubscriptions($date_pause_subscriptions)
+    {
+        $this->date_pause_subscriptions = $date_pause_subscriptions;
+        return $this;
     }
 
     public function getFailedInvoice()
@@ -608,5 +644,88 @@ class StripeRecOrder{
     {
     	$this->count = $count;
     	return $this;
+    }
+
+    public function getProductNameMain()
+    {
+        $productNameMain = null;
+        foreach($this->OrderItems as $rec_order_item){      
+            $productNameMain = $rec_order_item->getProduct()->getName();
+            if ($productNameMain) {
+                break;
+            }
+        }
+        return $productNameMain;
+    }
+
+    public function getCustomerData()
+    {
+        if (!is_null($this->getOrder()) && !is_null($this->getOrder()->getCustomer()) ) {
+            return $this->getOrder()->getCustomer()->getId();
+        } else {
+            return null;
+        }
+    }
+
+    public function getSubscriptionBalance()
+    {
+        return rand(0, 1);
+    }
+    
+    public function getRecStatusCsv()
+    {
+        switch($this->rec_status) {
+            case StripeRecOrder::REC_STATUS_ACTIVE:
+                return trans('stripe_recurring.label.rec_status.active');
+            case StripeRecOrder::REC_STATUS_CANCELED:
+                return trans('stripe_recurring.label.rec_status.canceled');
+            case StripeRecOrder::REC_STATUS_SCHEDULED:
+                return trans('stripe_recurring.label.rec_status.scheduled');
+            case StripeRecOrder::REC_STATUS_SCHEDULED_CANCELED:
+                return trans('stripe_recurring.label.rec_status.canceled');
+            default:
+                return null;
+        }
+    }
+
+    private $firstDateOrder;
+
+    public function setFirstOrderDate($firstDateOrder)
+    {
+        $this->firstDateOrder = $firstDateOrder;
+        return $this;
+    }
+
+    public function getFirstOrderDate()
+    {
+        return $this->firstDateOrder;
+    }
+
+    public function getUpdateOrderDate()
+    {
+        return $this->getOrder()->getUpdateDate() ?? null;
+    }
+
+    public function getSubscriptBalanceRemaining() 
+    {
+        try {
+            $stripeCustomer = StripeCustomer::retrieve(["id" => $this->getStripeCustomerId(), "expand" => ["cash_balance"]]);
+            return $stripeCustomer->cash_balance->available && $stripeCustomer->cash_balance->available > $this->getAmount() ? 1 : 0;
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+
+    public function getNextBillingDate() 
+    {
+        try {
+            $invoice = Invoice::upcoming([
+                'customer' => $this->getStripeCustomerId(),
+                ]);
+                $timeUp = $invoice->next_payment_attempt;
+            return Carbon::createFromTimestamp($timeUp)->format('Y-m-d') ?? null;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 }

@@ -659,6 +659,9 @@ class ShoppingExController extends ShoppingController
                     'exp_year' => $request->get('exp_year'),
                     'cvc' => $request->get('cvc'),
                 ],
+                'billing_details' => [
+                    'name' => $request->get('name')
+                ]
             ]);
 
             return $this->json([

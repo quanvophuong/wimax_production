@@ -33,6 +33,8 @@ use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+use Plugin\StripeRec\Repository\StripeRecOrderRepository;
+
 class CsvExportService
 {
     /**
@@ -114,6 +116,11 @@ class CsvExportService
     protected $paginator;
 
     /**
+     * @var StripeRecOrderRepository
+     */    
+    protected $stripeRecOrderRepository;
+
+    /**
      * CsvExportService constructor.
      *
      * @param EntityManagerInterface $entityManager
@@ -126,6 +133,7 @@ class CsvExportService
      * @param EccubeConfig $eccubeConfig
      * @param FormFactoryInterface $formFactory
      * @param PaginatorInterface $paginator
+     * @param StripeRecOrderRepository $stripeRecOrderRepository
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -137,7 +145,8 @@ class CsvExportService
         ProductRepository $productRepository,
         EccubeConfig $eccubeConfig,
         FormFactoryInterface $formFactory,
-        PaginatorInterface $paginator
+        PaginatorInterface $paginator,
+        StripeRecOrderRepository $stripeRecOrderRepository
     ) {
         $this->entityManager = $entityManager;
         $this->csvRepository = $csvRepository;
@@ -149,6 +158,7 @@ class CsvExportService
         $this->productRepository = $productRepository;
         $this->formFactory = $formFactory;
         $this->paginator = $paginator;
+        $this->stripeRecOrderRepository = $stripeRecOrderRepository;
     }
 
     /**
@@ -465,5 +475,13 @@ class CsvExportService
             ->getQueryBuilderBySearchDataForAdmin($searchData);
 
         return $qb;
+    }
+
+    /**
+     * @param StripeRecOrderRepository $stripeRecOrderRepository
+     */
+    public function setStripeRecOrderRepository(StripeRecOrderRepository $stripeRecOrderRepository)
+    {
+        $this->stripeRecOrderRepository = $stripeRecOrderRepository;
     }
 }
