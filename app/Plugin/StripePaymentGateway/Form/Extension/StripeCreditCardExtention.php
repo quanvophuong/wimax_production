@@ -49,16 +49,18 @@ class StripeCreditCardExtention extends AbstractTypeExtension
             $form = $event->getForm();
 
             // 支払い方法が一致する場合
-            if ($data->getPayment()->getMethodClass() === StripeCreditCard::class) {
-                $form->add('stripe_payment_intent_id', HiddenType::class, [
-                    'required' => false,
-                    'mapped' => true
-                ]);
-
-                $form->add('is_save_card_on', CheckboxType::class,[
-                    'required' => false,
-                    'mapped' => true
-                ]);
+            if ($data->getPayment() && !is_null($data->getPayment()->getMethodClass())) {
+                if ($data->getPayment()->getMethodClass() === StripeCreditCard::class) {
+                    $form->add('stripe_payment_intent_id', HiddenType::class, [
+                        'required' => false,
+                        'mapped' => true
+                    ]);
+    
+                    $form->add('is_save_card_on', CheckboxType::class,[
+                        'required' => false,
+                        'mapped' => true
+                    ]);
+                }
             }
         });
 
