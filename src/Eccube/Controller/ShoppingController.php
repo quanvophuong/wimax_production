@@ -158,6 +158,8 @@ class ShoppingController extends AbstractShoppingController
             $this->entityManager->flush();
         }
 
+        dump($Order);
+
         $form = $this->createForm(OrderType::class, $Order);
         
         $shippings = $Order->getShippings();
