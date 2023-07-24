@@ -21,12 +21,8 @@ class MyLogoutSuccessHandler extends AbstractController implements LogoutSuccess
 
     public function onLogoutSuccess(Request $request)
     {
-        // dump($_SERVER['HTTP_HOST']);
         // get domain name
-        $protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']), 'https') === FALSE ? 'http' : 'https';
-        $domainLink = $protocol . '://' . $_SERVER['HTTP_HOST'] . '/';
-
-        // dump($protocol, $domainLink);
+        $domainLink = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/';
 
         return new RedirectResponse($domainLink);
     }
