@@ -326,14 +326,14 @@ file that was distributed with this source code.
                                                 {% if rec_order.RecStatus == 'active' %}    
                                                     {% if rec_order.isPauseSubscriptions %}
                                                         <button type="button" 
-                                                            data-tooltip="true" data-placement="top" title="Bạn muốn tạm dừng tài khoản này?"
+                                                            data-tooltip="true" data-placement="top" 
                                                             href="{{ url('admin_striperec_order_re_open', { id : rec_order.Id }) }}"
                                                             class="btn-re-open-subscriptions badge badge-ec-blue" style="border: 2px solid #437ec4; background: #fff; color: #437ec4">
                                                             一時停止解除
                                                         </button>
                                                     {% else %}
                                                         <button type="button" 
-                                                            data-tooltip="true" data-placement="top" title="Bạn muốn tạm dừng tài khoản này?"
+                                                            data-tooltip="true" data-placement="top" 
                                                             href="{{ url('admin_striperec_order_pause', { id : rec_order.Id }) }}"
                                                             class="btn-pause-subscriptions badge badge-ec-blue" style="border: 2px solid #437ec4; background: #fff; color: #437ec4">
                                                             一時停止
