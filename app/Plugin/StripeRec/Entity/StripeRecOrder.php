@@ -710,7 +710,7 @@ class StripeRecOrder{
     {
         try {
             $stripeCustomer = StripeCustomer::retrieve(["id" => $this->getStripeCustomerId(), "expand" => ["cash_balance"]]);
-            return $stripeCustomer->cash_balance->available && $stripeCustomer->cash_balance->available > $this->getAmount() ? 1 : 0;
+            return $stripeCustomer->cash_balance->available && $stripeCustomer->cash_balance->available >= $this->getAmount() ? 1 : 0;
         } catch (\Exception $e) {
             return 0;
         }
