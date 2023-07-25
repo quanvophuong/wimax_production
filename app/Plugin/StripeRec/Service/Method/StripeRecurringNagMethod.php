@@ -458,19 +458,19 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         if (intval($initial_price) == 0){
             $check_amount=self::getAmountToSentInStripe(50, strtolower($this->Order->getCurrencyCode()));
         }
-        $paymentIntent = $stripeClient->createPaymentIntentWithCustomer($check_amount, $payment_method_id, $this->Order->getId(), true, $customer_id, $this->Order->getCurrencyCode());
-        if($paymentIntent['error']) {
-            if (!empty($paymentIntent['error']['payment_intent']['id'])){
-                $stripe = new \Stripe\StripeClient($StripeConfig->secret_key);
-                $stripe->paymentIntents->cancel($paymentIntent['error']['payment_intent']['id']);
-            }
-            $result->setSuccess(false);
-            $result->setErrors([trans('stripe_recurring.checkout.payment_method.retrieve_error')]);
-            return $result;
-        }else{
-            $stripe = new \Stripe\StripeClient($StripeConfig->secret_key);
-            $stripe->paymentIntents->cancel($paymentIntent['id']);
-        }
+        // $paymentIntent = $stripeClient->createPaymentIntentWithCustomer($check_amount, $payment_method_id, $this->Order->getId(), true, $customer_id, $this->Order->getCurrencyCode());
+        // if($paymentIntent['error']) {
+        //     if (!empty($paymentIntent['error']['payment_intent']['id'])){
+        //         $stripe = new \Stripe\StripeClient($StripeConfig->secret_key);
+        //         $stripe->paymentIntents->cancel($paymentIntent['error']['payment_intent']['id']);
+        //     }
+        //     $result->setSuccess(false);
+        //     $result->setErrors([trans('stripe_recurring.checkout.payment_method.retrieve_error')]);
+        //     return $result;
+        // }else{
+        //     $stripe = new \Stripe\StripeClient($StripeConfig->secret_key);
+        //     $stripe->paymentIntents->cancel($paymentIntent['id']);
+        // }
 
         // EOC --- compose subscription phases
         $interval = $order_items[0]->getProductClass()->getInterval();
