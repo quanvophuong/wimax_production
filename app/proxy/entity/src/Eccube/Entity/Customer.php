@@ -1224,9 +1224,4 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
         {
             return $this->url_flg;
         }
-
-        public function getLastOrderOfCustomer()
-        {
-            return $this->getOrders()->first()->getOrderDate() ?? $this->getFirstBuyDate();
-        }
     }

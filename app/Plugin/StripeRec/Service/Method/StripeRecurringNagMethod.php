@@ -58,7 +58,7 @@ use Plugin\StripeRec\Service\ConfigService;
 use Eccube\Repository\ProductClassRepository;
 use Plugin\Coupon4\Entity\CouponOrder;
 use Eccube\Repository\CalendarRepository;
-
+use Carbon\Carbon;
 
 /**
  * Stripe Recurring Non Apple/Google pay method
@@ -1192,7 +1192,8 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             }
 
         }
-        $next_payday = new \DateTime($next_payday->format('Y-m-d 09:30:00'));
+        $typeFormatDatetime = Carbon::now()->subMinutes(5)->format('H:i:s');
+        $next_payday = new \DateTime($next_payday->format('Y-m-d '. $typeFormatDatetime));
         $now = new \DateTime();
         $load_time = new \DateInterval('PT10S');
         $now->add($load_time);

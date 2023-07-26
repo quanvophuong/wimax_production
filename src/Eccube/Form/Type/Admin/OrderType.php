@@ -43,6 +43,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class OrderType extends AbstractType
 {
@@ -65,6 +66,14 @@ class OrderType extends AbstractType
      * @var OrderStatusRepository
      */
     protected $orderStatusRepository;
+
+    const MOBILE_PLAN_HAVE_ADAPTER = 'mobile_plan_have_adapter';
+    const MOBILE_PLAN_NO_ADAPTER = 'mobile_plan_no_adapter';
+    const HOME_PLAN = 'home_plan';
+    const MOBILE_PLAN_ID = 3;
+    const MOBILE_PLAN_NAME_HAVE_ADAPTER = '購入する';
+    const MOBILE_PLAN_NAME_NO_ADAPTER = '購入しない';
+    const HOME_PLAN_ID = 4;
 
     /**
      * OrderType constructor.
@@ -90,7 +99,50 @@ class OrderType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $optionsOrderReceiveds = [
+            self::MOBILE_PLAN_HAVE_ADAPTER => [
+                'フリー補償' => 'price_1M0mZkGS5e9lvq3n22LWr0w4',
+                'ライト補償' => 'price_1M0mZkGS5e9lvq3nkgVDVEpq',
+                '補償なし' => 'price_1M0mZjGS5e9lvq3nauWnKZ89'
+            ],
+            self::MOBILE_PLAN_NO_ADAPTER => [
+                'フリー補償' => 'price_1M0mZkGS5e9lvq3ndtcFp9Ux',
+                'ライト補償' => 'price_1M0mZkGS5e9lvq3n5z7tTwBU',
+                '補償なし' => 'price_1M0mZjGS5e9lvq3nj2MLmAce'
+            ],
+            self::HOME_PLAN => [
+                'フリー補償' => 'price_1M0ma5GS5e9lvq3nxAhIjwJv',
+                'ライト補償' => 'price_1M0ma5GS5e9lvq3nZTWNSFnD',
+                '補償なし' => 'price_1M0ma4GS5e9lvq3nwtxOpn0G'
+            ],
+        ];
+
+        $optionsOrderReceivedPrice = [];
+
+        $dataOrderItems = $options['data']->getOrderItems();
+        foreach ($dataOrderItems as $dataOrderItem) {
+            if (is_null($dataOrderItem->getClassCategoryName2())) {
+                continue;
+            }
+            if ($dataOrderItem->getProduct()->getId() == self::MOBILE_PLAN_ID) {
+                if ($dataOrderItem->getClassCategoryName2() == self::MOBILE_PLAN_NAME_HAVE_ADAPTER) {
+                    $optionsOrderReceivedPrice = $optionsOrderReceiveds[self::MOBILE_PLAN_HAVE_ADAPTER];
+                    break;
+                } else {
+                    $optionsOrderReceivedPrice = $optionsOrderReceiveds[self::MOBILE_PLAN_NO_ADAPTER];
+                    break;
+                }
+            } else {
+                $optionsOrderReceivedPrice = $optionsOrderReceiveds[self::HOME_PLAN];
+                break;
+            }
+        }
         $builder
+            ->add('PriceIdChange', ChoiceType::class, [
+                'required' => false,
+                'placeholder' => 'オプションを選択してください',
+                'choices' => $optionsOrderReceivedPrice,
+            ])
             ->add('name', NameType::class, [
                 'required' => false,
                 'options' => [
