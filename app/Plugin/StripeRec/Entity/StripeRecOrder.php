@@ -722,6 +722,7 @@ class StripeRecOrder{
             // return Carbon::today()->addMonth()->startOfMonth()->format('Y-m-d') ?? null;
             $invoice = Invoice::upcoming([
                 'customer' => $this->getStripeCustomerId(),
+                'subscription' => $this->getSubscriptionId()
             ]);
             $timeUp = $invoice->next_payment_attempt;
             return Carbon::createFromTimestamp($timeUp)->format('Y-m-d') ?? null;

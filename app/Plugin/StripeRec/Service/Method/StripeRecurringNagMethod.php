@@ -595,6 +595,12 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $stripeOrder->setPaidStatus(StripeRecOrder::STATUS_PAY_UNDEFINED);
             $stripeOrder->setOrder($this->Order);
             $stripeOrder->setSubscriptionId($subscription_id);
+            if (is_null($stripeOrder->getCurrentPeriodStart())) {
+                $stripeOrder->setCurrentPeriodStart($subscription_schedule->current_phase->start_date);
+            }
+            if (is_null($stripeOrder->getCurrentPeriodEnd())) {
+                $stripeOrder->setCurrentPeriodEnd($subscription_schedule->current_phase->end_date);
+            }
 
             $dt = new \DateTime();
             if($purchase_point === "now"){

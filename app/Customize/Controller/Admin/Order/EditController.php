@@ -25,7 +25,7 @@ use Eccube\Event\EccubeEvents;
 use Eccube\Event\EventArgs;
 use Eccube\Exception\ShoppingException;
 use Eccube\Form\Type\AddCartType;
-use Eccube\Form\Type\Admin\OrderType;
+use Customize\Form\Type\Admin\OrderType;
 use Eccube\Form\Type\Admin\SearchCustomerType;
 use Eccube\Form\Type\Admin\SearchProductType;
 use Eccube\Repository\CategoryRepository;
