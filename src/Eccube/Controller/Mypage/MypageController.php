@@ -40,6 +40,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Plugin\StripeRec\Repository\StripeRecOrderRepository;
 use Stripe\Subscription;
 use Stripe\Invoice;
+use Stripe\Charge;
 
 class MypageController extends AbstractController
 {
@@ -414,10 +415,23 @@ class MypageController extends AbstractController
         
                 $invoice = Invoice::retrieve($latestInvoice);
         
-                $url = $invoice->invoice_pdf;
+                $stripeCharge = Charge::retrieve($invoice->charge);
+                $receiptUrl = $stripeCharge->receipt_url;
+                $html = file_get_contents($receiptUrl);
+                $dom = new \DOMDocument();
+                $dom->loadHTML($html);
+                $receiptsInvocesUrlCheck = 'https://dashboard.stripe.com/receipts/invoices/';
+                $receiptsInvocesUrl = null;
+                foreach($dom->getElementsByTagName("a") as $each_node) {
+                    if ($each_node->getAttribute('href') && str_contains($each_node->getAttribute('href'), $receiptsInvocesUrlCheck)) {
+                        $receiptsInvocesUrl = $each_node->getAttribute('href');
+                        break;
+                    }
+                }
 
-                if ($url) {
-                    return $this->redirect($url);
+                if ($receiptsInvocesUrl) {
+                    return $this->redirect($receiptsInvocesUrl);
+
                 } else {
                     return $this->redirect($this->generateUrl('mypage'));
                 }

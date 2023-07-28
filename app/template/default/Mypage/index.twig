@@ -40,6 +40,7 @@ file that was distributed with this source code.
                             </thead>
                             <tbody>
                             {% for Order in pagination %}
+                                {% set idxParent = loop.index0 + 1 %}
                                 <tr>
                                     <td>{{ Order.order_no }}</td>
                                     <td>{{ Order.order_date|date_sec }}</td>
@@ -97,6 +98,16 @@ file that was distributed with this source code.
                                                     </div>
                                         <div class="deviceNo">端末番号：{{ Order.imei }}</div>
                                         <div class="deviceNo">
+                                            {% if pagination[idxParent] is defined %}
+                                            <a 
+                                                style="border: 2px solid #437ec4; background: #fff; color: #437ec4"
+                                                type="button"
+                                                class="btn btn-download-pdf-receipt"
+                                                href="{{ url('my_page_download_pdf_receipt', { id : pagination[idxParent].id }) }}"
+                                            >
+                                                前回の領収書ダウンロード
+                                            </a>
+                                            {% else %}
                                             <a 
                                                 style="border: 2px solid #437ec4; background: #fff; color: #437ec4"
                                                 type="button"
@@ -105,6 +116,7 @@ file that was distributed with this source code.
                                             >
                                                 前回の領収書ダウンロード
                                             </a>
+                                            {% endif %}
                                         </div>
                                                 {% endif %}
                                             {% endfor %}
