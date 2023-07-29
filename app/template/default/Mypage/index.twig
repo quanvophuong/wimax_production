@@ -107,15 +107,6 @@ file that was distributed with this source code.
                                             >
                                                 前回の領収書ダウンロード
                                             </a>
-                                            {% else %}
-                                            <a 
-                                                style="border: 2px solid #437ec4; background: #fff; color: #437ec4"
-                                                type="button"
-                                                class="btn btn-download-pdf-receipt"
-                                                href="{{ url('my_page_download_pdf_receipt', { id : Order.Id }) }}"
-                                            >
-                                                前回の領収書ダウンロード
-                                            </a>
                                             {% endif %}
                                         </div>
                                                 {% endif %}
