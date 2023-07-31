@@ -13,6 +13,7 @@
 
 namespace Eccube\Repository;
 
+use Carbon\Carbon;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Eccube\Doctrine\Query\Queries;
@@ -234,15 +235,16 @@ class OrderRepository extends AbstractRepository
 
         if (!empty($searchData['order_datetime_end']) && $searchData['order_datetime_end']) {
             $date = $searchData['order_datetime_end'];
+            $date = Carbon::parse($date->format('Y-m-d 23:59:59'));
             $qb
-                ->andWhere('o.order_date < :order_date_end')
+                ->andWhere('o.order_date <= :order_date_end')
                 ->setParameter('order_date_end', $date);
         } elseif (!empty($searchData['order_date_end']) && $searchData['order_date_end']) {
             $date = clone $searchData['order_date_end'];
             $date = $date
                 ->modify('+1 days');
             $qb
-                ->andWhere('o.order_date < :order_date_end')
+                ->andWhere('o.order_date <= :order_date_end')
                 ->setParameter('order_date_end', $date);
         }
 
@@ -261,8 +263,9 @@ class OrderRepository extends AbstractRepository
 
         if (!empty($searchData['payment_datetime_end']) && $searchData['payment_datetime_end']) {
             $date = $searchData['payment_datetime_end'];
+            $date = Carbon::parse($date->format('Y-m-d 23:59:59'));
             $qb
-                ->andWhere('o.payment_date < :payment_date_end')
+                ->andWhere('o.payment_date <= :payment_date_end')
                 ->setParameter('payment_date_end', $date);
         } elseif (!empty($searchData['payment_date_end']) && $searchData['payment_date_end']) {
             $date = clone $searchData['payment_date_end'];
@@ -288,8 +291,10 @@ class OrderRepository extends AbstractRepository
 
         if (!empty($searchData['update_datetime_end']) && $searchData['update_datetime_end']) {
             $date = $searchData['update_datetime_end'];
+            $date = Carbon::parse($date->format('Y-m-d 23:59:59'));
+
             $qb
-                ->andWhere('o.update_date < :update_date_end')
+                ->andWhere('o.update_date <= :update_date_end')
                 ->setParameter('update_date_end', $date);
         } elseif (!empty($searchData['update_date_end']) && $searchData['update_date_end']) {
             $date = clone $searchData['update_date_end'];
@@ -358,8 +363,9 @@ class OrderRepository extends AbstractRepository
 
         if (!empty($searchData['shipping_delivery_datetime_end']) && $searchData['shipping_delivery_datetime_end']) {
             $date = $searchData['shipping_delivery_datetime_end'];
+            $date = Carbon::parse($date->format('Y-m-d 23:59:59'));
             $qb
-                ->andWhere('s.shipping_delivery_date < :shipping_delivery_date_end')
+                ->andWhere('s.shipping_delivery_date <= :shipping_delivery_date_end')
                 ->setParameter('shipping_delivery_date_end', $date);
         } elseif (!empty($searchData['shipping_delivery_date_end']) && $searchData['shipping_delivery_date_end']) {
             $date = clone $searchData['shipping_delivery_date_end'];

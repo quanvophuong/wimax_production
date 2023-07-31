@@ -252,65 +252,72 @@ class EditController extends AbstractController
 
         if ($form->isSubmitted() && $form['OrderItems']->isValid()) {
             if ($TargetOrder->getPriceIdChange()) {
-                $recOrder = $this->stripeRecOrderRepository->findOneBy([
-                    "id" => $TargetOrder->getRecOrder()->getId(),
-                ]);
-    
-                $newPrice = $TargetOrder->getPriceIdChange();
-    
-                // $newPrice = 'price_1M2mpAGS5e9lvq3n0LssWVqS';
-    
-                // case is schedule
-                if ($recOrder->getScheduleId()) {
-                    // get schedule
-                    $subscriptionSchedule = \Stripe\SubscriptionSchedule::retrieve($recOrder->getScheduleId());
-                    // get phase
-                    $phaseSubscriptionSchedules = $subscriptionSchedule->phases;
-    
-                    // get price in items of phase
-                    foreach($phaseSubscriptionSchedules as $phaseSubscriptionSchedule) {
-                        $items = [];
-                        // get price
-                        foreach ($phaseSubscriptionSchedule->items as $phaseSubscriptionScheduleItem) {
-                            // check and date
-                            if ($subscriptionSchedule->current_phase->end_date >= $phaseSubscriptionSchedule->end_date) {
-                                $items[] = [
-                                    'price' => $phaseSubscriptionScheduleItem->price,
-                                ];
-                            } else {
-                                // date feature
-                                $items[] = [
-                                    'price' => $newPrice,
-                                ];
-                            }
-                        }
+                try {
+                    $recOrder = $this->stripeRecOrderRepository->findOneBy([
+                        "id" => $TargetOrder->getRecOrder()->getId(),
+                    ]);
         
-                        // define new phase
-                        $newPhases[] = [
-                            'items' => $items,
+                    $newPrice = $TargetOrder->getPriceIdChange();
+        
+                    // $newPrice = 'price_1M2mpAGS5e9lvq3n0LssWVqS';
+        
+                    // case is schedule
+                    if ($recOrder->getScheduleId()) {
+                        // get schedule
+                        $subscriptionSchedule = \Stripe\SubscriptionSchedule::retrieve($recOrder->getScheduleId());
+                        // get phase
+                        $phaseSubscriptionSchedules = $subscriptionSchedule->phases;
+        
+                        // get price in items of phase
+                        foreach($phaseSubscriptionSchedules as $phaseSubscriptionSchedule) {
+                            $items = [];
+                            // get price
+                            foreach ($phaseSubscriptionSchedule->items as $phaseSubscriptionScheduleItem) {
+                                // check and date
+                                if ($subscriptionSchedule->current_phase->end_date >= $phaseSubscriptionSchedule->end_date) {
+                                    $items[] = [
+                                        'price' => $phaseSubscriptionScheduleItem->price,
+                                    ];
+                                } else {
+                                    // date feature
+                                    $items[] = [
+                                        'price' => $newPrice,
+                                    ];
+                                }
+                            }
+
+                            // define new phase
+                            $newPhases[] = [
+                                'items' => $items,
+                                'proration_behavior' => 'none',
+                                'end_date' => $phaseSubscriptionSchedule->end_date,
+                                'start_date' => $phaseSubscriptionSchedule->start_date
+                            ];
+                        }
+
+                        // update date phase schedule
+                        \Stripe\SubscriptionSchedule::update($recOrder->getScheduleId(), [
+                            'phases' => $newPhases
+                        ]);
+                    } else { // case only sub
+                        // get sub
+                        $subscription = Subscription::retrieve($recOrder->getSubscriptionId());
+                        // update sub
+                        Subscription::update($subscription->id, [
+                            'items' => [
+                                [
+                                    "id" => $subscription->items->data[0]->id,
+                                    "price" => $newPrice,
+                                ]
+                            ],
                             'proration_behavior' => 'none',
-                            'end_date' => $phaseSubscriptionSchedule->end_date,
-                            'start_date' => $phaseSubscriptionSchedule->start_date
-                        ];    
+                        ]);
                     }
-    
-                    // update date phase schedule
-                    \Stripe\SubscriptionSchedule::update($recOrder->getScheduleId(), [
-                        'phases' => $newPhases
-                    ]);
-                } else { // case only sub
-                    // get sub
-                    $subscription = Subscription::retrieve($recOrder->getSubscriptionId());
-                    // update sub
-                    Subscription::update($subscription->id, [
-                        'items' => [
-                            [
-                                "id" => $subscription->items->data[0]->id,
-                                "price" => $newPrice,
-                            ]
-                        ],
-                        'proration_behavior' => 'none',
-                    ]);
+                } catch (\Exception $e) {
+                    // マッチしない場合はログ出力してスキップ.
+                    $this->addError('補償契約が見つかりませんでした', 'admin');
+
+                    return $this->redirectToRoute('admin_order_edit', ['id' => $TargetOrder->getId()]);
                 }
             }
 
