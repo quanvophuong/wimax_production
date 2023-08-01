@@ -44,6 +44,8 @@ use Plugin\Coupon4\Repository\CouponOrderRepository;
 use Plugin\Coupon4\Service\CouponService;
 use Plugin\Coupon4\Entity\Coupon;
 use Symfony\Component\Form\FormError;
+use Eccube\Entity\Payment;
+use Plugin\StripeRec\Service\Method\StripeRecurringNagMethod;
 
 class ShoppingController extends AbstractShoppingController
 {
@@ -156,6 +158,14 @@ class ShoppingController extends AbstractShoppingController
         if ($Customer->getId()) {
             $this->orderHelper->updateCustomerInfo($Order, $Customer);
             $this->entityManager->flush();
+        }
+
+        // case payment is null
+        if (is_null($Order->getPayment())) {
+            $paymentRepository = $this->entityManager->getRepository(Payment::class);
+            $payment = $paymentRepository->findOneBy(['method_class' => StripeRecurringNagMethod::class]);
+            // set payment
+            $Order->setPayment($payment);
         }
 
         $form = $this->createForm(OrderType::class, $Order);

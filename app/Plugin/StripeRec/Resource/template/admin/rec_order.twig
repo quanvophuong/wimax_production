@@ -54,6 +54,44 @@ file that was distributed with this source code.
                 })
             })
 
+            $(".btn-pause-subscriptions").on('click', function(e){
+                
+                e.preventDefault();
+                let modal = $("#confirmModalPause");
+                modal.modal("show")
+                let confirm_btn = modal.find('a[data-action="confirm"]');
+                let url = $(this).attr('href');
+                confirm_btn.data('url', url);
+                confirm_btn.on('click', function(){
+                    if($(this).data('url')){
+                        location.href = $(this).data('url')
+                    }
+                })
+                let cancel_btn = modal.find('a[data-action="cancel"]')
+                cancel_btn.on('click', function(){
+                    modal.modal("hide");
+                })
+            })
+
+
+            $(".btn-re-open-subscriptions").on('click', function(e){
+                
+                e.preventDefault();
+                let modal = $("#confirmModalReOpen");
+                modal.modal("show")
+                let confirm_btn = modal.find('a[data-action="confirm"]');
+                let url = $(this).attr('href');
+                confirm_btn.data('url', url);
+                confirm_btn.on('click', function(){
+                    if($(this).data('url')){
+                        location.href = $(this).data('url')
+                    }
+                })
+                let cancel_btn = modal.find('a[data-action="cancel"]')
+                cancel_btn.on('click', function(){
+                    modal.modal("hide");
+                })
+            })
         });
     </script>
 
@@ -226,11 +264,13 @@ file that was distributed with this source code.
                                         <th class="border-top-0 pt-2 pb-2 text-center">{{ 'stripe_recurring.admin.rec_order.table.last_payment_date'|trans }}</th>
                                         {# <th class="border-top-0 pt-2 pb-2 text-center">注文ID</th> #}
                                         <th class="border-top-0 pt-2 pb-2 text-center">{{ 'stripe_recurring.admin.rec_order.table.rec_status'|trans }}</th>
+                                        <th class="border-top-0 pt-2 pb-2 text-center">一時停止</th>
                                         <th class="border-top-0 pt-2 pb-2 text-center">{{ 'stripe_recurring.admin.rec_order.table.action'|trans }}</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {% for rec_order in pagination %}
+                                    {% dump(rec_order.FirstOrderDate) %}
                                     {% set Order = rec_order.Order %}
                                     {% set paidObj = util_service.paidStatusObj(rec_order) %}
                                     {% set recObj = util_service.recStatusObj(rec_order) %}
@@ -280,6 +320,25 @@ file that was distributed with this source code.
                                                 <span class="badge badge-ec-blue" style="border: 2px solid {{ recObj[1] }}; background: #fff; color: {{ recObj[1] }}">
                                                 {{ recObj[0] }}
                                                 </span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="align-middle text-center">
+                                                {% if rec_order.RecStatus == 'active' %}    
+                                                    {% if rec_order.isPauseSubscriptions %}
+                                                        <button type="button" 
+                                                            data-tooltip="true" data-placement="top" 
+                                                            href="{{ url('admin_striperec_order_re_open', { id : rec_order.Id }) }}"
+                                                            class="btn-re-open-subscriptions badge badge-ec-blue" style="border: 2px solid #437ec4; background: #fff; color: #437ec4">
+                                                            一時停止解除
+                                                        </button>
+                                                    {% else %}
+                                                        <button type="button" 
+                                                            data-tooltip="true" data-placement="top" 
+                                                            href="{{ url('admin_striperec_order_pause', { id : rec_order.Id }) }}"
+                                                            class="btn-pause-subscriptions badge badge-ec-blue" style="border: 2px solid #437ec4; background: #fff; color: #437ec4">
+                                                            一時停止
+                                                        </button>
+                                                    {% endif %}
                                                 {% endif %}
                                             </td>
                                             <td class="align-middle text-center">
@@ -383,6 +442,57 @@ file that was distributed with this source code.
                     </div>
                 </div>
 
+                {# action pause subscriptions #}
+                <div class="modal fade" id="confirmModalPause" tabindex="-1" role="dialog"
+                    aria-labelledby="confirmModal" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">確認</h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="screen-name">サブスクリプションの支払いを一時停止してもよろしいですか?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <a class="btn btn-ec-conversion" data-action="confirm" href="javascript:void(0)">
+                                    {{ 'stripe_recurring.admin.rec_order.delete_confirm'|trans }}
+                                </a>
+                                <a class="btn btn-ec-sub" data-action="cancel" href="javascript:void(0)">
+                                    {{ 'stripe_recurring.admin.rec_order.delete_cancel'|trans }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# action re-open subscriptions #}
+                <div class="modal fade" id="confirmModalReOpen" tabindex="-1" role="dialog"
+                    aria-labelledby="confirmModal" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">確認</h5>
+                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="screen-name">サブスクリプションの請求を再開してもよろしいですか?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <a class="btn btn-ec-conversion" data-action="confirm" href="javascript:void(0)">
+                                    {{ 'stripe_recurring.admin.rec_order.delete_confirm'|trans }}
+                                </a>
+                                <a class="btn btn-ec-sub" data-action="cancel" href="javascript:void(0)">
+                                    {{ 'stripe_recurring.admin.rec_order.delete_cancel'|trans }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

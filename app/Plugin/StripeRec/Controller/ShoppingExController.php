@@ -41,6 +41,9 @@ use Stripe\PaymentIntent;
 use Plugin\Coupon4\Repository\CouponRepository;
 use Plugin\Coupon4\Repository\CouponOrderRepository;
 use Plugin\Coupon4\Service\CouponService;
+use Plugin\StripeRec\Service\Method\StripeRecurringNagMethod;
+use Eccube\Entity\Payment;
+use Eccube\Exception\ShoppingException;
 
 class ShoppingExController extends ShoppingController
 {
@@ -408,6 +411,15 @@ class ShoppingExController extends ShoppingController
             if ($response) {
                 return $response;
             }
+
+            if (is_null($Order->getPayment())) {
+                $paymentRepository = $this->entityManager->getRepository(Payment::class);
+                $payment = $paymentRepository->findOneBy(['method_class' => StripeRecurringNagMethod::class]);
+                // set payment
+                $Order->setPayment($payment);
+                $Order->setPaymentMethod($payment->getMethod());
+            }
+
             log_info('[注文処理] PaymentMethodを取得します.', [$Order->getPayment()->getMethodClass()]);
             $paymentMethod = $this->createPaymentMethod($Order, null);
 
@@ -659,6 +671,9 @@ class ShoppingExController extends ShoppingController
                     'exp_year' => $request->get('exp_year'),
                     'cvc' => $request->get('cvc'),
                 ],
+                'billing_details' => [
+                    'name' => $request->get('name')
+                ]
             ]);
 
             return $this->json([

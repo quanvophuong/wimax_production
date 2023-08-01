@@ -73,6 +73,21 @@ file that was distributed with this source code.
                 },
             });
 
+            $('input.datetimepicker-input-temp').datetimepicker({
+                locale: '{{ eccube_config.locale }}',
+                format: 'YYYY-MM-DD 23:59:59',
+                useCurrent: false,
+                buttons: {
+                    showToday: true,
+                    showClose: true
+                },
+            });
+
+            // datetimepicker で value が消えてしまうので更新
+            $('input.datetimepicker-inpu-tempt').each(function() {
+                $(this).val($(this).data('value'));
+            });
+
             // datetimepicker で value が消えてしまうので更新
             $('input.datetimepicker-input').each(function() {
                 $(this).val($(this).data('value'));
@@ -538,7 +553,7 @@ file that was distributed with this source code.
                 </div>
             </div>
             <div class="c-outsideBlock__contents mb-5">
-                {{ include('@admin/search_items.twig', { 'form': searchForm }, ignore_missing = true) }}
+                {{ include('@admin/search_items_temp.twig', { 'form': searchForm }, ignore_missing = true) }}
             </div>
             {{ form_widget(searchForm.sortkey, {'attr': {'class': 'js-listSort-key'}}) }}
             {{ form_widget(searchForm.sorttype, {'attr': {'class': 'js-listSort-type'}}) }}

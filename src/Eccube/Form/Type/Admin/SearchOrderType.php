@@ -162,7 +162,7 @@ class SearchOrderType extends AbstractType
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'attr' => [
-                    'class' => 'datetimepicker-input',
+                    'class' => 'datetimepicker-input-temp',
                     'data-target' => '#'.$this->getBlockPrefix().'_order_datetime_end',
                     'data-toggle' => 'datetimepicker',
                 ],
@@ -212,7 +212,7 @@ class SearchOrderType extends AbstractType
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'attr' => [
-                    'class' => 'datetimepicker-input',
+                    'class' => 'datetimepicker-input-temp',
                     'data-target' => '#'.$this->getBlockPrefix().'_payment_datetime_end',
                     'data-toggle' => 'datetimepicker',
                 ],
@@ -262,7 +262,7 @@ class SearchOrderType extends AbstractType
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'attr' => [
-                    'class' => 'datetimepicker-input',
+                    'class' => 'datetimepicker-input-temp',
                     'data-target' => '#'.$this->getBlockPrefix().'_update_datetime_end',
                     'data-toggle' => 'datetimepicker',
                 ],
@@ -312,7 +312,7 @@ class SearchOrderType extends AbstractType
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd',
                 'attr' => [
-                    'class' => 'datetimepicker-input',
+                    'class' => 'datetimepicker-input-temp',
                     'data-target' => '#'.$this->getBlockPrefix().'_shipping_delivery_datetime_end',
                     'data-toggle' => 'datetimepicker',
                 ],
