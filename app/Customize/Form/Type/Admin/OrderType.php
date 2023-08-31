@@ -101,21 +101,41 @@ class OrderType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        // key product
+        // $optionsOrderReceiveds = [
+        //     self::MOBILE_PLAN_HAVE_ADAPTER => [
+        //         'フリー補償' => 'price_1M0mZkGS5e9lvq3n22LWr0w4',
+        //         'ライト補償' => 'price_1M0mZkGS5e9lvq3nkgVDVEpq',
+        //         '補償なし' => 'price_1M0mZjGS5e9lvq3nauWnKZ89'
+        //     ],
+        //     self::MOBILE_PLAN_NO_ADAPTER => [
+        //         'フリー補償' => 'price_1M0mZkGS5e9lvq3ndtcFp9Ux',
+        //         'ライト補償' => 'price_1M0mZkGS5e9lvq3n5z7tTwBU',
+        //         '補償なし' => 'price_1M0mZjGS5e9lvq3nj2MLmAce'
+        //     ],
+        //     self::HOME_PLAN => [
+        //         'フリー補償' => 'price_1M0ma5GS5e9lvq3nxAhIjwJv',
+        //         'ライト補償' => 'price_1M0ma5GS5e9lvq3nZTWNSFnD',
+        //         '補償なし' => 'price_1M0ma4GS5e9lvq3nwtxOpn0G'
+        //     ],
+        // ];
+
+        // key STG
         $optionsOrderReceiveds = [
             self::MOBILE_PLAN_HAVE_ADAPTER => [
-                'フリー補償' => 'price_1M0mZkGS5e9lvq3n22LWr0w4',
-                'ライト補償' => 'price_1M0mZkGS5e9lvq3nkgVDVEpq',
-                '補償なし' => 'price_1M0mZjGS5e9lvq3nauWnKZ89'
+                'フリー補償' => 'price_1M2mpBGS5e9lvq3nhtNCKORt',
+                'ライト補償' => 'price_1M2mpAGS5e9lvq3na3W10GA3',
+                '補償なし' => 'price_1M2mpAGS5e9lvq3n0LssWVqS'
             ],
             self::MOBILE_PLAN_NO_ADAPTER => [
-                'フリー補償' => 'price_1M0mZkGS5e9lvq3ndtcFp9Ux',
-                'ライト補償' => 'price_1M0mZkGS5e9lvq3n5z7tTwBU',
-                '補償なし' => 'price_1M0mZjGS5e9lvq3nj2MLmAce'
+                'フリー補償' => 'price_1M2mpBGS5e9lvq3nvPWuO80E',
+                'ライト補償' => 'price_1M2mpAGS5e9lvq3nYqCMPNbO',
+                '補償なし' => 'price_1M2mp9GS5e9lvq3nW2bPCjXK'
             ],
             self::HOME_PLAN => [
-                'フリー補償' => 'price_1M0ma5GS5e9lvq3nxAhIjwJv',
-                'ライト補償' => 'price_1M0ma5GS5e9lvq3nZTWNSFnD',
-                '補償なし' => 'price_1M0ma4GS5e9lvq3nwtxOpn0G'
+                'フリー補償' => 'price_1M2mt6GS5e9lvq3ncnwwTLXU',
+                'ライト補償' => 'price_1M2mt5GS5e9lvq3nCPHmz85h',
+                '補償なし' => 'price_1M2mt5GS5e9lvq3nmLRB9ykg'
             ],
         ];
 

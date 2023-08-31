@@ -267,14 +267,15 @@ class EditController extends AbstractController
                         $subscriptionSchedule = \Stripe\SubscriptionSchedule::retrieve($recOrder->getScheduleId());
                         // get phase
                         $phaseSubscriptionSchedules = $subscriptionSchedule->phases;
-        
+                        $newPhases = [];
                         // get price in items of phase
-                        foreach($phaseSubscriptionSchedules as $phaseSubscriptionSchedule) {
+                        foreach($phaseSubscriptionSchedules as $key => $phaseSubscriptionSchedule) {
                             $items = [];
                             // get price
                             foreach ($phaseSubscriptionSchedule->items as $phaseSubscriptionScheduleItem) {
                                 // check and date
-                                if ($subscriptionSchedule->current_phase->end_date >= $phaseSubscriptionSchedule->end_date) {
+                                // if ($subscriptionSchedule->current_phase->end_date >= $phaseSubscriptionSchedule->end_date) {
+                                if ($key == 0) {
                                     $items[] = [
                                         'price' => $phaseSubscriptionScheduleItem->price,
                                     ];
