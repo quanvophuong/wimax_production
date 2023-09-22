@@ -399,7 +399,9 @@ class OrderRepository extends AbstractRepository
     public function getQueryBuilderByCustomer(Customer $Customer)
     {
         $qb = $this->createQueryBuilder('o')
-            ->where('o.Customer = :Customer')
+            ->select('o as order', 'sro.subscription_id as subscriptionId')
+            ->innerJoin('\Plugin\StripeRec\Entity\StripeRecOrder', 'sro', 'WITH', 'sro.Order = o.id')
+            ->andWhere('o.Customer = :Customer')
             ->setParameter('Customer', $Customer);
 
         // Order By

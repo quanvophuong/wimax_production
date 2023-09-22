@@ -13,7 +13,6 @@
 
 namespace Eccube\Controller\Mypage;
 
-use Carbon\Carbon;
 use Eccube\Controller\AbstractController;
 use Eccube\Entity\BaseInfo;
 use Eccube\Entity\Customer;
@@ -37,10 +36,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Plugin\StripeRec\Repository\StripeRecOrderRepository;
-use Stripe\Subscription;
-use Stripe\Invoice;
-use Stripe\Charge;
 
 class MypageController extends AbstractController
 {
@@ -75,11 +70,6 @@ class MypageController extends AbstractController
     protected $purchaseFlow;
 
     /**
-     * @var StripeRecOrderRepository
-     */    
-    protected $stripeRecOrderRepository;
-
-    /**
      * MypageController constructor.
      *
      * @param OrderRepository $orderRepository
@@ -87,22 +77,19 @@ class MypageController extends AbstractController
      * @param CartService $cartService
      * @param BaseInfoRepository $baseInfoRepository
      * @param PurchaseFlow $purchaseFlow
-     * @param StripeRecOrderRepository $stripeRecOrderRepository
      */
     public function __construct(
         OrderRepository $orderRepository,
         CustomerFavoriteProductRepository $customerFavoriteProductRepository,
         CartService $cartService,
         BaseInfoRepository $baseInfoRepository,
-        PurchaseFlow $purchaseFlow,
-        StripeRecOrderRepository $stripeRecOrderRepository
+        PurchaseFlow $purchaseFlow
     ) {
         $this->orderRepository = $orderRepository;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
         $this->BaseInfo = $baseInfoRepository->get();
         $this->cartService = $cartService;
         $this->purchaseFlow = $purchaseFlow;
-        $this->stripeRecOrderRepository = $stripeRecOrderRepository;
     }
 
     /**
@@ -391,55 +378,5 @@ class MypageController extends AbstractController
         log_info('お気に入り商品削除完了', [$Customer->getId(), $CustomerFavoriteProduct->getId()]);
 
         return $this->redirect($this->generateUrl('mypage_favorite'));
-    }
-
-    /**
-     * my_page_download_pdf_receipt
-     * @Route("/mypage/download-pdf/{id}/receipt", name="my_page_download_pdf_receipt")     
-     */
-    public function downloadPdfReceipt(Request $request, $id = null)
-    {
-        try {
-            $Customer = $this->getUser();
-
-            $recOrder = $this->stripeRecOrderRepository->findRecOrderByCustomerAndOrderId($Customer->getId(), $id);
-
-            if (!empty($recOrder)) {
-                $recOrder = $recOrder[0];
-            }
-
-            if ($recOrder->getSubscriptionId()) {
-                $subscription = Subscription::retrieve($recOrder->getSubscriptionId());
-            
-                $latestInvoice = $subscription->latest_invoice;
-        
-                $invoice = Invoice::retrieve($latestInvoice);
-        
-                $stripeCharge = Charge::retrieve($invoice->charge);
-                $receiptUrl = $stripeCharge->receipt_url;
-                $html = file_get_contents($receiptUrl);
-                $dom = new \DOMDocument();
-                $dom->loadHTML($html);
-                $receiptsInvocesUrlCheck = 'https://dashboard.stripe.com/receipts/invoices/';
-                $receiptsInvocesUrl = null;
-                foreach($dom->getElementsByTagName("a") as $each_node) {
-                    if ($each_node->getAttribute('href') && str_contains($each_node->getAttribute('href'), $receiptsInvocesUrlCheck)) {
-                        $receiptsInvocesUrl = $each_node->getAttribute('href');
-                        break;
-                    }
-                }
-
-                if ($receiptsInvocesUrl) {
-                    return $this->redirect($receiptsInvocesUrl);
-
-                } else {
-                    return $this->redirect($this->generateUrl('mypage'));
-                }
-            } else {
-                return $this->redirect($this->generateUrl('mypage'));
-            }
-        } catch (\Exception $e) {
-            return $this->redirect($this->generateUrl('mypage'));
-        }
     }
 }

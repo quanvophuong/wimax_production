@@ -61,7 +61,7 @@ class StripeCreditCardExtention extends AbstractTypeExtension
 
             if (is_null($data->getPayment())) {
                 $paymentRepository = $this->entityManager->getRepository(Payment::class);
-                $payment = $paymentRepository->findOneBy(['method_class' => StripeRecurringNagMethod::class]);
+                $payment = $paymentRepository->findOneBy(['method_class' => StripeCreditCard::class]);
                 // set payment
                 $data->setPayment($payment);
                 $data->setPaymentMethod($payment->getMethod());

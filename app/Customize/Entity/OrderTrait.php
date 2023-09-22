@@ -4,6 +4,9 @@ namespace Customize\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Eccube\Annotation\EntityExtension;
+use Stripe\Subscription;
+use Stripe\Invoice;
+use Stripe\Charge;
 
 /**
  * @EntityExtension("Eccube\Entity\Order")
@@ -48,4 +51,19 @@ trait OrderTrait
         return $this->priceIdChange;
     }
 
+    public function checkHaveReceiptInStripe($subscriptionId)
+    {
+        try {
+            $subscription = Subscription::retrieve($subscriptionId);
+        
+            $latestInvoice = $subscription->latest_invoice;
+    
+            $invoice = Invoice::retrieve($latestInvoice);
+    
+            return $invoice->charge;
+
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
 }

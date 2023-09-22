@@ -39,8 +39,8 @@ file that was distributed with this source code.
                             </tr>
                             </thead>
                             <tbody>
-                            {% for Order in pagination %}
-                                {% set idxParent = loop.index0 + 1 %}
+                            {% for OrderParent in pagination %}
+                                {% set Order = OrderParent.order %}
                                 <tr>
                                     <td>{{ Order.order_no }}</td>
                                     <td>{{ Order.order_date|date_sec }}</td>
@@ -98,12 +98,12 @@ file that was distributed with this source code.
                                                     </div>
                                         <div class="deviceNo">端末番号：{{ Order.imei }}</div>
                                         <div class="deviceNo">
-                                            {% if pagination[idxParent] is defined %}
+                                            {% if Order.checkHaveReceiptInStripe(OrderParent.subscriptionId) %}
                                             <a 
                                                 style="border: 2px solid #437ec4; background: #fff; color: #437ec4"
                                                 type="button"
                                                 class="btn btn-download-pdf-receipt"
-                                                href="{{ url('my_page_download_pdf_receipt', { id : pagination[idxParent].id }) }}"
+                                                href="{{ url('my_page_download_pdf_receipt', { id : OrderParent.subscriptionId }) }}"
                                             >
                                                 前回の領収書ダウンロード
                                             </a>
