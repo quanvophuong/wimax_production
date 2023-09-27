@@ -577,8 +577,10 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $stripeOrder->setRecStatus(StripeRecOrder::REC_STATUS_ACTIVE);
             $stripeOrder->setStartDate(new \DateTime());
         }else{
-            if (isset($schedule_params['phases'][1]['billing_cycle_anchor']) && $schedule_params['phases'][1]['billing_cycle_anchor'] != 'phase_start') {
-                foreach ($schedule_params['phases'] as $key => &$scheduleParamsPhase) {
+            dump($schedule_params);
+            $newPhases = [];
+            if (!isset($schedule_params['phases'][1]['billing_cycle_anchor'])) {
+                foreach ($schedule_params['phases'] as $key => $scheduleParamsPhase) {
                     if ($key == 0) {
                         // set end_date phases[0]
                         $dateTimeToday = Carbon::today()->firstOfMonth()->addMonth();
@@ -588,7 +590,11 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                     if (isset($scheduleParamsPhase['iterations'])) {
                         unset($scheduleParamsPhase['iterations']);
                     }
+
+                    array_push($newPhases, $scheduleParamsPhase);
                 }
+
+                $schedule_params['phases'] = $newPhases;
             }
 
             $subscription_schedule = SubscriptionSchedule::create($schedule_params);
