@@ -735,7 +735,7 @@ class StripeRecOrder{
     {
         try {
             $stripeSubscription = StripeSubscription::retrieve($this->getSubscriptionId());
-            return $stripeSubscription->cancel_at ?? null;
+            return $stripeSubscription->canceled_at ?? null;
         } catch (\Exception $e) {
             return null;
         }
