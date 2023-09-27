@@ -411,7 +411,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                 $phases = [
                     [
                         'items'     => $subscription_items_initial,
-                        // 'iterations'=> 1,
+                        'iterations'=> 1,
                         'proration_behavior' => 'none',
                     ],
                     [
@@ -430,7 +430,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $phases = [
                 [
                     'items'     => $items,
-                    // 'iterations'=> 1,
+                    'iterations'=> 1,
                     'proration_behavior' => 'none',
                 ],
                 [
@@ -577,11 +577,19 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $stripeOrder->setRecStatus(StripeRecOrder::REC_STATUS_ACTIVE);
             $stripeOrder->setStartDate(new \DateTime());
         }else{
-            // set end_date phases[0]
-            $dateTimeToday = Carbon::today()->firstOfMonth()->addMonth();
-            $schedule_params['phases'][0]['end_date'] = $dateTimeToday->getTimestamp();
+            if (isset($schedule_params['phases'][1]['billing_cycle_anchor']) && $schedule_params['phases'][1]['billing_cycle_anchor'] != 'phase_start') {
+                foreach ($schedule_params['phases'] as $key => &$scheduleParamsPhase) {
+                    if ($key == 0) {
+                        // set end_date phases[0]
+                        $dateTimeToday = Carbon::today()->firstOfMonth()->addMonth();
+                        $scheduleParamsPhase['end_date'] = $dateTimeToday->getTimestamp();
+                    }
 
-            log_info("end_date phases 0: ". $dateTimeToday->getTimestamp());
+                    if (isset($scheduleParamsPhase['iterations'])) {
+                        unset($scheduleParamsPhase['iterations']);
+                    }
+                }
+            }
 
             $subscription_schedule = SubscriptionSchedule::create($schedule_params);
 
@@ -840,7 +848,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                     $phases = [
                         [
                             'items' =>  $initial_items,
-                            // 'iterations'    =>  1,
+                            'iterations'    =>  1,
                             'proration_behavior'    =>  'none',
                         ],
                         [
@@ -859,7 +867,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                 $phases = [
                     [
                         'items' =>  $items,
-                        // 'iterations'    =>  1,
+                        'iterations'    =>  1,
                         'proration_behavior'    =>  'none',
                     ],
                     [
@@ -1208,6 +1216,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         }
 
         $next_payday = new \DateTime($next_payday->format('Y-m-d 09:30:00'));
+        $dateTimeToday = Carbon::today()->firstOfMonth()->addMonth();
         $now = new \DateTime();
         $load_time = new \DateInterval('PT10S');
         $now->add($load_time);
@@ -1226,12 +1235,14 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                     'quantity' => 1
                 ]
             ],
-            'end_date' => $next_payday->getTimestamp(),
+            'end_date' => $dateTimeToday->getTimestamp(),
             'proration_behavior' => 'none',
             //'trial_end' => $now->getTimestamp(),
         ];
         array_unshift($phases, $phase_first_prod);
         $phases[1]['billing_cycle_anchor'] = "phase_start";
+        log_info(__METHOD__ . ' G-point billing_cycle_anchor' . print_r($schedule_params, true));
+
         $schedule_params['phases'] = $phases;
         //dump($schedule_params);die();
                     log_info(__METHOD__ . ' G-point' . print_r($schedule_params, true));
