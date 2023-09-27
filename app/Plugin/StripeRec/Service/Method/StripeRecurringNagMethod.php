@@ -411,7 +411,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                 $phases = [
                     [
                         'items'     => $subscription_items_initial,
-                        'iterations'=> 1,
+                        // 'iterations'=> 1,
                         'proration_behavior' => 'none',
                     ],
                     [
@@ -430,7 +430,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $phases = [
                 [
                     'items'     => $items,
-                    'iterations'=> 1,
+                    // 'iterations'=> 1,
                     'proration_behavior' => 'none',
                 ],
                 [
@@ -577,6 +577,12 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $stripeOrder->setRecStatus(StripeRecOrder::REC_STATUS_ACTIVE);
             $stripeOrder->setStartDate(new \DateTime());
         }else{
+            // set end_date phases[0]
+            $dateTimeToday = Carbon::today()->firstOfMonth()->addMonth();
+            $schedule_params['phases'][0]['end_date'] = $dateTimeToday->getTimestamp();
+
+            log_info("end_date phases 0: ". $dateTimeToday->getTimestamp());
+
             $subscription_schedule = SubscriptionSchedule::create($schedule_params);
 
             log_info(self::LOG_IF . "--- subscription schedule created.");
@@ -834,7 +840,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                     $phases = [
                         [
                             'items' =>  $initial_items,
-                            'iterations'    =>  1,
+                            // 'iterations'    =>  1,
                             'proration_behavior'    =>  'none',
                         ],
                         [
@@ -853,7 +859,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                 $phases = [
                     [
                         'items' =>  $items,
-                        'iterations'    =>  1,
+                        // 'iterations'    =>  1,
                         'proration_behavior'    =>  'none',
                     ],
                     [
@@ -1111,6 +1117,8 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                 }
             }
         }else{
+            log_info("for monthly");
+
             // for monthly recurring
             $day = $start_time->format("j");
             $days_of_month = $start_time->format("t");
@@ -1198,8 +1206,8 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             }
 
         }
-        $typeFormatDatetime = Carbon::now()->subMinutes(5)->format('H:i:s');
-        $next_payday = new \DateTime($next_payday->format('Y-m-d '. $typeFormatDatetime));
+
+        $next_payday = new \DateTime($next_payday->format('Y-m-d 09:30:00'));
         $now = new \DateTime();
         $load_time = new \DateInterval('PT10S');
         $now->add($load_time);
