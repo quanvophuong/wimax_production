@@ -577,7 +577,6 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $stripeOrder->setRecStatus(StripeRecOrder::REC_STATUS_ACTIVE);
             $stripeOrder->setStartDate(new \DateTime());
         }else{
-            dump($schedule_params);
             $newPhases = [];
             if (!isset($schedule_params['phases'][1]['billing_cycle_anchor'])) {
                 foreach ($schedule_params['phases'] as $key => $scheduleParamsPhase) {
