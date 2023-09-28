@@ -57,6 +57,7 @@ use Plugin\StripeRec\Entity\StripeRecOrderItem;
 use Plugin\StripeRec\Service\ConfigService;
 use Eccube\Repository\ProductClassRepository;
 use Plugin\Coupon4\Entity\CouponOrder;
+use Carbon\Carbon;
 
 
 /**
@@ -516,6 +517,25 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $stripeOrder->setRecStatus(StripeRecOrder::REC_STATUS_ACTIVE);
             $stripeOrder->setStartDate(new \DateTime());
         }else{
+            $newPhases = [];
+            if (!isset($schedule_params['phases'][1]['billing_cycle_anchor'])) {
+                foreach ($schedule_params['phases'] as $key => $scheduleParamsPhase) {
+                    if ($key == 0) {
+                        // set end_date phases[0]
+                        $dateTimeToday = Carbon::today()->firstOfMonth()->addMonth();
+                        $scheduleParamsPhase['end_date'] = $dateTimeToday->getTimestamp();
+                    }
+
+                    if (isset($scheduleParamsPhase['iterations'])) {
+                        unset($scheduleParamsPhase['iterations']);
+                    }
+
+                    array_push($newPhases, $scheduleParamsPhase);
+                }
+
+                $schedule_params['phases'] = $newPhases;
+            }
+
             $subscription_schedule = SubscriptionSchedule::create($schedule_params);
 
             log_info(self::LOG_IF . "--- subscription schedule created.");
@@ -534,6 +554,12 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $stripeOrder->setPaidStatus(StripeRecOrder::STATUS_PAY_UNDEFINED);
             $stripeOrder->setOrder($this->Order);
             $stripeOrder->setSubscriptionId($subscription_id);
+            if (is_null($stripeOrder->getCurrentPeriodStart())) {
+                $stripeOrder->setCurrentPeriodStart($subscription_schedule->current_phase->start_date);
+            }
+            if (is_null($stripeOrder->getCurrentPeriodEnd())) {
+                $stripeOrder->setCurrentPeriodEnd($subscription_schedule->current_phase->end_date);
+            }
 
             $dt = new \DateTime();
             if($purchase_point === "now"){
@@ -1133,6 +1159,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
 
         }
         $next_payday = new \DateTime($next_payday->format('Y-m-d 09:30:00'));
+        $dateTimeToday = Carbon::today()->firstOfMonth()->addMonth();
         $now = new \DateTime();
         $load_time = new \DateInterval('PT10S');
         $now->add($load_time);
@@ -1151,7 +1178,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                     'quantity' => 1
                 ]
             ],
-            'end_date' => $next_payday->getTimestamp(),
+            'end_date' => $dateTimeToday->getTimestamp(),
             'proration_behavior' => 'none',
             //'trial_end' => $now->getTimestamp(),
         ];

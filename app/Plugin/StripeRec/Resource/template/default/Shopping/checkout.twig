@@ -275,7 +275,8 @@ file that was distributed with this source code.
         $('#card_error').hide();
         loadingOverlay("show");
 
-        do_pay('{{ stripePaymentMethodObj.id }}');
+        var payment_method_id = '{{ stripePaymentMethodObj.id ?? 7 }}'
+        do_pay(payment_method_id);
     })
 
     function do_pay(payment_method_id){

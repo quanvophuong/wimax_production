@@ -17,6 +17,10 @@ use Eccube\Entity\Customer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Eccube\Entity\Order;
+use Stripe\Customer as StripeCustomer;
+use Stripe\Subscription as StripeSubscription;
+use Stripe\Invoice;
+use Carbon\Carbon;
 
 /**
  * StripeRecOrder
@@ -608,5 +612,100 @@ class StripeRecOrder{
     {
     	$this->count = $count;
     	return $this;
+    }
+
+    public function getProductNameMain()
+    {
+        $productNameMain = null;
+        foreach($this->OrderItems as $rec_order_item){      
+            $productNameMain = $rec_order_item->getProduct()->getName();
+            if ($productNameMain) {
+                break;
+            }
+        }
+        return $productNameMain;
+    }
+
+    public function getCustomerData()
+    {
+        if (!is_null($this->getOrder()) && !is_null($this->getOrder()->getCustomer()) ) {
+            return $this->getOrder()->getCustomer()->getId();
+        } else {
+            return null;
+        }
+    }
+
+    public function getSubscriptionBalance()
+    {
+        return rand(0, 1);
+    }
+    
+    public function getRecStatusCsv()
+    {
+        switch($this->rec_status) {
+            case StripeRecOrder::REC_STATUS_ACTIVE:
+                return trans('stripe_recurring.label.rec_status.active');
+            case StripeRecOrder::REC_STATUS_CANCELED:
+                return trans('stripe_recurring.label.rec_status.canceled');
+            case StripeRecOrder::REC_STATUS_SCHEDULED:
+                return trans('stripe_recurring.label.rec_status.scheduled');
+            case StripeRecOrder::REC_STATUS_SCHEDULED_CANCELED:
+                return trans('stripe_recurring.label.rec_status.canceled');
+            default:
+                return null;
+        }
+    }
+
+    private $firstDateOrder;
+
+    public function setFirstOrderDate($firstDateOrder)
+    {
+        $this->firstDateOrder = $firstDateOrder;
+        return $this;
+    }
+
+    public function getFirstOrderDate()
+    {
+        return $this->firstDateOrder;
+    }
+
+    public function getUpdateOrderDate()
+    {
+        return $this->getOrder()->getUpdateDate() ?? null;
+    }
+
+    public function getSubscriptBalanceRemaining() 
+    {
+        try {
+            $stripeCustomer = StripeCustomer::retrieve(["id" => $this->getStripeCustomerId(), "expand" => ["cash_balance"]]);
+            return $stripeCustomer->cash_balance->available && $stripeCustomer->cash_balance->available >= $this->getAmount() ? 1 : 0;
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
+
+    public function getNextBillingDate() 
+    {
+        try {
+            // return Carbon::today()->addMonth()->startOfMonth()->format('Y-m-d') ?? null;
+            $invoice = Invoice::upcoming([
+                'customer' => $this->getStripeCustomerId(),
+                'subscription' => $this->getSubscriptionId()
+            ]);
+            $timeUp = $invoice->next_payment_attempt;
+            return Carbon::createFromTimestamp($timeUp)->format('Y-m-d') ?? null;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    public function getCancelOrderDate()
+    {
+        try {
+            $stripeSubscription = StripeSubscription::retrieve($this->getSubscriptionId());
+            return $stripeSubscription->canceled_at ? Carbon::createFromTimestamp($stripeSubscription->canceled_at)->format('Y-m-d') : null;
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 }
