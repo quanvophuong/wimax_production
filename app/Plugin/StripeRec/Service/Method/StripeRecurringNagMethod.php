@@ -586,6 +586,11 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                         $scheduleParamsPhase['end_date'] = $dateTimeToday->getTimestamp();
                     }
 
+                    if ($key == 1 && isset($scheduleParamsPhase['trial_end'])) {
+                        $scheduleParamsPhase['end_date'] = $scheduleParamsPhase['trial_end'];
+                        unset($scheduleParamsPhase['trial_end']);
+                    }
+
                     if (isset($scheduleParamsPhase['iterations'])) {
                         unset($scheduleParamsPhase['iterations']);
                     }
@@ -595,6 +600,8 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
 
                 $schedule_params['phases'] = $newPhases;
             }
+
+            log_info(__METHOD__ . ' DATA CHECK ' . print_r($schedule_params, true));
 
             $subscription_schedule = SubscriptionSchedule::create($schedule_params);
 

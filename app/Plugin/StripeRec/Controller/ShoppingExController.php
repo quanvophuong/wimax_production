@@ -493,7 +493,7 @@ class ShoppingExController extends ShoppingController
             $StripeCustomer=$this->stripeCustomerRepository->findOneBy(array('Customer'=>$Customer));
             if($StripeCustomer instanceof StripeCustomer){
                 $stripLibCustomer = $stripeClient->retrieveCustomer($StripeCustomer->getStripeCustomerId());
-                if(is_array($stripLibCustomer) || isset($stripLibCustomer['error'])) {
+                if(is_array($stripLibCustomer) || isset($stripLibCustomer['error']) || (isset($stripLibCustomer['deleted']) && $stripLibCustomer['deleted'] == true)) {
                     if(isset($stripLibCustomer['error']['code']) && $stripLibCustomer['error']['code'] == 'resource_missing') {
                         $isStripeCustomer = false;
                     }
