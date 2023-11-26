@@ -73,6 +73,38 @@
 {% endblock %}
 
 {% block main %}
+    {# START【停止タグ】#}
+    <script type='text/javascript'>
+        window.ebSettings_2 = {
+            eb_appId: '0dc088057ec1496282da50666a100e5f',
+        };
+    </script>
+    <script src='https://cdn.engage-bot.asia/sdk/web-form/v2.10/submitted.js'></script>
+    <script type='text/javascript'>
+        window.ebSettings_2 = {
+            eb_appId: '23c5bcf6ece14828af9abdf1e2a13447',
+        };
+    </script>
+    <script src='https://cdn.engage-bot.asia/sdk/web-form/v2.10/submitted.js'></script>
+    {# END 【成果タグ】 #}
+
+    {# START【成果タグ】#}
+    <script> 
+        (function(){ 
+            var uqid = "fd781i48cTTf7636"; 
+            var gid = "760"; 
+            var uid = new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" });
+            var uid2 = ""; 
+            var af = ""; 
+            var pid = ""; 
+            var amount = ""; 
+            var a=document.createElement("script"); 
+            a.src="//ac.eb.react.tokyo/ac/action_js.php"; 
+            a.id="afadaction-"+Date.now(); 
+            a.addEventListener("load",function(){(new fpcAction(a.id)).groupAction(gid, af, [uid, uid2], pid, amount, uqid)}); 
+        document.head.appendChild(a)})(); 
+    </script>
+    {# END 【成果タグ】 #}
     <style>
         .ec-layoutRole .ec-layoutRole__contents {
             max-width: none;
@@ -112,12 +144,13 @@
                     {% endfor %}
                     円税込<br>
                     {% set next_date_temp = "now" | date ( "Y-m-01") %}
-                    {% if(is_use_current_month) %}
+                    　　　　　・次回課金日：{{ next_date_temp|date_modify("+#{1} months")|date("Y年m月1日") }}<br>
+                    {# {% if(is_use_current_month) %}
                     　　　　　・次回課金日：{{ next_date_temp|date_modify("+#{1} months")|date("Y年m月1日") }}<br>
 
                     {% else %}
                             ・次回課金日：{{ next_date_temp|date_modify("+#{2} months")|date("Y年m月1日") }}<br>
-                    {% endif %}
+                    {% endif %} #}
                     
                     　　　　　・課金間隔：毎月1日<br>
                 </div>
