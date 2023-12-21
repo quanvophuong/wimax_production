@@ -526,6 +526,11 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                         $scheduleParamsPhase['end_date'] = $dateTimePhase0->getTimestamp();
                     }
 
+                    if ($key == 1 && isset($scheduleParamsPhase['trial_end'])) {
+                        $scheduleParamsPhase['end_date'] = $scheduleParamsPhase['trial_end'];
+                        unset($scheduleParamsPhase['trial_end']);
+                    }
+
                     if (isset($scheduleParamsPhase['iterations'])) {
                         unset($scheduleParamsPhase['iterations']);
                     }
