@@ -580,10 +580,10 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $newPhases = [];
             if (!isset($schedule_params['phases'][1]['billing_cycle_anchor'])) {
                 foreach ($schedule_params['phases'] as $key => $scheduleParamsPhase) {
+                    $dateTimePhase0 = Carbon::today()->firstOfMonth()->addMonth()->addHours(9)->addMinutes(30);
                     if ($key == 0) {
                         // set end_date phases[0]
-                        $dateTimeToday = Carbon::today()->firstOfMonth()->addMonth();
-                        $scheduleParamsPhase['end_date'] = $dateTimeToday->getTimestamp();
+                        $scheduleParamsPhase['end_date'] = $dateTimePhase0->getTimestamp();
                     }
 
                     if ($key == 1 && isset($scheduleParamsPhase['trial_end'])) {
@@ -1247,7 +1247,7 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                     'quantity' => 1
                 ]
             ],
-            'end_date' => $dateTimeToday->getTimestamp(),
+            'end_date' => $next_payday->getTimestamp(),
             'proration_behavior' => 'none',
             //'trial_end' => $now->getTimestamp(),
         ];
