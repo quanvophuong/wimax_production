@@ -14,6 +14,18 @@ file that was distributed with this source code.
 
 {% set body_class = 'mypage' %}
 
+{% block javascript %}
+<script>
+    $(function () {
+        $('.btn-download-pdf-receipt').on('change', function () {
+            var url = $(this).val();
+            if (url) {
+                window.open(url, '_blank');
+            }
+        });
+    });
+</script>
+{% endblock %}
 {% block main %}
     <style>
         footer{
@@ -99,14 +111,22 @@ file that was distributed with this source code.
                                         <div class="deviceNo">端末番号：{{ Order.imei }}</div>
                                         <div class="deviceNo">
                                             {% if Order.checkHaveReceiptInStripe(OrderParent.subscriptionId) %}
-                                            <a 
+                                                <select class="custom-select btn btn-download-pdf-receipt" style="border: 2px solid #437ec4; background: #fff; color: #437ec4">
+                                                    <option>前回の領収書ダウンロード</option>
+                                                    {% for invoice in OrderParent.invoices %}
+                                                        <option value="{{ url('my_page_download_pdf_receipt', { id : invoice.id }) }}">
+                                                            {{ invoice.created|date('Y年m月')}}
+                                                        </option>
+                                                    {% endfor %}
+                                                </select>
+                                            {# <a 
                                                 style="border: 2px solid #437ec4; background: #fff; color: #437ec4"
                                                 type="button"
                                                 class="btn btn-download-pdf-receipt"
                                                 href="{{ url('my_page_download_pdf_receipt', { id : OrderParent.subscriptionId }) }}"
                                             >
                                                 前回の領収書ダウンロード
-                                            </a>
+                                            </a> #}
                                             {% endif %}
                                         </div>
                                                 {% endif %}

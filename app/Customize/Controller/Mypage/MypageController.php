@@ -107,6 +107,52 @@ class MypageController extends MypageMypageController
     }
 
     /**
+     * マイページ.
+     *
+     * @Route("/mypage/", name="mypage", methods={"GET"})
+     * @Template("Mypage/index.twig")
+     */
+    public function index(Request $request, PaginatorInterface $paginator)
+    {
+        $Customer = $this->getUser();
+
+        // 購入処理中/決済処理中ステータスの受注を非表示にする.
+        $this->entityManager
+            ->getFilters()
+            ->enable('incomplete_order_status_hidden');
+
+        // paginator
+        $qb = $this->orderRepository->getQueryBuilderByCustomer($Customer);
+
+        $event = new EventArgs(
+            [
+                'qb' => $qb,
+                'Customer' => $Customer,
+            ],
+            $request
+        );
+        $this->eventDispatcher->dispatch(EccubeEvents::FRONT_MYPAGE_MYPAGE_INDEX_SEARCH, $event);
+
+        $pagination = $paginator->paginate(
+            $qb,
+            $request->get('pageno', 1),
+            $this->eccubeConfig['eccube_search_pmax']
+        );
+        $paginations = clone $pagination;
+        foreach ($pagination as $key => $value) {
+            if (isset($value['subscriptionId']) && $value['subscriptionId'] != '') {
+                $invoices = Invoice::all(['subscription' => $value['subscriptionId']]);
+                $value['invoices'] = $invoices;
+                $paginations[$key] = $value; 
+            }
+        }
+        
+        return [
+            'pagination' => $paginations,
+        ];
+    }
+
+    /**
      * my_page_download_pdf_receipt
      * @Route("/mypage/download-pdf/{id}/receipt", name="my_page_download_pdf_receipt")     
      */
@@ -114,11 +160,11 @@ class MypageController extends MypageMypageController
     {
         try {
             if ($id) {
-                $subscription = Subscription::retrieve($id);
+                // $subscription = Subscription::retrieve($id);
             
-                $latestInvoice = $subscription->latest_invoice;
+                // $latestInvoice = $subscription->latest_invoice;
         
-                $invoice = Invoice::retrieve($latestInvoice);
+                $invoice = Invoice::retrieve($id);
         
                 $stripeCharge = Charge::retrieve($invoice->charge);
                 $receiptUrl = $stripeCharge->receipt_url;
