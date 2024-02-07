@@ -141,9 +141,16 @@ class MypageController extends MypageMypageController
         $paginations = clone $pagination;
         foreach ($pagination as $key => $value) {
             if (isset($value['subscriptionId']) && $value['subscriptionId'] != '') {
-                $invoices = Invoice::all(['subscription' => $value['subscriptionId']]);
-                $value['invoices'] = $invoices;
-                $paginations[$key] = $value; 
+                try {
+                    $invoices = Invoice::all(['subscription' => $value['subscriptionId']]);
+                    $value['invoices'] = $invoices;
+                    $paginations[$key] = $value;
+                } catch (\Exception $e) {
+                    $value['invoices'] = [];
+                    $paginations[$key] = $value;
+                    continue;
+                }
+                 
             }
         }
         
