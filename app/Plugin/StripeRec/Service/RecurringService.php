@@ -743,4 +743,27 @@ class RecurringService{
         //     $this->em->flush();
         // }
     }
+
+    public function updateDescriptionPaymentIntent($rec_order){
+        $res = true;
+
+        try {
+            if ($rec_order->getOrder()) {
+                $subscription = Subscription::retrieve($rec_order->getSubscriptionId());
+                $latestInvoice = $subscription->latest_invoice;
+                $invoice = Invoice::retrieve($latestInvoice);
+                $paymentIntentId = $invoice->payment_intent;
+                $paymentIntent = PaymentIntent::retrieve($paymentIntentId);
+                if ($paymentIntent->description == 'Subscription update') {
+                    PaymentIntent::update($paymentIntentId, [
+                        'description' => 'F'.$rec_order->getOrder()->getId(),
+                    ]);
+                }
+            }
+
+            return $res;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
 }

@@ -199,7 +199,7 @@ class StripePaymentController extends AbstractController
             $newPaymentIntent = $stripeClient->createPaymentIntentWithCustomer(
                 $amount, 
                 $stripePaymentMethodObj, 
-                $Order->getId(), 
+                'F'.$Order->getId(), 
                 false,
                 $stripeCustomerId,
                 $Order->getCurrencyCode());
