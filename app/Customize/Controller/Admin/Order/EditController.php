@@ -292,7 +292,8 @@ class EditController extends AbstractController
                                 'items' => $items,
                                 'proration_behavior' => 'none',
                                 'end_date' => $phaseSubscriptionSchedule->end_date,
-                                'start_date' => $phaseSubscriptionSchedule->start_date
+                                'start_date' => $phaseSubscriptionSchedule->start_date,
+                                'billing_cycle_anchor' => 'phase_start',
                             ];
                         }
 
