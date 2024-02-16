@@ -114,7 +114,7 @@ file that was distributed with this source code.
                                                 <select class="custom-select btn btn-download-pdf-receipt" style="border: 2px solid #437ec4; background: #fff; color: #437ec4">
                                                     <option value="">前回の領収書ダウンロード</option>
                                                     {% for invoice in OrderParent.invoices %}
-                                                        <option value="{{ url('my_page_download_pdf_receipt', { id : invoice.id }) }}">
+                                                        <option value="{{ url('my_page_download_pdf_receipt_download', { id : invoice.id }) }}">
                                                             {{ invoice.created|date('Y年m月')}}
                                                         </option>
                                                     {% endfor %}

@@ -14,6 +14,7 @@
 namespace Customize\Controller\Mypage;
 
 use Carbon\Carbon;
+use Customize\Service\ReceiptPdfService;
 use Eccube\Controller\AbstractController;
 use Eccube\Entity\BaseInfo;
 use Eccube\Entity\Customer;
@@ -33,6 +34,7 @@ use Eccube\Service\PurchaseFlow\PurchaseFlow;
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -81,6 +83,11 @@ class MypageController extends MypageMypageController
     protected $stripeRecOrderRepository;
 
     /**
+     * @var ReceiptPdfService
+     */    
+    protected $receiptPdfService;
+
+    /**
      * MypageController constructor.
      *
      * @param OrderRepository $orderRepository
@@ -89,6 +96,7 @@ class MypageController extends MypageMypageController
      * @param BaseInfoRepository $baseInfoRepository
      * @param PurchaseFlow $purchaseFlow
      * @param StripeRecOrderRepository $stripeRecOrderRepository
+     * @param ReceiptPdfService $receiptPdfService
      */
     public function __construct(
         OrderRepository $orderRepository,
@@ -96,7 +104,8 @@ class MypageController extends MypageMypageController
         CartService $cartService,
         BaseInfoRepository $baseInfoRepository,
         PurchaseFlow $purchaseFlow,
-        StripeRecOrderRepository $stripeRecOrderRepository
+        StripeRecOrderRepository $stripeRecOrderRepository,
+        ReceiptPdfService $receiptPdfService
     ) {
         $this->orderRepository = $orderRepository;
         $this->customerFavoriteProductRepository = $customerFavoriteProductRepository;
@@ -104,6 +113,7 @@ class MypageController extends MypageMypageController
         $this->cartService = $cartService;
         $this->purchaseFlow = $purchaseFlow;
         $this->stripeRecOrderRepository = $stripeRecOrderRepository;
+        $this->receiptPdfService = $receiptPdfService;
     }
 
     /**
@@ -199,5 +209,88 @@ class MypageController extends MypageMypageController
         } catch (\Exception $e) {
             return $this->redirect($this->generateUrl('mypage'));
         }
+    }
+
+    /**
+     * @Route("/mypage/download-pdf/{id}/receipt_download", name="my_page_download_pdf_receipt_download")
+     *
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function exportPdfPdfReceiptDownload(Request $request, $id = null)
+    {
+        if ($id) {
+            $receiptPdfServiceDL = clone $this->receiptPdfService;
+
+            $invoice = Invoice::retrieve($id);
+            $stripeCharge = Charge::retrieve($invoice->charge);
+            if ($stripeCharge->receipt_number == null) {
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $stripeCharge->receipt_url); //set url
+                curl_setopt($ch, CURLOPT_HEADER, true); //get header
+                curl_setopt($ch, CURLOPT_NOBODY, true); //do not include response body
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); //do not show in browser the response
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); //follow any redirects
+                curl_exec($ch);
+                curl_close($ch);
+
+                $stripeCharge = Charge::retrieve($invoice->charge);
+            }
+            
+            $order = $this->stripeRecOrderRepository->findBy(['subscription_id' => $invoice->subscription]);
+            if (sizeof($order)>0) {
+                log_info('Unable to create pdf files! Process have problems!');
+
+                $response = new Response(
+                    'admin.order.export.pdf.download.failure',
+                    400,
+                    ['content-type' => 'application/json']
+                );
+            }
+            // 購入情報からPDFを作成する
+            $arrData = [
+                'invoice' => $invoice,
+                'stripeCharge' => $stripeCharge,
+                'order' => $order[0],
+            ];
+            $status = $receiptPdfServiceDL->makePdfOrder($arrData);
+
+            // 異常終了した場合の処理
+            if (!$status) {
+                // $this->addError('admin.order.export.pdf.download.failure', 'admin');
+                log_info('Unable to create pdf files! Process have problems!');
+
+                $response = new Response(
+                    'admin.order.export.pdf.download.failure',
+                    400,
+                    ['content-type' => 'application/json']
+                );
+            }
+
+            // TCPDF::Outputを実行するとプロパティが初期化されるため、ファイル名を事前に取得しておく
+            $pdfFileName = $receiptPdfServiceDL->getPdfOrderFileName();
+
+            // ダウンロードする
+            $response = new Response(
+                $receiptPdfServiceDL->outputPdf(),
+                200,
+                ['content-type' => 'application/pdf']
+            );
+
+            $response->headers->set('Content-Disposition', 'attachment; filename="'.$pdfFileName.'"');
+
+            // log_info('OrderPdf download success!', ['Order ID' => implode(',', $request->get('ids', []))]);
+
+            return $response;
+        }
+        $response = new Response(
+            'admin.order.export.pdf.download.failure',
+            400,
+            ['content-type' => 'application/json']
+        );
+
+        return $response;
+
     }
 }
