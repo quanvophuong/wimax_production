@@ -313,11 +313,13 @@ file that was distributed with this source code.
     });
     $('#btn_bulk_charge').on('click', function( event ) {
         event.preventDefault();
+        $(this).attr('disabled', true);
         $('#form_bulk').attr('action', "{{ url('stripe_payment_order_payment_bulk_charge') }}").submit();
         return false;
     });
     $('#btn_bulk_refund').on('click', function( event ) {
         event.preventDefault();
+        $(this).attr('disabled', true);
         $('#form_bulk').attr('action', "{{ url('stripe_payment_order_payment_bulk_refund') }}").submit();
         return false;
     });
@@ -1088,7 +1090,8 @@ file that was distributed with this source code.
                             <div class="modal-body text-left">
                                 <p class="text-left"></p>
                                 <div class="row">
-                                    <input type="number" id="cash_refund" name="filter" class="form_control col-8 ml-3 mr-3" min="1" required> 円
+                                    <div class="col-6"></div>
+                                    <input type="number" id="cash_refund" name="filter" class="form_control col-3 ml-3 mr-3" min="1" required style="text-align: end;"> 円
                                 </div>
                                 <ul id="bulkRefundErrors"></ul>
                                 <div class="progress" style="display: none">
