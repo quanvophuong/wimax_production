@@ -271,35 +271,44 @@ class EditController extends AbstractController
                         // get price in items of phase
                         foreach($phaseSubscriptionSchedules as $key => $phaseSubscriptionSchedule) {
                             $items = [];
-                            // get price
-                            foreach ($phaseSubscriptionSchedule->items as $phaseSubscriptionScheduleItem) {
-                                // check and date
-                                // if ($subscriptionSchedule->current_phase->end_date >= $phaseSubscriptionSchedule->end_date) {
-                                if ($key == 0) {
-                                    $items[] = [
-                                        'price' => $phaseSubscriptionScheduleItem->price,
+                            $currentDate = Carbon::now()->timestamp;
+                            
+                            if ($currentDate <= $phaseSubscriptionSchedule->end_date) {
+                                // get price
+                                foreach ($phaseSubscriptionSchedule->items as $phaseSubscriptionScheduleItem) {
+                                    // check and date
+                                    // if ($subscriptionSchedule->current_phase->end_date >= $phaseSubscriptionSchedule->end_date) {
+                                    
+                                    if ($key == 0) {
+                                        $items[] = [
+                                            'price' => $phaseSubscriptionScheduleItem->price,
+                                        ];
+                                    } else {
+                                        // date feature
+                                        $items[] = [
+                                            'price' => $newPrice,
+                                        ];
+                                    }
+                                    // define new phase
+                                    $newPhases[] = [
+                                        'items' => $items,
+                                        'proration_behavior' => 'none',
+                                        'end_date' => $phaseSubscriptionSchedule->end_date,
+                                        'start_date' => $phaseSubscriptionSchedule->start_date,
+                                        'billing_cycle_anchor' => 'phase_start',
                                     ];
-                                } else {
-                                    // date feature
-                                    $items[] = [
-                                        'price' => $newPrice,
-                                    ];
+                                    // \Stripe\SubscriptionSchedule::update($recOrder->getScheduleId(), [
+                                    //     'phases' => $newPhases,
+                                    //     'proration_behavior' => 'none',
+                                    // ]);
                                 }
                             }
-
-                            // define new phase
-                            $newPhases[] = [
-                                'items' => $items,
-                                'proration_behavior' => 'none',
-                                'end_date' => $phaseSubscriptionSchedule->end_date,
-                                'start_date' => $phaseSubscriptionSchedule->start_date,
-                                'billing_cycle_anchor' => 'phase_start',
-                            ];
                         }
 
                         // update date phase schedule
                         \Stripe\SubscriptionSchedule::update($recOrder->getScheduleId(), [
-                            'phases' => $newPhases
+                            'phases' => $newPhases,
+                            'proration_behavior' => 'none',
                         ]);
                     } else { // case only sub
                         // get sub
