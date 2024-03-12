@@ -222,26 +222,56 @@ class ReceiptPdfService extends TcpdfFpdi
         $this->receiptId = $stripeCharge->receipt_number;
 
         // 請求書番号
+        $this->lfText(10, 25.5, '請求書番号', 9, 'B');
         $this->lfText(30, 25.5, $invoice->number, 9, 'B');
 
         // 領収書番号
+        $this->lfText(10, 30.5, '領収書番号', 9, 'B');
         $this->lfText(30, 30.5, $stripeCharge->receipt_number, 9);
 
+        // 登録番号
+        $this->lfText(10, 35.5, '登録番号', 9, 'B');
+        $this->lfText(30, 35.5, 'T7011001094684', 9);
+
         // 注文番号
-        $this->lfText(30, 35.5, 'F'.$order->getOrder()->getId(), 9);
+        $this->lfText(10, 40.5, '注文番号', 9, 'B');
+        $this->lfText(30, 40.5, 'F'.$order->getOrder()->getId(), 9);
 
         // ⽀払い⽇
         $paymentDate = $stripeCharge->created;
-        $this->lfText(30, 40.5, date('Y年m⽉d⽇', $paymentDate), 9);
+        $this->lfText(10, 45.5, '支払い日', 9, 'B');
+        $this->lfText(30, 45.5, date('Y年m⽉d⽇', $paymentDate), 9);
 
         // ⽀払い⽅法
         $card = $stripeCharge->payment_method_details->card;
         $brand = $card->brand;
         $last4 = $card->last4;
-        $this->lfText(30, 45.5, ucfirst($brand) . ' - ' . $last4, 9);
+        $this->lfText(10, 50.5, '支払い方法', 9, 'B');
+        $this->lfText(30, 50.5, ucfirst($brand) . ' - ' . $last4, 9);
 
         // Footer
         $this->issueDate = $stripeCharge->receipt_number. ' · '.date('Y年m⽉d⽇', $paymentDate).'に'.$invoice->amount_paid.'を領収いたしました';
+    }
+
+    protected function renderStoreData()
+    {
+        // 基準座標を設定する
+        $this->setBasePosition();
+
+        // フォント情報のバックアップ
+        $this->backupFont();
+
+        $this->lfText(10, 60, 'Free Max+5G', 9, 'B');
+        $this->lfText(10, 65, '〒1600023', 9);
+        $this->lfText(10, 70, '東京都', 9);
+        $this->lfText(10, 75, '新宿区', 9);
+        $this->lfText(10, 80, '⻄新宿7-18-19', 9);
+        $this->lfText(10, 85, '新宿税理士ビル第二別館佐竹ビル2F', 9);
+        $this->lfText(10, 90, '日本', 9);
+        $this->lfText(10, 95, 'support@free-max.com', 9);
+
+        // フォント情報の復元
+        $this->restoreFont();
     }
 
     /**
@@ -259,7 +289,7 @@ class ReceiptPdfService extends TcpdfFpdi
 
         $paymentDate = date('Y年m⽉d⽇', $stripeCharge->created);
         $total = '￥' . number_format($stripeCharge->amount_captured);
-        $this->lfText(10, 100, $paymentDate.'に'.$total.'を領収いたしました', 13, 'B');
+        $this->lfText(10, 103, $paymentDate.'に'.$total.'を領収いたしました', 13, 'B');
 
         // フォント情報の復元
         $this->restoreFont();
@@ -276,7 +306,8 @@ class ReceiptPdfService extends TcpdfFpdi
         // フォント情報のバックアップ
         $this->backupFont();
 
-        $this->lfText(85, 57, $invoice->customer_email, 9);
+        $this->lfText(85, 60, '請求先', 9, 'B');
+        $this->lfText(85, 65, $invoice->customer_email, 9);
 
         // フォント情報の復元
         $this->restoreFont();
@@ -451,6 +482,9 @@ class ReceiptPdfService extends TcpdfFpdi
 
         // Charge info
         $this->renderChargeData($invoice, $stripeCharge, $order);
+
+        // Charge info
+        $this->renderStoreData();
 
         // Customer info
         $this->renderCustomerData($invoice);
