@@ -265,10 +265,9 @@ class ReceiptPdfService extends TcpdfFpdi
         $this->lfText(10, 65, '〒1600023', 9);
         $this->lfText(10, 70, '東京都', 9);
         $this->lfText(10, 75, '新宿区', 9);
-        $this->lfText(10, 80, '⻄新宿7-18-19', 9);
-        $this->lfText(10, 85, '新宿税理士ビル第二別館佐竹ビル2F', 9);
-        $this->lfText(10, 90, '日本', 9);
-        $this->lfText(10, 95, 'support@free-max.com', 9);
+        $this->lfText(10, 80, '西新宿7-8-13栗原ビル3F', 9);
+        $this->lfText(10, 85, '日本', 9);
+        $this->lfText(10, 90, 'support@free-max.com', 9);
 
         // フォント情報の復元
         $this->restoreFont();
