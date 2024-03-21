@@ -379,7 +379,7 @@ class OrderPdfService extends TcpdfFpdi
      *
      * @param string $title
      */
-    protected function renderTitle($title)
+    protected function renderTitle($title, $h=10)
     {
         // 基準座標を設定する
         $this->setBasePosition();
@@ -389,7 +389,7 @@ class OrderPdfService extends TcpdfFpdi
 
         //文書タイトル（納品書・請求書）
         $this->SetFont(self::FONT_GOTHIC, '', 15);
-        $this->Cell(0, 10, $title, 0, 2, 'C', 0, '');
+        $this->Cell(0, $h, $title, 0, 2, 'C', 0, '');
         $this->Cell(0, 66, '', 0, 2, 'R', 0, '');
         $this->Cell(5, 0, '', 0, 0, 'R', 0, '');
 
@@ -453,6 +453,15 @@ class OrderPdfService extends TcpdfFpdi
             $this->lfText(25, 125, $orderDate, 10);
             //注文番号
             $this->lfText(25, 135, $Order->getOrderNo(), 10);
+            //端末区分
+            $orderItems = $Order->getOrderItems();
+            $orderItem = null;
+            if(!empty($orderItems)){
+            	$orderItem = $orderItems[0];
+            	$this->lfText(20, 140, "【端末区分】", 10);
+            	$this->lfText(25, 145, $orderItem->getProductName(), 10);
+            }
+            
 
             // 総合計金額
             if (!$Order->isMultiple()) {
@@ -847,23 +856,23 @@ class OrderPdfService extends TcpdfFpdi
             // テンプレートファイルを読み込む
             $Order = $Shipping->getOrder();
 
-            $userPath = $this->eccubeConfig->get('eccube_html_admin_dir').'/assets/pdf/nouhinsyo-order.pdf';
+            $userPath = $this->eccubeConfig->get('eccube_html_admin_dir').'/assets/pdf/nouhinsyo-order2.pdf';
             $this->setSourceFile($userPath);
 
             // PDFにページを追加する
             $this->addPdfPage();
 
             // タイトルを描画する
-            $this->renderTitle($formData['title']);
+            $this->renderTitle($formData['title'], -5);
 
             // 店舗情報を描画する
-            $this->renderShopData();
+//             $this->renderShopData();
 
             // 注文情報を描画する
-            $this->renderOrderData($Shipping, true);
+//             $this->renderOrderData($Shipping, true);
 
             // メッセージを描画する
-            $this->renderMessageData($formData);
+//             $this->renderMessageData($formData);
 
             // 出荷詳細情報を描画する
             $this->renderOrderDetailOrderData($Shipping);
@@ -907,13 +916,28 @@ class OrderPdfService extends TcpdfFpdi
         $this->SetFont(self::FONT_SJIS, '', 10);
 
         //注文番号
-        $this->lfText(25, 126, $Order->getOrderNo(), 10);
+        $this->lfText(20, 35, "【注文番号】", 10);
+        $this->lfText(25, 40, $Order->getOrderNo(), 10);
         //ご注文日
         $orderDate = $Order->getCreateDate()->format('Y/m/d H:i');
         if ($Order->getOrderDate()) {
             $orderDate = $Order->getOrderDate()->format('Y/m/d H:i');
         }
-        $this->lfText(25, 135, $orderDate, 10);
+        $this->lfText(20, 49, "【注文日】", 10);
+        $this->lfText(25, 54, $orderDate, 10);
+        
+        // 契約者情報
+        $text = $Order->getName01().'　'.$Order->getName02().'　様';
+        $this->lfText(20, 63, "【契約者氏名】", 10);
+        $this->lfText(25, 68, $text, 10);
+        
+        $text = $Order->getPhoneNumber();
+        $this->lfText(20, 77, "【契約者電話番号】", 10);
+        $this->lfText(25, 82, $text, 10);
+        
+        $text = $Order->getAddr01() . $Order->getAddr02();
+        $this->lfText(20, 91, "【契約者住所】", 10);
+        $this->lfText(25, 96, $text, 10);
 
         $OrderItems = $Order->getItems();
         $OrderItem = null;
@@ -923,35 +947,80 @@ class OrderPdfService extends TcpdfFpdi
                 break;
             }
         }
+        
+        // 契約内容
+        $product_name = "";
+        $quantity = "";
+        $cat_name = "";
+        if(!empty($OrderItem)){
+        	$product_name = $OrderItem->getProductName();
+        	$quantity = $OrderItem->getQuantity();
+        	$cat_name = '安心補償オプション＊'.$OrderItem->getClassCategoryName1();
+        }
+        $this->lfText(20, 105, "【注文内容】", 10);
+        $this->lfText(25, 110, $product_name, 10);
+        
+        $this->lfText(20, 119, "【注文個数】", 10);
+        $this->lfText(25, 124, $quantity, 10);
+        
+        $this->lfText(20, 133, "【安心補償有無/内容】", 10);
+        $this->lfText(25, 138, $cat_name, 10);
+        
         $text = '最短発送';
         if (!empty($OrderItem->getShip()) && $OrderItem->getShip()==2){
             $text = '翌月発送';
         }
-        $this->lfText(25, 144, $text, 10);
+        $this->lfText(20, 147, "【配送希望日】", 10);
+        $this->lfText(25, 152, $text, 10);
 
-        $this->lfText(25, 153, $Order->getName01().' '.$Order->getName02(), 10);
-        $this->lfText(25, 162, $Order->getKana01().' '.$Order->getKana02(), 10);
+        // 配送先情報
+        $this->lfText(20, 161, "【配送先氏名】", 10);
+        $this->lfText(25, 166, $Shipping->getName01().' '.$Shipping->getName02(), 10);
+        
+        $this->lfText(20, 175, "【配送先氏名（カナ）】", 10);
+        $this->lfText(25, 180, $Shipping->getKana01().' '.$Shipping->getKana02(), 10);
+        
+        $this->lfText(20, 189, "【配送先電話番号】", 10);
+        $this->lfText(25, 194, $Shipping->getPhoneNumber(), 10);
+        
+        $this->lfText(20, 203, "【配送先住所】", 10);
+        $this->lfText(25, 208, $Shipping->getPref().$Shipping->getAddr01() . $Shipping->getAddr02(), 10);
+        $this->lfText(25, 213, $Shipping->getCompanyName(), 10);
+        
+        $this->lfText(20, 222, "【配送方法】", 10);
+        $delivery_name = $Shipping->getShippingDeliveryName();
+        if($delivery_name === "ヤマト運輸" || $delivery_name === "佐川急便"){
+        	$delivery_name = "宅配便";
+        }
+        $this->lfText(25, 227, $delivery_name, 10);
+        $this->lfText(25, 232, $Shipping->getShippingDeliveryTime(), 10);
+        
+        $this->lfText(20, 241, "【お問い合わせ】", 10);
+        $this->lfText(20, 246, $Order->getMessage(), 10);
+        
+//         $this->lfText(25, 153, $Order->getName01().' '.$Order->getName02(), 10);
+//         $this->lfText(25, 162, $Order->getKana01().' '.$Order->getKana02(), 10);
 
         // $this->lfText(25, 171, '〒'.$Order->getPostalCode(), 10);
         // $this->lfText(25, 175, $Order->getPref().$Order->getAddr01(), 10);
         // $this->lfText(25, 179, $Order->getAddr02(), 10);
 
-        $this->lfText(25, 171, $Order->getPhoneNumber(), 10);
+//         $this->lfText(25, 171, $Order->getPhoneNumber(), 10);
         // $this->lfText(25, 197, $Order->getCompanyName(), 10);
 
-        if(!empty($OrderItem)){
-            $this->lfText(25, 180, $OrderItem->getProductName(), 10);
-            $this->lfText(25, 184, '安心補償オプション＊'.$OrderItem->getClassCategoryName1(), 10);
-            $this->lfText(25, 188, 'USB ACアダプター＊'.$OrderItem->getClassCategoryName2(), 10);
-        }
+//         if(!empty($OrderItem)){
+//             $this->lfText(25, 180, $OrderItem->getProductName(), 10);
+//             $this->lfText(25, 184, '安心補償オプション＊'.$OrderItem->getClassCategoryName1(), 10);
+//             $this->lfText(25, 188, 'USB ACアダプター＊'.$OrderItem->getClassCategoryName2(), 10);
+//         }
 
-        $this->lfText(25, 197, '〒'.$Shipping->getPostalCode(), 10);
-        $this->lfText(25, 201, $Shipping->getPref().$Shipping->getAddr01(), 10);
-        $this->lfText(25, 205, $Shipping->getAddr02(), 10);
+//         $this->lfText(25, 197, '〒'.$Shipping->getPostalCode(), 10);
+//         $this->lfText(25, 201, $Shipping->getPref().$Shipping->getAddr01(), 10);
+//         $this->lfText(25, 205, $Shipping->getAddr02(), 10);
 
-        $this->lfText(25, 214, $Shipping->getShippingDeliveryName(), 10);
+//         $this->lfText(25, 214, $Shipping->getShippingDeliveryName(), 10);
         
-        $this->lfText(25, 223, $Shipping->getNote(), 10);
+//         $this->lfText(25, 223, $Shipping->getNote(), 10);
             // // 総合計金額
             // if (!$Order->isMultiple()) {
             //     $this->SetFont(self::FONT_SJIS, 'B', 15);

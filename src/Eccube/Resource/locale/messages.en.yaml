@@ -497,6 +497,8 @@ admin.common.move_to_confirm_message: 'Will move to %name% Setting page. Do you 
 admin.common.move_to_confirm_move_only: Move
 admin.common.move_to_confirm_save_and_move: Save & Move
 admin.common.admin_url_warning: 'Please set the Admin Console URL that is hard to guess for security. You can set it at "<a href="%url%">Security</a>".'
+admin.common.additional_payment: Additional payment
+admin.common.refund: Refund
 
 
 # Labels related to entity
@@ -919,6 +921,7 @@ admin.order.skip_change_status: '%name%: Status change has been skipped'
 
 # Shipping CSV Templates
 admin.order.shipping_csv.shipping_id_col: Shipping ID
+admin.order.shipping_csv.order_id_col: Order ID
 admin.order.shipping_csv.shipping_id_description: ''
 admin.order.shipping_csv.tracking_number_col: Tracking No.
 admin.order.shipping_csv.tracking_number_description: ''

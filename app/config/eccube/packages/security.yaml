@@ -58,7 +58,8 @@ security:
                 failure_handler: eccube.security.failure_handler
             logout:
                 path: logout
-                target: homepage
+                # target: homepage
+                success_handler: Customize\Controller\MyLogoutSuccessHandler
 
     access_decision_manager:
         strategy: unanimous

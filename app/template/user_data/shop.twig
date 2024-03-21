@@ -135,6 +135,10 @@ file that was distributed with this source code.
     });
     //sp total toggle
     $(function () {
+    
+    // 初期値
+    calcAmount();
+
     $('.displayBtn').click(function () {
         $(this).toggleClass("add");
         $('.displayArea').slideToggle();
@@ -265,6 +269,7 @@ file that was distributed with this source code.
     classcategory_id2 = 11;
 }
 
+
     if(product_id == 3){
     var url = '{{ url('product_add_cart', {id:3}) }}'
                     if(classcategory_id1 == 9){
@@ -369,6 +374,7 @@ file that was distributed with this source code.
             $('#total_value').text(total.toLocaleString() + '円');
             $('#next_total').text(next.toLocaleString() + '円')
         }
+        
     </script>
 {% endblock javascript %}
 
@@ -495,14 +501,14 @@ file that was distributed with this source code.
                     <div class="formContentBlock color_block">
 {#                        <h3>発送希望日を選択<br><span style="color:red;font-size: 26px;">「最短発送」希望のお客様は必ず「最短発送」をご選択ください。</span></h3>#}
                         <h3>発送希望日を選択<br><span style="color:red;font-size: 25px;">「最短発送」希望のお客様は必ず「最短発送」をご選択ください。</span></h3>
-                        <input type="radio" id="short" name="send" value="1">
+                        <input type="radio" id="short" name="send" value="1" {% if(is_use_current_month) %}checked{% endif %}>
                         {% if(is_use_current_month) %}
                             <label for="short">
                                 <em>最短発送</em>
                                 <span id="current_month">すぐにご利用のお客様→　{{ current_delivery_date }}</span>
                             </label>
                         {% endif %}
-                        <input type="radio" id="next" name="send" value="2" checked>
+                        <input type="radio" id="next" name="send" value="2" {% if(is_use_current_month==false) %}checked{% endif %}>
                         <label for="next">
                             <em>翌月</em>
                             <span id="">{{ next_delivery_date }}</span>
@@ -514,33 +520,33 @@ file that was distributed with this source code.
                         </ul>
                     </div>
                 </form>
-{#                <div class="ec-borderedDefs">#}
-{#                    <dl>#}
-{#                        <dt style="display:flex;align-items: center;font-weight: bold;">#}
-{#                            <div>キャッシュバック<br>キャンペーン</div>#}
-{#                            <span class="ec-required">必須</span>#}
-{#                        </dt>#}
-{#                        <dd>#}
-{#                            <div class="form-group form-inline">#}
-{#                                <div class="ec-radio">#}
-{#                                    <div id="entry_url_flg">#}
-{#                                        <input type="radio" id="entry_url_flg_0"#}
-{#                                               name="temp_url_flg" required="required"#}
-{#                                               value="1" checked>#}
-{#                                        <label for="entry_url_flg_0">#}
-{#                                            <span>申し込む</span>#}
-{#                                        </label>#}
-{#                                        <input type="radio" id="entry_url_flg_1" name="temp_url_flg"#}
-{#                                               required="required" value="0">#}
-{#                                        <label for="entry_url_flg_1">#}
-{#                                            <span>申し込まない</span>#}
-{#                                        </label>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </dd>#}
-{#                    </dl>#}
-{#                </div>#}
+                {# <div class="ec-borderedDefs">
+                    <dl>
+                        <dt style="display:flex;align-items: center;font-weight: bold;">
+                            <div>キャッシュバック<br>キャンペーン</div>
+                            <span class="ec-required">必須</span>
+                        </dt>
+                        <dd>
+                            <div class="form-group form-inline">
+                                <div class="ec-radio">
+                                    <div id="entry_url_flg">
+                                        <input type="radio" id="entry_url_flg_0"
+                                               name="temp_url_flg" required="required"
+                                               value="1" checked>
+                                        <label for="entry_url_flg_0">
+                                            <span>申し込む</span>
+                                        </label>
+                                        <input type="radio" id="entry_url_flg_1" name="temp_url_flg"
+                                               required="required" value="0">
+                                        <label for="entry_url_flg_1">
+                                            <span>申し込まない</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </dd>
+                    </dl>
+                </div> #}
                 <form id="productForm" name="form" method="post">
                     <input type="hidden" id="classcategory_id1" name="classcategory_id1" value="9">
                     <input type="hidden" id="classcategory_id2" name="classcategory_id2" value="11">

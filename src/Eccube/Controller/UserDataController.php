@@ -110,6 +110,7 @@ class UserDataController extends AbstractController
 
             $next_date_string = $next_conf_date->format('n月j日発送予定');
             $current_date_string = $currnet_conf_date->format('n月j日発送予定');
+            
             return $this->render($file, array(
                 'next_delivery_date' => $next_date_string,
                 'current_delivery_date' => $current_date_string,

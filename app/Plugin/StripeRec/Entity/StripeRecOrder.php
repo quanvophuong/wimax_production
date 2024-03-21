@@ -242,11 +242,43 @@ class StripeRecOrder{
      */
     private $count;
 
-    
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="is_pause_subscriptions", type="boolean", options={"default":false})
+     */
+    private $is_pause_subscriptions = false;
+
+    /**
+     * @var string
+     * @ORM\Column(name="date_pause_subscriptions", type="datetimetz", nullable=true)
+     */
+    private $date_pause_subscriptions;
 
     public function __construct()
     {
         $this->Orders = new ArrayCollection();
+    }
+
+    public function setPauseSubscriptions($is_pause_subscriptions)
+    {
+        $this->is_pause_subscriptions = $is_pause_subscriptions;
+        return $this;
+    }
+
+    public function isPauseSubscriptions(){
+        return $this->is_pause_subscriptions;
+    }
+
+    public function getDatePauseSubscriptions()
+    {
+        return $this->date_pause_subscriptions;
+    }
+
+    public function setDatePauseSubscriptions($date_pause_subscriptions)
+    {
+        $this->date_pause_subscriptions = $date_pause_subscriptions;
+        return $this;
     }
 
     public function getFailedInvoice()
@@ -703,7 +735,8 @@ class StripeRecOrder{
     {
         try {
             $stripeSubscription = StripeSubscription::retrieve($this->getSubscriptionId());
-            return $stripeSubscription->canceled_at ? Carbon::createFromTimestamp($stripeSubscription->canceled_at)->format('Y-m-d') : null;
+            return $stripeSubscription->canceled_at ?? null;
+            // return $stripeSubscription->canceled_at ? Carbon::createFromTimestamp($stripeSubscription->canceled_at)->format('Y-m-d') : null;
         } catch (\Exception $e) {
             return null;
         }

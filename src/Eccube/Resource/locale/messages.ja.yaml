@@ -497,6 +497,8 @@ admin.common.move_to_confirm_message: '%name%に移動します。編集内容�
 admin.common.move_to_confirm_move_only: 保存せずに移動
 admin.common.move_to_confirm_save_and_move: 保存して移動
 admin.common.admin_url_warning: '管理画面URLは、セキュリティのため推測されにくいものを設定してください。「<a href="%url%">セキュリティ管理</a>」から設定できます。'
+admin.common.additional_payment: 追加決済
+admin.common.refund: 返金
 
 
 # エンティティに関連するラベル
@@ -919,6 +921,7 @@ admin.order.skip_change_status: '%name%: ステータス変更をスキップし
 
 # 出荷CSV雛形
 admin.order.shipping_csv.shipping_id_col: 出荷ID
+admin.order.shipping_csv.order_id_col: 注文番号
 admin.order.shipping_csv.shipping_id_description: ''
 admin.order.shipping_csv.tracking_number_col: お問い合わせ番号
 admin.order.shipping_csv.tracking_number_description: ''

@@ -24,6 +24,7 @@ use Eccube\Form\Type\Front\ShoppingShippingType;
 use Eccube\Form\Type\Shopping\CustomerAddressType;
 use Eccube\Form\Type\Shopping\OrderType;
 use Eccube\Repository\OrderRepository;
+use Eccube\Repository\CalendarRepository;
 use Eccube\Service\CartService;
 use Eccube\Service\MailService;
 use Eccube\Service\OrderHelper;
@@ -43,6 +44,8 @@ use Plugin\Coupon4\Repository\CouponOrderRepository;
 use Plugin\Coupon4\Service\CouponService;
 use Plugin\Coupon4\Entity\Coupon;
 use Symfony\Component\Form\FormError;
+use Eccube\Entity\Payment;
+use Plugin\StripeRec\Service\Method\StripeRecurringNagMethod;
 
 class ShoppingController extends AbstractShoppingController
 {
@@ -70,6 +73,8 @@ class ShoppingController extends AbstractShoppingController
     private $couponOrderRepository;
     private $couponService;
 
+    protected $calendarRepository;
+
     public function __construct(
         CartService $cartService,
         MailService $mailService,
@@ -77,7 +82,8 @@ class ShoppingController extends AbstractShoppingController
         OrderHelper $orderHelper,
         CouponRepository $couponRepository,
         CouponOrderRepository $couponOrderRepository,
-        CouponService $couponService
+        CouponService $couponService,
+        CalendarRepository $calendarRepository
     ) {
         $this->cartService = $cartService;
         $this->mailService = $mailService;
@@ -86,6 +92,7 @@ class ShoppingController extends AbstractShoppingController
         $this->couponRepository = $couponRepository;
         $this->couponOrderRepository = $couponOrderRepository;
         $this->couponService = $couponService;
+        $this->calendarRepository = $calendarRepository;
     }
 
     /**
@@ -153,14 +160,63 @@ class ShoppingController extends AbstractShoppingController
             $this->entityManager->flush();
         }
 
-        $form = $this->createForm(OrderType::class, $Order);
+        // case payment is null
+        if (is_null($Order->getPayment())) {
+            $paymentRepository = $this->entityManager->getRepository(Payment::class);
+            $payment = $paymentRepository->findOneBy(['method_class' => StripeRecurringNagMethod::class]);
+            // set payment
+            $Order->setPayment($payment);
+        }
 
+        $form = $this->createForm(OrderType::class, $Order);
+        
+        $shippings = $Order->getShippings();
+        foreach($shippings as $shipping){
+        	$orderitems = $shipping->getProductOrderItems();
+        	$num = count($orderitems);
+        	log_info('[TEST LOG] num' . $num, [$flowResult->getErrors()]);
+        	foreach ($orderitems as $key => $orderitem){
+        		log_info('[TEST LOG] ' . $orderitem->getId() . $orderitem->getProductName());
+        		if($key>0){
+        			// 2個以上ある場合は最後のデータ以外は削除
+        			$shipping->removeOrderItem($orderitem);
+        			$this->entityManager->remove($orderitem);
+        			$this->entityManager->flush();
+        		}else if($orderitem->getQuantity() > 1){
+        			// 数量が1以上の場合は修正
+        			$orderitem->setQuantity(1);
+        			$this->entityManager->persist($orderitem);
+        			$this->entityManager->flush();
+        		}
+        	}
+        }
+        
         if ($CouponOrder){
             $form->get('coupon_cd')->setData($CouponOrder->getCouponCd());
         }
+
+        // 課金日検証
+        $next_month = new \DateTime(date('Y-m-01'));
+        date_add($next_month, new \DateInterval('P1M'));
+        $next_month_day = $next_month->format('Y-m-01');
+        $next_date = new \DateTime($next_month_day);
+
+        $current_month = new \DateTime('now');
+        if($current_month->format('H') > 13) date_add($current_month, new \DateInterval('P1D'));
+        $current_month_day = $current_month->format('Y-m-d');
+        $current_date = new \DateTime($current_month_day);
+        $currnet_conf_date = $this->getAvailableDate($current_date);
+        $next_conf_date = $this->getAvailableDate($next_date);
+
+        $currnet_last_date = clone $currnet_conf_date;
+
+        date_add($currnet_last_date, new \DateInterval('P1D'));
+        $is_use_current = date('n') == $currnet_last_date->format('n');
+
         return [
             'form' => $form->createView(),
             'Order' => $Order,
+            'is_use_current_month' => $is_use_current
         ];
     }
 
@@ -390,6 +446,49 @@ class ShoppingController extends AbstractShoppingController
                 'done' => true,
                 'messages' => "success",
             ]);
+        } else {
+            $order_id = $form->getData()->getId();
+            $Shipping = $form->getData()->getShippings()->first();
+
+            $order = $this->orderRepository->find($order_id);
+            if (!$Order) {
+                log_info('[注文確認] 購入処理中の受注が存在しません.', [$preOrderId]);
+    
+                return $this->json([
+                    'fail' => true,
+                    'messages' => "fail",
+                ]);
+            }
+
+            $next_month = new \DateTime(date('Y-m-01'));
+        	date_add($next_month, new \DateInterval('P1M'));
+        	$next_month_day = $next_month->format('Y-m-01');
+            $next_date = new \DateTime($next_month_day);
+
+            $current_month = new \DateTime('now');
+            if($current_month->format('H') > 13) date_add($current_month, new \DateInterval('P1D'));
+            $current_month_day = $current_month->format('Y-m-d');
+            $current_date = new \DateTime($current_month_day);
+            $currnet_conf_date = $this->getAvailableDate($current_date);
+            $next_conf_date = $this->getAvailableDate($next_date);
+
+            $orderShipping = $order->getShippings()->first();
+            $orderShipping->setShippingDeliveryTime($Shipping->getShippingDeliveryTime());
+            $orderShipping->setShippingDeliveryName($Shipping->getShippingDeliveryName());
+
+            $orderItems = $order->getProductOrderItems();
+            foreach($orderItems as $orderItem){
+                if ($orderItem->isProduct()){
+                    if ($orderItem->getShip() == 1){
+                        $orderShipping->setShippingDeliveryDate($currnet_conf_date);
+                    } else {
+                        $orderShipping->setShippingDeliveryDate($next_conf_date);
+                    }
+                }
+            }
+
+            $this->entityManager->persist($orderShipping);
+            $this->entityManager->flush();
         }
 
         log_info('[注文確認] フォームエラーのため, 注文手続画面を表示します.', [$Order->getId()]);
@@ -567,10 +666,28 @@ class ShoppingController extends AbstractShoppingController
 
         log_info('[注文完了] 注文完了画面を表示しました. ', [$hasNextCart]);
 
+        $next_month = new \DateTime(date('Y-m-01'));
+        date_add($next_month, new \DateInterval('P1M'));
+        $next_month_day = $next_month->format('Y-m-01');
+        $next_date = new \DateTime($next_month_day);
+
+        $current_month = new \DateTime('now');
+        if($current_month->format('H') > 13) date_add($current_month, new \DateInterval('P1D'));
+        $current_month_day = $current_month->format('Y-m-d');
+        $current_date = new \DateTime($current_month_day);
+        $currnet_conf_date = $this->getAvailableDate($current_date);
+        $next_conf_date = $this->getAvailableDate($next_date);
+
+        $currnet_last_date = clone $currnet_conf_date;
+
+        date_add($currnet_last_date, new \DateInterval('P1D'));
+        $is_use_current = date('n') == $currnet_last_date->format('n');
+
         return [
             'Order' => $Order,
             'hasNextCart' => $hasNextCart,
-            'url_flg' => $url_flg
+            'url_flg' => $url_flg,
+            'is_use_current_month' => $is_use_current,
         ];
     }
 
@@ -894,5 +1011,21 @@ class ShoppingController extends AbstractShoppingController
         }
 
         return null;
+    }
+
+    function getAvailableDate($date){
+        while(1){
+            $weeknum = $date->format('N');
+            if ($weeknum < 6){
+                $Calendar = $this->calendarRepository->findOneBy(array('holiday' => $date));
+                $date->setTimezone(new \DateTimeZone('Asia/Tokyo'));
+                if (empty($Calendar)){
+                    return $date;
+                    break;
+                }
+            }
+            date_add($date, new \DateInterval('P1D'));
+        }
+
     }
 }

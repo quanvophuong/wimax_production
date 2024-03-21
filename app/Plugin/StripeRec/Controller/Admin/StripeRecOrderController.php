@@ -560,4 +560,45 @@ class StripeRecOrderController extends AbstractController
         return $response;
     }
 
+    /**
+     * Admin rec_order_history
+     * @Route("/%eccube_admin_route%/plugin/striperec/order/{id}/pause", name="admin_striperec_order_pause")     
+     */
+    public function pauseSubscription(Request $request, $id = null)
+    {
+        $rec_order = $this->stripe_rec_repo->find($id);
+        Subscription::update($rec_order->getSubscriptionId(), [
+            'pause_collection' => [
+                'behavior' => 'keep_as_draft'
+            ]
+        ]);
+
+        $rec_order->setPauseSubscriptions(true);
+        $rec_order->setDatePauseSubscriptions(new \DateTime());
+
+        $this->entityManager->persist($rec_order);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute("stripe_rec_admin_recorder");
+    }
+
+    /**
+     * Admin rec_order_history
+     * @Route("/%eccube_admin_route%/plugin/striperec/order/{id}/re-open", name="admin_striperec_order_re_open")     
+     */
+    public function reOpenSubscription(Request $request, $id = null)
+    {
+        $rec_order = $this->stripe_rec_repo->find($id);
+        Subscription::update($rec_order->getSubscriptionId(), [
+            'pause_collection' => ''
+        ]);
+
+        $rec_order->setPauseSubscriptions(false);
+        $rec_order->setDatePauseSubscriptions(null);
+
+        $this->entityManager->persist($rec_order);
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute("stripe_rec_admin_recorder");
+    }
 }

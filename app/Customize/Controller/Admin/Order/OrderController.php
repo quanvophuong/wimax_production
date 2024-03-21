@@ -665,7 +665,8 @@ class OrderController extends AbstractController
     public function exportPdf(Request $request)
     {
         // requestから出荷番号IDの一覧を取得する.
-        $ids = $request->get('ids', []);
+    	$ids = $request->get('ids', []);
+    	$products = $request->get('products', []);
 
         if (count($ids) == 0) {
             $this->addError('admin.order.delivery_note_parameter_error', 'admin');
@@ -696,6 +697,7 @@ class OrderController extends AbstractController
 
         // Formへの設定
         $form->get('ids')->setData(implode(',', $ids));
+        $form->get('product_name')->setData(implode(',', $products));
 
         return [
             'form' => $form->createView(),

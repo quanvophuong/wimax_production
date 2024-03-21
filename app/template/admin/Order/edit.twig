@@ -181,6 +181,7 @@ file that was distributed with this source code.
             $('#order_Shipping_Delivery').change(function() {
                 var deliveryId = $(this).val();
                 var $shippingDeliveryTime = $('#order_Shipping_DeliveryTime');
+                var shippingDeliveryTimeValue = $('#order_Shipping_DeliveryTime').val();
                 $shippingDeliveryTime.find('option').remove();
                 $shippingDeliveryTime.append($('<option></option>').val('').text('指定なし'));
                 if (typeof(times[deliveryId]) !== 'undefined') {
@@ -190,6 +191,40 @@ file that was distributed with this source code.
                             .val(timeId)
                             .text(timeValue));
                     }
+                    if(deliveryId == 2 || deliveryId == 6){
+	                    if(shippingDeliveryTimeValue == 3){
+							// 午前中
+	                    	$shippingDeliveryTime.val(8);
+	                    }else if(shippingDeliveryTimeValue == 4){
+							// 14:00～16:00
+	                    	$shippingDeliveryTime.val(9);
+	                    }else if(shippingDeliveryTimeValue == 5){
+	                    	// 16:00～18:00
+	                    	$shippingDeliveryTime.val(10);
+	                    }else if(shippingDeliveryTimeValue == 6){
+	                    	// 18:00～20:00
+	                    	$shippingDeliveryTime.val(11);
+	                    }else if(shippingDeliveryTimeValue == 7){
+	                    	// 19:00～21:00
+	                    	$shippingDeliveryTime.val(12);
+	                    }else if(shippingDeliveryTimeValue == 8){
+							// 午前中
+	                    	$shippingDeliveryTime.val(3);
+	                    }else if(shippingDeliveryTimeValue == 9){
+							// 14:00～16:00
+	                    	$shippingDeliveryTime.val(4);
+	                    }else if(shippingDeliveryTimeValue == 10){
+	                    	// 16:00～18:00
+	                    	$shippingDeliveryTime.val(5);
+	                    }else if(shippingDeliveryTimeValue == 11){
+	                    	// 18:00～20:00
+	                    	$shippingDeliveryTime.val(6);
+	                    }else if(shippingDeliveryTimeValue == 12){
+	                    	// 19:00～21:00
+	                    	$shippingDeliveryTime.val(7);
+	                    }
+                    }
+                        
                 }
             });
 
@@ -312,6 +347,13 @@ file that was distributed with this source code.
                                                 {{ form_widget(form.Payment) }}
                                                 {{ form_errors(form.Payment) }}
                                                 <p class="form-text font-weight-bold text-danger mb-0">{{ 'admin.order.change_payment_method_message'|trans }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="row mb-3 form-group">
+                                            <label class="col-3 col-form-label">契約補償</label>
+                                            <div class="col">
+                                                {{ form_widget(form.PriceIdChange) }}
+                                                {{ form_errors(form.PriceIdChange) }}
                                             </div>
                                         </div>
                                     </div>
@@ -546,9 +588,9 @@ file that was distributed with this source code.
                                     {# 単数配送の場合は配送先の編集が可能 #}
                                     <div class="row mb-3">
                                         <div class="col-6">
-                                            <button type="button" class="btn btn-ec-regular copy-customer">{{ 'admin.order.copy_orderer'|trans }}</button>
+                                            <button type="button" class="btn btn-ec-regular copy-customer" style="display:none;">{{ 'admin.order.copy_orderer'|trans }}</button>
                                             {% if Order.id is not empty %}
-                                                <a class="btn btn-ec-regular pdf-print" href="{{ url('admin_order_export_pdf') }}?ids[]={{ Order.Shippings[0].id }}">{{ 'admin.order.output_delivery_note'|trans }}</a>
+                                                <a class="btn btn-ec-regular pdf-print" href="{{ url('admin_order_export_pdf') }}?ids[]={{ Order.Shippings[0].id }}&products[]={{ Order.OrderItems[0].product_name }}">{{ 'admin.order.output_delivery_note'|trans }}</a>
                                                 <a class="btn btn-ec-regular pdf-order-print" href="{{ url('admin_order_pdf_order_download') }}?ids[]={{ Order.Shippings[0].id }}">注文書出力</a>
                                             {% endif %}
                                         </div>

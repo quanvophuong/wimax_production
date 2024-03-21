@@ -8,6 +8,10 @@ http://www.ec-cube.co.jp/
 For the full copyright and license information, please view the LICENSE
 file that was distributed with this source code.
 #}
+
+{% set keyCheckEndDate = ['order_datetime_end', 'payment_datetime_end', 'update_datetime_end', 'shipping_delivery_datetime_end', 'order_date_end', 'payment_date_end', 'update_date_end', 'shipping_delivery_date_end'] %}
+{% set keyCheckStartDate = ['order_datetime_start', 'payment_datetime_start', 'update_datetime_start', 'shipping_delivery_datetime_start', 'order_date_start', 'payment_date_start', 'update_date_start', 'shipping_delivery_date_start'] %}
+{% set screenCheckEndDate = 'admin_search_order' %}
 <ul class="list-inline">
     {% for child in form.children if child.vars.name != '_token' and child.vars.data is not empty %}
         {% if false == (child.vars.label == 'admin.list.sort.key' or child.vars.label == 'admin.list.sort.type') %}{# ソートの選択結果は表示しない #}
@@ -22,10 +26,13 @@ file that was distributed with this source code.
                     {%- endfor -%}
                     {{ not loop.last ? ',&nbsp;' }}
                 {%- endfor -%}
+            {%- elseif (child.vars.name in keyCheckEndDate) and (form.vars.id == screenCheckEndDate) -%}
+                {{ child.vars.data|date_day }} 23:59:59
+            {%- elseif (child.vars.name in keyCheckStartDate) and (form.vars.id == screenCheckEndDate) -%}
+                {{ child.vars.data|date_day }}
             {%- elseif php_is_a(child.vars.data, '\DateTime') -%}
-                {# DateTimeType の時は分まで表示 しない #}
-                {% if 'datetime' in child.vars.id %}
-                    {{ child.vars.data|date_day }}
+                {%- if 'datetime' in child.vars.id %}
+                    {{ child.vars.data|date_sec }}
                 {% else %}
                     {{ child.vars.data|date_day }}
                 {% endif %}
