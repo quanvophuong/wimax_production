@@ -497,6 +497,8 @@ admin.common.move_to_confirm_message: 'Will move to %name% Setting page. Do you 
 admin.common.move_to_confirm_move_only: Move
 admin.common.move_to_confirm_save_and_move: Save & Move
 admin.common.admin_url_warning: 'Please set the Admin Console URL that is hard to guess for security. You can set it at "<a href="%url%">Security</a>".'
+admin.common.additional_payment: Additional payment
+admin.common.refund: Refund
 
 
 # Labels related to entity

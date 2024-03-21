@@ -23,6 +23,9 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Form\FormError;
+use Eccube\Entity\Payment;
+use Doctrine\ORM\EntityManagerInterface;
+use Plugin\StripeRec\Service\Method\StripeRecurringNagMethod;
 
 class StripeCreditCardExtention extends AbstractTypeExtension
 {
@@ -31,9 +34,17 @@ class StripeCreditCardExtention extends AbstractTypeExtension
      */
     protected $paymentRepository;
 
-    public function __construct(PaymentRepository $paymentRepository)
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $entityManager;
+
+    public function __construct(
+        PaymentRepository $paymentRepository, 
+        EntityManagerInterface $entityManager)
     {
         $this->paymentRepository = $paymentRepository;
+        $this->entityManager = $entityManager;
     }
 
     public static function getExtendedTypes(): iterable
@@ -47,6 +58,14 @@ class StripeCreditCardExtention extends AbstractTypeExtension
             /** @var Order $data */
             $data = $event->getData();
             $form = $event->getForm();
+
+            if (is_null($data->getPayment())) {
+                $paymentRepository = $this->entityManager->getRepository(Payment::class);
+                $payment = $paymentRepository->findOneBy(['method_class' => StripeCreditCard::class]);
+                // set payment
+                $data->setPayment($payment);
+                $data->setPaymentMethod($payment->getMethod());
+            }
 
             // 支払い方法が一致する場合
             if ($data->getPayment()->getMethodClass() === StripeCreditCard::class) {
@@ -84,7 +103,7 @@ class StripeCreditCardExtention extends AbstractTypeExtension
                 $form = $event->getForm();
 
                 // 支払い方法が一致しなければremove
-                if ($Payment->getId() != $data['Payment']) {
+                if (isset($data['Payment']) && $Payment->getId() != $data['Payment']) {
                     $form->remove('stripe_payment_intent_id');
                     $form->remove('is_save_card_on');
                 }

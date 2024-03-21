@@ -44,6 +44,8 @@ use Plugin\Coupon4\Repository\CouponOrderRepository;
 use Plugin\Coupon4\Service\CouponService;
 use Plugin\Coupon4\Entity\Coupon;
 use Symfony\Component\Form\FormError;
+use Eccube\Entity\Payment;
+use Plugin\StripeRec\Service\Method\StripeRecurringNagMethod;
 
 class ShoppingController extends AbstractShoppingController
 {
@@ -156,6 +158,14 @@ class ShoppingController extends AbstractShoppingController
         if ($Customer->getId()) {
             $this->orderHelper->updateCustomerInfo($Order, $Customer);
             $this->entityManager->flush();
+        }
+
+        // case payment is null
+        if (is_null($Order->getPayment())) {
+            $paymentRepository = $this->entityManager->getRepository(Payment::class);
+            $payment = $paymentRepository->findOneBy(['method_class' => StripeRecurringNagMethod::class]);
+            // set payment
+            $Order->setPayment($payment);
         }
 
         $form = $this->createForm(OrderType::class, $Order);
@@ -436,6 +446,49 @@ class ShoppingController extends AbstractShoppingController
                 'done' => true,
                 'messages' => "success",
             ]);
+        } else {
+            $order_id = $form->getData()->getId();
+            $Shipping = $form->getData()->getShippings()->first();
+
+            $order = $this->orderRepository->find($order_id);
+            if (!$Order) {
+                log_info('[注文確認] 購入処理中の受注が存在しません.', [$preOrderId]);
+    
+                return $this->json([
+                    'fail' => true,
+                    'messages' => "fail",
+                ]);
+            }
+
+            $next_month = new \DateTime(date('Y-m-01'));
+        	date_add($next_month, new \DateInterval('P1M'));
+        	$next_month_day = $next_month->format('Y-m-01');
+            $next_date = new \DateTime($next_month_day);
+
+            $current_month = new \DateTime('now');
+            if($current_month->format('H') > 13) date_add($current_month, new \DateInterval('P1D'));
+            $current_month_day = $current_month->format('Y-m-d');
+            $current_date = new \DateTime($current_month_day);
+            $currnet_conf_date = $this->getAvailableDate($current_date);
+            $next_conf_date = $this->getAvailableDate($next_date);
+
+            $orderShipping = $order->getShippings()->first();
+            $orderShipping->setShippingDeliveryTime($Shipping->getShippingDeliveryTime());
+            $orderShipping->setShippingDeliveryName($Shipping->getShippingDeliveryName());
+
+            $orderItems = $order->getProductOrderItems();
+            foreach($orderItems as $orderItem){
+                if ($orderItem->isProduct()){
+                    if ($orderItem->getShip() == 1){
+                        $orderShipping->setShippingDeliveryDate($currnet_conf_date);
+                    } else {
+                        $orderShipping->setShippingDeliveryDate($next_conf_date);
+                    }
+                }
+            }
+
+            $this->entityManager->persist($orderShipping);
+            $this->entityManager->flush();
         }
 
         log_info('[注文確認] フォームエラーのため, 注文手続画面を表示します.', [$Order->getId()]);

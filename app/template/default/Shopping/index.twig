@@ -53,12 +53,13 @@ file that was distributed with this source code.
             var day = 1;
 
             {% set next_date_temp = "now" | date ( "Y-m-01") %}
-            {% if(is_use_current_month) %}
-            　　　　　var txt = '・次回課金日：{{ next_date_temp|date_modify("+#{1} months")|date("Y年m月1日") }}';
+            var txt = '・次回課金日：{{ next_date_temp|date_modify("+#{1} months")|date("Y年m月1日") }}';
+            // {% if(is_use_current_month) %}
+            // 　　　　　var txt = '・次回課金日：{{ next_date_temp|date_modify("+#{1} months")|date("Y年m月1日") }}';
 
-            {% else %}
-                    var txt = '・次回課金日：{{ next_date_temp|date_modify("+#{2} months")|date("Y年m月1日") }}';
-            {% endif %}
+            // {% else %}
+            //         var txt = '・次回課金日：{{ next_date_temp|date_modify("+#{2} months")|date("Y年m月1日") }}';
+            // {% endif %}
 
             // var txt = '・次回課金日：'+ nextMonth.getFullYear() + '年' + month + '月' + day + '日';
             $('#next_month').text(txt);

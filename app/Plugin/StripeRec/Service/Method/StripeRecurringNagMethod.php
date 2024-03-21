@@ -58,7 +58,7 @@ use Plugin\StripeRec\Service\ConfigService;
 use Eccube\Repository\ProductClassRepository;
 use Plugin\Coupon4\Entity\CouponOrder;
 use Eccube\Repository\CalendarRepository;
-
+use Carbon\Carbon;
 
 /**
  * Stripe Recurring Non Apple/Google pay method
@@ -458,19 +458,19 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         if (intval($initial_price) == 0){
             $check_amount=self::getAmountToSentInStripe(50, strtolower($this->Order->getCurrencyCode()));
         }
-        $paymentIntent = $stripeClient->createPaymentIntentWithCustomer($check_amount, $payment_method_id, $this->Order->getId(), true, $customer_id, $this->Order->getCurrencyCode());
-        if($paymentIntent['error']) {
-            if (!empty($paymentIntent['error']['payment_intent']['id'])){
-                $stripe = new \Stripe\StripeClient($StripeConfig->secret_key);
-                $stripe->paymentIntents->cancel($paymentIntent['error']['payment_intent']['id']);
-            }
-            $result->setSuccess(false);
-            $result->setErrors([trans('stripe_recurring.checkout.payment_method.retrieve_error')]);
-            return $result;
-        }else{
-            $stripe = new \Stripe\StripeClient($StripeConfig->secret_key);
-            $stripe->paymentIntents->cancel($paymentIntent['id']);
-        }
+        // $paymentIntent = $stripeClient->createPaymentIntentWithCustomer($check_amount, $payment_method_id, $this->Order->getId(), true, $customer_id, $this->Order->getCurrencyCode());
+        // if($paymentIntent['error']) {
+        //     if (!empty($paymentIntent['error']['payment_intent']['id'])){
+        //         $stripe = new \Stripe\StripeClient($StripeConfig->secret_key);
+        //         $stripe->paymentIntents->cancel($paymentIntent['error']['payment_intent']['id']);
+        //     }
+        //     $result->setSuccess(false);
+        //     $result->setErrors([trans('stripe_recurring.checkout.payment_method.retrieve_error')]);
+        //     return $result;
+        // }else{
+        //     $stripe = new \Stripe\StripeClient($StripeConfig->secret_key);
+        //     $stripe->paymentIntents->cancel($paymentIntent['id']);
+        // }
 
         // EOC --- compose subscription phases
         $interval = $order_items[0]->getProductClass()->getInterval();
@@ -577,6 +577,32 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $stripeOrder->setRecStatus(StripeRecOrder::REC_STATUS_ACTIVE);
             $stripeOrder->setStartDate(new \DateTime());
         }else{
+            $newPhases = [];
+            if (!isset($schedule_params['phases'][1]['billing_cycle_anchor'])) {
+                foreach ($schedule_params['phases'] as $key => $scheduleParamsPhase) {
+                    $dateTimePhase0 = Carbon::today()->firstOfMonth()->addMonth()->addHours(9)->addMinutes(30);
+                    if ($key == 0) {
+                        // set end_date phases[0]
+                        $scheduleParamsPhase['end_date'] = $dateTimePhase0->getTimestamp();
+                    }
+
+                    if ($key == 1 && isset($scheduleParamsPhase['trial_end'])) {
+                        $scheduleParamsPhase['end_date'] = $scheduleParamsPhase['trial_end'];
+                        unset($scheduleParamsPhase['trial_end']);
+                    }
+
+                    if (isset($scheduleParamsPhase['iterations'])) {
+                        unset($scheduleParamsPhase['iterations']);
+                    }
+
+                    array_push($newPhases, $scheduleParamsPhase);
+                }
+
+                $schedule_params['phases'] = $newPhases;
+            }
+
+            log_info(__METHOD__ . ' DATA CHECK ' . print_r($schedule_params, true));
+
             $subscription_schedule = SubscriptionSchedule::create($schedule_params);
 
             log_info(self::LOG_IF . "--- subscription schedule created.");
@@ -595,6 +621,12 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             $stripeOrder->setPaidStatus(StripeRecOrder::STATUS_PAY_UNDEFINED);
             $stripeOrder->setOrder($this->Order);
             $stripeOrder->setSubscriptionId($subscription_id);
+            if (is_null($stripeOrder->getCurrentPeriodStart())) {
+                $stripeOrder->setCurrentPeriodStart($subscription_schedule->current_phase->start_date);
+            }
+            if (is_null($stripeOrder->getCurrentPeriodEnd())) {
+                $stripeOrder->setCurrentPeriodEnd($subscription_schedule->current_phase->end_date);
+            }
 
             $dt = new \DateTime();
             if($purchase_point === "now"){
@@ -1105,6 +1137,8 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
                 }
             }
         }else{
+            log_info("for monthly");
+
             // for monthly recurring
             $day = $start_time->format("j");
             $days_of_month = $start_time->format("t");
@@ -1192,7 +1226,9 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
             }
 
         }
+
         $next_payday = new \DateTime($next_payday->format('Y-m-d 09:30:00'));
+        $dateTimeToday = Carbon::today()->firstOfMonth()->addMonth();
         $now = new \DateTime();
         $load_time = new \DateInterval('PT10S');
         $now->add($load_time);
@@ -1217,6 +1253,8 @@ class StripeRecurringNagMethod implements PaymentMethodInterface
         ];
         array_unshift($phases, $phase_first_prod);
         $phases[1]['billing_cycle_anchor'] = "phase_start";
+        log_info(__METHOD__ . ' G-point billing_cycle_anchor' . print_r($schedule_params, true));
+
         $schedule_params['phases'] = $phases;
         //dump($schedule_params);die();
                     log_info(__METHOD__ . ' G-point' . print_r($schedule_params, true));

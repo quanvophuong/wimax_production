@@ -522,6 +522,7 @@ class RecurringService{
     }
     public function cancelRecurring($rec_order){
         $res = true;
+        $Order = $rec_order->getOrder();
 
         if($rec_order->isScheduled()){
             $pb_service = $this->container->get("plg_stripe_rec.service.pointbundle_service");
@@ -536,6 +537,11 @@ class RecurringService{
             }else{
                 $rec_order->setRecStatus(StripeRecOrder::REC_STATUS_SCHEDULED_CANCELED);
                 $this->em->persist($rec_order);
+
+                $OrderStatus = $this->em->getRepository(OrderStatus::class)->find(OrderStatus::CANCEL);
+                $Order->setOrderStatus($OrderStatus);
+                $this->em->persist($Order);
+                
                 $this->em->flush();
             }
             return $res;
@@ -547,6 +553,10 @@ class RecurringService{
             if($rec_order->getRecStatus() != StripeRecOrder::REC_STATUS_CANCELED){
                 $res = $this->stripe_service->cancelRecurring($sub_id);
                 if(!empty($res)){
+                    $OrderStatus = $this->em->getRepository(OrderStatus::class)->find(OrderStatus::CANCEL);
+                    $Order->setOrderStatus($OrderStatus);
+                    $this->em->persist($Order);
+
                     $rec_order->setRecStatus(StripeRecOrder::REC_STATUS_CANCELED);
                     $this->em->persist($rec_order);
                     $this->em->flush();
@@ -742,5 +752,28 @@ class RecurringService{
         //     $this->em->persist($rec_order);
         //     $this->em->flush();
         // }
+    }
+
+    public function updateDescriptionPaymentIntent($rec_order){
+        $res = true;
+
+        try {
+            if ($rec_order->getOrder()) {
+                $subscription = Subscription::retrieve($rec_order->getSubscriptionId());
+                $latestInvoice = $subscription->latest_invoice;
+                $invoice = Invoice::retrieve($latestInvoice);
+                $paymentIntentId = $invoice->payment_intent;
+                $paymentIntent = PaymentIntent::retrieve($paymentIntentId);
+                if ($paymentIntent->description == 'Subscription update') {
+                    PaymentIntent::update($paymentIntentId, [
+                        'description' => 'F'.$rec_order->getOrder()->getId(),
+                    ]);
+                }
+            }
+
+            return $res;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }

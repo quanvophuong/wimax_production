@@ -349,6 +349,13 @@ file that was distributed with this source code.
                                                 <p class="form-text font-weight-bold text-danger mb-0">{{ 'admin.order.change_payment_method_message'|trans }}</p>
                                             </div>
                                         </div>
+                                        <div class="row mb-3 form-group">
+                                            <label class="col-3 col-form-label">契約補償</label>
+                                            <div class="col">
+                                                {{ form_widget(form.PriceIdChange) }}
+                                                {{ form_errors(form.PriceIdChange) }}
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-6">
                                         <div class="row mb-3">
