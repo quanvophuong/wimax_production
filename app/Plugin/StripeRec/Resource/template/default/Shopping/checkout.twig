@@ -82,7 +82,7 @@ file that was distributed with this source code.
     <main>
         <form action="{{ url('plugin_striperec_checkout') }}" method="POST" id="checkout_form">
             {% if stripePaymentMethodObj is defined and stripePaymentMethodObj != false and is_granted('ROLE_USER') == true %}
-            <section class="container-lg" style="width:600px">
+            <section class="container-lg fix-width-card">
                 <div class="cell example example4" id="example-4" style="background-color:white;">
                     <div class="stripe_payment_gateway_existing_box" style="margin-bottom:60px; display:block;">
                         <p class="stripe_payment_gateway_text">保存済みカード</p>
