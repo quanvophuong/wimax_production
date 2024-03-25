@@ -952,10 +952,13 @@ class OrderPdfService extends TcpdfFpdi
         $product_name = "";
         $quantity = "";
         $cat_name = "";
+        $cat_name_ac = "";
         if(!empty($OrderItem)){
         	$product_name = $OrderItem->getProductName();
         	$quantity = $OrderItem->getQuantity();
         	$cat_name = '安心補償オプション＊'.$OrderItem->getClassCategoryName1();
+            $cat_name_ac = $OrderItem->getClassCategoryName2();
+            $cat_name_ac = $cat_name_ac == '購入する' ? '有' : '無し';
         }
         $this->lfText(20, 105, "【注文内容】", 10);
         $this->lfText(25, 110, $product_name, 10);
@@ -966,37 +969,41 @@ class OrderPdfService extends TcpdfFpdi
         $this->lfText(20, 133, "【安心補償有無/内容】", 10);
         $this->lfText(25, 138, $cat_name, 10);
         
+        $this->lfText(20, 147, "【ACアダプターの有無】", 10);
+        $this->lfText(25, 152, $cat_name_ac, 10);
+        
         $text = '最短発送';
         if (!empty($OrderItem->getShip()) && $OrderItem->getShip()==2){
             $text = '翌月発送';
         }
-        $this->lfText(20, 147, "【配送希望日】", 10);
-        $this->lfText(25, 152, $text, 10);
+        $this->lfText(20, 161, "【配送希望日】", 10);
+        $this->lfText(25, 166, $text, 10);
 
         // 配送先情報
-        $this->lfText(20, 161, "【配送先氏名】", 10);
-        $this->lfText(25, 166, $Shipping->getName01().' '.$Shipping->getName02(), 10);
+        $this->lfText(20, 175, "【配送先氏名】", 10);
+        $this->lfText(25, 180, $Shipping->getName01().' '.$Shipping->getName02(), 10);
         
-        $this->lfText(20, 175, "【配送先氏名（カナ）】", 10);
-        $this->lfText(25, 180, $Shipping->getKana01().' '.$Shipping->getKana02(), 10);
+        $this->lfText(20, 189, "【配送先氏名（カナ）】", 10);
+        $this->lfText(25, 194, $Shipping->getKana01().' '.$Shipping->getKana02(), 10);
         
-        $this->lfText(20, 189, "【配送先電話番号】", 10);
-        $this->lfText(25, 194, $Shipping->getPhoneNumber(), 10);
+        $this->lfText(20, 203, "【配送先電話番号】", 10);
+        $this->lfText(25, 208, $Shipping->getPhoneNumber(), 10);
         
-        $this->lfText(20, 203, "【配送先住所】", 10);
-        $this->lfText(25, 208, $Shipping->getPref().$Shipping->getAddr01() . $Shipping->getAddr02(), 10);
-        $this->lfText(25, 213, $Shipping->getCompanyName(), 10);
+        $this->lfText(20, 217, "【配送先住所】", 10);
+        $this->lfText(25, 222, "〒" . $Shipping->getPostalCode(), 10);
+        $this->lfText(25, 227, $Shipping->getPref().$Shipping->getAddr01() . $Shipping->getAddr02(), 10);
+        $this->lfText(25, 232, $Shipping->getCompanyName(), 10);
         
-        $this->lfText(20, 222, "【配送方法】", 10);
+        $this->lfText(20, 241, "【配送方法】", 10);
         $delivery_name = $Shipping->getShippingDeliveryName();
         if($delivery_name === "ヤマト運輸" || $delivery_name === "佐川急便"){
         	$delivery_name = "宅配便";
         }
-        $this->lfText(25, 227, $delivery_name, 10);
-        $this->lfText(25, 232, $Shipping->getShippingDeliveryTime(), 10);
+        $this->lfText(25, 246, $delivery_name, 10);
+        $this->lfText(25, 251, $Shipping->getShippingDeliveryTime(), 10);
         
-        $this->lfText(20, 241, "【お問い合わせ】", 10);
-        $this->lfText(20, 246, $Order->getMessage(), 10);
+        $this->lfText(20, 260, "【お問い合わせ】", 10);
+        $this->lfText(20, 265, $Order->getMessage(), 10);
         
 //         $this->lfText(25, 153, $Order->getName01().' '.$Order->getName02(), 10);
 //         $this->lfText(25, 162, $Order->getKana01().' '.$Order->getKana02(), 10);
