@@ -146,6 +146,12 @@ class CsvImportController extends AbstractCsvImportController
             // 存在しない出荷IDはエラー
             if (empty($Order)) {
             	$errors[] = trans('admin.common.csv_invalid_not_found', ['%line%' => $line + 1, '%name%' => $columnNames['id']]);
+                continue;
+            }
+
+            if (isset($row[$columnNames['imei']]) && !empty($row[$columnNames['imei']]) && strlen($row[$columnNames['imei']]) != 15) {
+                $errors[] = trans('admin.common.csv_invalid_length_exactly', ['%line%' => $line + 1, '%number%' => '15', '%name%' => $columnNames['id']]);
+                continue;
             }
             
             /* @var Shipping $Shipping */
