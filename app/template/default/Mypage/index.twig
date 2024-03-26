@@ -112,10 +112,10 @@ file that was distributed with this source code.
                                         <div class="deviceNo">
                                             {% if Order.checkHaveReceiptInStripe(OrderParent.subscriptionId) %}
                                                 <select class="custom-select btn btn-download-pdf-receipt" style="border: 2px solid #437ec4; background: #fff; color: #437ec4">
-                                                    <option value="">前回の領収書ダウンロード</option>
+                                                    <option value="">領収書ダウンロード</option>
                                                     {% for invoice in OrderParent.invoices %}
                                                         <option value="{{ url('my_page_download_pdf_receipt_download', { id : invoice.id }) }}">
-                                                            {{ invoice.created|date('Y年m月')}}
+                                                            {{ invoice.created|date('Y年m月')}}分
                                                         </option>
                                                     {% endfor %}
                                                 </select>
@@ -125,7 +125,7 @@ file that was distributed with this source code.
                                                 class="btn btn-download-pdf-receipt"
                                                 href="{{ url('my_page_download_pdf_receipt', { id : OrderParent.subscriptionId }) }}"
                                             >
-                                                前回の領収書ダウンロード
+                                                領収書ダウンロード
                                             </a> #}
                                             {% endif %}
                                         </div>
